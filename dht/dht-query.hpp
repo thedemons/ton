@@ -44,8 +44,8 @@ class DhtQuery : public td::actor::Actor {
   bool client_only_;
 
  public:
-  DhtQuery(DhtKeyId key, DhtMember::PrintId print_id, adnl::AdnlNodeIdShort src, td::uint32 k,
-           td::uint32 a, td::int32 our_network_id, DhtNode self, bool client_only, td::actor::ActorId<DhtMember> node,
+  DhtQuery(DhtKeyId key, DhtMember::PrintId print_id, adnl::AdnlNodeIdShort src, td::uint32 k, td::uint32 a,
+           td::int32 our_network_id, DhtNode self, bool client_only, td::actor::ActorId<DhtMember> node,
            td::actor::ActorId<adnl::Adnl> adnl)
       : key_(key)
       , self_(std::move(self))
@@ -167,9 +167,9 @@ class DhtQueryFindValueSingle : public DhtQueryFindValue {
 class DhtQueryFindValueMany : public DhtQueryFindValue {
  public:
   DhtQueryFindValueMany(DhtKeyId key, DhtMember::PrintId print_id, adnl::AdnlNodeIdShort src, DhtNodesList list,
-                         td::uint32 k, td::uint32 a, td::int32 our_network_id, DhtNode self, bool client_only,
-                         td::actor::ActorId<DhtMember> node, td::actor::ActorId<adnl::Adnl> adnl,
-                         std::function<void(DhtValue)> callback, td::Promise<td::Unit> promise)
+                        td::uint32 k, td::uint32 a, td::int32 our_network_id, DhtNode self, bool client_only,
+                        td::actor::ActorId<DhtMember> node, td::actor::ActorId<adnl::Adnl> adnl,
+                        std::function<void(DhtValue)> callback, td::Promise<td::Unit> promise)
       : DhtQueryFindValue(key, print_id, src, std::move(list), k, a, our_network_id, std::move(self), client_only, node,
                           adnl)
       , callback_(std::move(callback))
@@ -205,8 +205,8 @@ class DhtQueryStore : public td::actor::Actor {
 
  public:
   DhtQueryStore(DhtValue key_value, DhtMember::PrintId print_id, adnl::AdnlNodeIdShort src, DhtNodesList list,
-                td::uint32 k, td::uint32 a, td::int32 our_network_id, DhtNode self, bool client_only, td::actor::ActorId<DhtMember> node,
-                td::actor::ActorId<adnl::Adnl> adnl, td::Promise<td::Unit> promise);
+                td::uint32 k, td::uint32 a, td::int32 our_network_id, DhtNode self, bool client_only,
+                td::actor::ActorId<DhtMember> node, td::actor::ActorId<adnl::Adnl> adnl, td::Promise<td::Unit> promise);
   void send_stores(td::Result<DhtNodesList> res);
   void store_ready(td::Result<td::BufferSlice> res);
   void start_up() override;

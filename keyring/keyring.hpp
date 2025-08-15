@@ -73,4 +73,3 @@ class KeyringImpl : public Keyring {
 }  // namespace keyring
 
 }  // namespace ton
-

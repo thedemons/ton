@@ -755,8 +755,8 @@ td::Result<std::unique_ptr<HttpResponse>> HttpResponse::create(std::string proto
     return td::Status::Error(PSTRING() << "bad status code '" << code << "'");
   }
 
-  return std::make_unique<HttpResponse>(std::move(proto_version), code, std::move(reason), force_no_payload,
-                                        keep_alive, is_tunnel);
+  return std::make_unique<HttpResponse>(std::move(proto_version), code, std::move(reason), force_no_payload, keep_alive,
+                                        is_tunnel);
 }
 
 td::Status HttpResponse::complete_parse_header() {

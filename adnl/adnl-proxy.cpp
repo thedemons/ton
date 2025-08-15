@@ -304,7 +304,8 @@ int main(int argc, char *argv[]) {
     SET_VERBOSITY_LEVEL(v);
   });
   p.add_option('V', "version", "shows adnl-proxy build information", [&]() {
-    std::cout << "adnl-proxy build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+    std::cout << "adnl-proxy build information: [ Commit: " << GitMetadata::CommitSHA1()
+              << ", Date: " << GitMetadata::CommitDate() << "]\n";
     std::exit(0);
   });
   p.add_option('h', "help", "prints_help", [&]() {

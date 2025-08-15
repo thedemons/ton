@@ -40,9 +40,9 @@ class HighloadWalletV2 : public WalletBase<HighloadWalletV2, HighloadWalletV2Tra
   td::Result<td::Ref<vm::Cell>> make_a_gift_message(const td::Ed25519::PrivateKey& private_key, td::uint32 valid_until,
                                                     td::Span<Gift> gifts) const override;
   static td::Ref<vm::Cell> get_init_data(const InitData& init_data) noexcept;
-  td::Result<td::Ref<vm::Cell>> get_init_message(const td::Ed25519::PrivateKey& private_key,
-                                                 td::uint32 valid_until = std::numeric_limits<td::uint32>::max()) const
-      noexcept;
+  td::Result<td::Ref<vm::Cell>> get_init_message(
+      const td::Ed25519::PrivateKey& private_key,
+      td::uint32 valid_until = std::numeric_limits<td::uint32>::max()) const noexcept;
 
   // can't use get methods for compatibility with old revisions
   td::Result<td::uint32> get_wallet_id() const override;

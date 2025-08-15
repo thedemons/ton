@@ -265,8 +265,8 @@ class CoreActor : public CoreActorInterface {
       MHD_destroy_post_processor(postprocessor);
     }
     static MHD_RESULT iterate_post(void* coninfo_cls, enum MHD_ValueKind kind, const char* key, const char* filename,
-                            const char* content_type, const char* transfer_encoding, const char* data, uint64_t off,
-                            size_t size) {
+                                   const char* content_type, const char* transfer_encoding, const char* data,
+                                   uint64_t off, size_t size) {
       auto ptr = static_cast<HttpRequestExtra*>(coninfo_cls);
       ptr->total_size += strlen(key) + size;
       if (ptr->total_size > MAX_POST_SIZE) {
@@ -292,8 +292,9 @@ class CoreActor : public CoreActorInterface {
     }
   }
 
-  static MHD_RESULT process_http_request(void* cls, struct MHD_Connection* connection, const char* url, const char* method,
-                                  const char* version, const char* upload_data, size_t* upload_data_size, void** ptr) {
+  static MHD_RESULT process_http_request(void* cls, struct MHD_Connection* connection, const char* url,
+                                         const char* method, const char* version, const char* upload_data,
+                                         size_t* upload_data_size, void** ptr) {
     struct MHD_Response* response = nullptr;
     MHD_RESULT ret;
 

@@ -39,13 +39,13 @@ void TmpVar::show_as_stack_comment(std::ostream& os) const {
 }
 
 void TmpVar::show(std::ostream& os) const {
-  os << '\'' << ir_idx;   // vars are printed out as `'1 '2` (in stack comments, debug info, etc.)
+  os << '\'' << ir_idx;  // vars are printed out as `'1 '2` (in stack comments, debug info, etc.)
   if (!name.empty()) {
     os << '_' << name;
   }
 #ifdef TOLK_DEBUG
   if (desc) {
-    os << ' ' << desc;    // "origin" of implicitly created tmp var, like `'15 (binary-op) '16 (glob-var)`
+    os << ' ' << desc;  // "origin" of implicitly created tmp var, like `'15 (binary-op) '16 (glob-var)`
   }
 #endif
 }
@@ -401,7 +401,8 @@ std::vector<var_idx_t> CodeBlob::create_var(TypePtr var_type, SrcLocation loc, s
   if (const TypeDataStruct* t_struct = var_type->try_as<TypeDataStruct>()) {
     for (int i = 0; i < t_struct->struct_ref->get_num_fields(); ++i) {
       StructFieldPtr field_ref = t_struct->struct_ref->get_field(i);
-      std::string sub_name = name.empty() || t_struct->struct_ref->get_num_fields() == 1 ? name : name + "." + field_ref->name;
+      std::string sub_name =
+          name.empty() || t_struct->struct_ref->get_num_fields() == 1 ? name : name + "." + field_ref->name;
       std::vector<var_idx_t> nested = create_var(field_ref->declared_type, loc, std::move(sub_name));
       ir_idx.insert(ir_idx.end(), nested.begin(), nested.end());
     }
@@ -415,11 +416,12 @@ std::vector<var_idx_t> CodeBlob::create_var(TypePtr var_type, SrcLocation loc, s
     ir_idx = create_var(t_alias->underlying_type, loc, std::move(name));
   } else if (const TypeDataUnion* t_union = var_type->try_as<TypeDataUnion>(); t_union && stack_w != 1) {
     std::string utag_name = name.empty() ? "'UTag" : name + ".UTag";
-    if (t_union->or_null) {   // in stack comments, `a:(int,int)?` will be "a.0 a.1 a.UTag"
+    if (t_union->or_null) {  // in stack comments, `a:(int,int)?` will be "a.0 a.1 a.UTag"
       ir_idx = create_var(t_union->or_null, loc, std::move(name));
-    } else {                  // in stack comments, `a:int|slice` will be "a.USlot1 a.UTag"
+    } else {  // in stack comments, `a:int|slice` will be "a.USlot1 a.UTag"
       for (int i = 0; i < stack_w - 1; ++i) {
-        std::string slot_name = name.empty() ? "'USlot" + std::to_string(i + 1) : name + ".USlot" + std::to_string(i + 1);
+        std::string slot_name =
+            name.empty() ? "'USlot" + std::to_string(i + 1) : name + ".USlot" + std::to_string(i + 1);
         ir_idx.emplace_back(create_var(TypeDataUnknown::create(), loc, std::move(slot_name))[0]);
       }
     }

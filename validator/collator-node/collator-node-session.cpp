@@ -86,15 +86,13 @@ void CollatorNodeSession::new_shard_block_accepted(BlockIdExt block_id, bool can
       break;
     }
     if (!entry->has_external_query_at && entry->has_internal_query_at) {
-      LOG(INFO) << "generate block query"
-                << ": shard=" << shard_.to_str() << ", cc_seqno=" << validator_set_->get_catchain_seqno()
-                << ", next_block_seqno=" << entry->block_seqno
+      LOG(INFO) << "generate block query" << ": shard=" << shard_.to_str()
+                << ", cc_seqno=" << validator_set_->get_catchain_seqno() << ", next_block_seqno=" << entry->block_seqno
                 << ": nobody asked for block, but we tried to generate it";
     }
     if (entry->has_external_query_at && !entry->has_internal_query_at) {
-      LOG(INFO) << "generate block query"
-                << ": shard=" << shard_.to_str() << ", cc_seqno=" << validator_set_->get_catchain_seqno()
-                << ", next_block_seqno=" << entry->block_seqno
+      LOG(INFO) << "generate block query" << ": shard=" << shard_.to_str()
+                << ", cc_seqno=" << validator_set_->get_catchain_seqno() << ", next_block_seqno=" << entry->block_seqno
                 << ": somebody asked for block we didn't even try to generate";
     }
     cache_.erase(cache_.begin());
@@ -127,8 +125,8 @@ void CollatorNodeSession::generate_block(std::vector<BlockIdExt> prev_blocks,
 
   static auto prefix_inner = [](td::StringBuilder& sb, const ShardIdFull& shard, CatchainSeqno cc_seqno,
                                 BlockSeqno block_seqno, const td::optional<BlockCandidatePriority>& o_priority) {
-    sb << "generate block query"
-       << ": shard=" << shard.to_str() << ", cc_seqno=" << cc_seqno << ", next_block_seqno=" << block_seqno;
+    sb << "generate block query" << ": shard=" << shard.to_str() << ", cc_seqno=" << cc_seqno
+       << ", next_block_seqno=" << block_seqno;
     if (o_priority) {
       sb << " external{";
       sb << "round_offset=" << o_priority.value().round - o_priority.value().first_block_round

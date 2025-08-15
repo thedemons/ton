@@ -71,7 +71,7 @@ class MerkleProofBuilder {
   bool extract_proof_to(Ref<Cell> &proof_root) const;
   td::Result<td::BufferSlice> extract_proof_boc() const;
 
-  void set_cell_load_callback(std::function<void(const LoadedCell&)> f) {
+  void set_cell_load_callback(std::function<void(const LoadedCell &)> f) {
     usage_tree->set_cell_load_callback(std::move(f));
   }
   const CellUsageTree &get_usage_tree() const {

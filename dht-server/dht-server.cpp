@@ -1233,24 +1233,24 @@ int main(int argc, char *argv[]) {
     td::log_interface = logger_.get();
   });
   td::uint32 threads = 7;
-  p.add_checked_option(
-      't', "threads", PSTRING() << "number of threads (default=" << threads << ")", [&](td::Slice arg) {
-        td::int32 v;
-        try {
-          v = std::stoi(arg.str());
-        } catch (...) {
-          return td::Status::Error(ton::ErrorCode::error, "bad value for --threads: not a number");
-        }
-        if (v <= 0) {
-          return td::Status::Error(ton::ErrorCode::error, "bad value for --threads: should be > 0");
-        }
-        if (v > 127) {
-          LOG(WARNING) << "`--threads " << v << "` is too big, effective value will be 127";
-          v = 127;
-        }
-        threads = v;
-        return td::Status::OK();
-      });
+  p.add_checked_option('t', "threads", PSTRING() << "number of threads (default=" << threads << ")",
+                       [&](td::Slice arg) {
+                         td::int32 v;
+                         try {
+                           v = std::stoi(arg.str());
+                         } catch (...) {
+                           return td::Status::Error(ton::ErrorCode::error, "bad value for --threads: not a number");
+                         }
+                         if (v <= 0) {
+                           return td::Status::Error(ton::ErrorCode::error, "bad value for --threads: should be > 0");
+                         }
+                         if (v > 127) {
+                           LOG(WARNING) << "`--threads " << v << "` is too big, effective value will be 127";
+                           v = 127;
+                         }
+                         threads = v;
+                         return td::Status::OK();
+                       });
   p.add_checked_option('u', "user", "change user", [&](td::Slice user) { return td::change_user(user.str()); });
   p.run(argc, argv).ensure();
 

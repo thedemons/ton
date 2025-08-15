@@ -46,29 +46,28 @@ td::Ref<vm::Cell> build_internal_message(td::RefInt256 amount, td::Ref<vm::CellS
   if (args.address) {
     td::BigInt256 dest_addr;
     dest_addr.import_bits((*args.address).addr.as_bitslice());
-    cb.store_ones(1)
-        .store_zeroes(2)
-        .store_long((*args.address).workchain, 8)
-        .store_int256(dest_addr, 256);
+    cb.store_ones(1).store_zeroes(2).store_long((*args.address).workchain, 8).store_int256(dest_addr, 256);
   }
   auto address = cb.finalize();
-  
+
   vm::CellBuilder b;
-  b.store_long(0b0110, 4);                      // 0 ihr_disabled:Bool bounce:Bool bounced:Bool
+  b.store_long(0b0110, 4);  // 0 ihr_disabled:Bool bounce:Bool bounced:Bool
   // use -1:00..00 as src:MsgAddressInt
   // addr_std$10 anycast:(Maybe Anycast)  workchain_id:int8 address:bits256  = MsgAddressInt;
-  b.store_long(0b100, 3); b.store_ones(8); b.store_zeroes(256);
+  b.store_long(0b100, 3);
+  b.store_ones(8);
+  b.store_zeroes(256);
   b.append_cellslice(address);  // dest:MsgAddressInt
   unsigned len = (((unsigned)amount->bit_size(false) + 7) >> 3);
-  b.store_long_bool(len, 4) && b.store_int256_bool(*amount, len * 8, false); // grams:Grams
-  b.store_zeroes(1 + 4 + 4 + 64 + 32 + 1);      // extre, ihr_fee, fwd_fee, created_lt, created_at, init
+  b.store_long_bool(len, 4) && b.store_int256_bool(*amount, len * 8, false);  // grams:Grams
+  b.store_zeroes(1 + 4 + 4 + 64 + 32 + 1);  // extre, ihr_fee, fwd_fee, created_lt, created_at, init
   // body:(Either X ^X)
   if (b.remaining_bits() >= 1 + (*body).size() && b.remaining_refs() >= (*body).size_refs()) {
-      b.store_zeroes(1);
-      b.append_cellslice(body);
+    b.store_zeroes(1);
+    b.append_cellslice(body);
   } else {
-      b.store_ones(1);
-      b.store_ref(vm::CellBuilder().append_cellslice(body).finalize_novm());
+    b.store_ones(1);
+    b.store_ref(vm::CellBuilder().append_cellslice(body).finalize_novm());
   }
   return b.finalize_novm();
 }
@@ -78,41 +77,39 @@ td::Ref<vm::Cell> build_external_message(td::RefInt256 amount, td::Ref<vm::CellS
   if (args.address) {
     td::BigInt256 dest_addr;
     dest_addr.import_bits((*args.address).addr.as_bitslice());
-    cb.store_ones(1)
-        .store_zeroes(2)
-        .store_long((*args.address).workchain, 8)
-        .store_int256(dest_addr, 256);
+    cb.store_ones(1).store_zeroes(2).store_long((*args.address).workchain, 8).store_int256(dest_addr, 256);
   }
   auto address = cb.finalize();
-  
+
   vm::CellBuilder b;
-  b.store_long(0b1000, 4);                      // ext_in_msg_info$10 src:MsgAddressExt
-  b.append_cellslice(address);                  // dest:MsgAddressInt
-  b.store_zeroes(4);                            //import_fee:Grams
-  b.store_zeroes(1);                            // init
+  b.store_long(0b1000, 4);      // ext_in_msg_info$10 src:MsgAddressExt
+  b.append_cellslice(address);  // dest:MsgAddressInt
+  b.store_zeroes(4);            //import_fee:Grams
+  b.store_zeroes(1);            // init
   // body:(Either X ^X)
   if (b.remaining_bits() >= 1 + (*body).size() && b.remaining_refs() >= (*body).size_refs()) {
-      b.store_zeroes(1);
-      b.append_cellslice(body);
+    b.store_zeroes(1);
+    b.append_cellslice(body);
   } else {
-      b.store_ones(1);
-      b.store_ref(vm::CellBuilder().append_cellslice(body).finalize_novm());
+    b.store_ones(1);
+    b.store_ref(vm::CellBuilder().append_cellslice(body).finalize_novm());
   }
   return b.finalize_novm();
 }
 
-td::Ref<vm::Stack> prepare_vm_stack(td::RefInt256 amount, td::Ref<vm::CellSlice> body, SmartContract::Args args, int selector) {
+td::Ref<vm::Stack> prepare_vm_stack(td::RefInt256 amount, td::Ref<vm::CellSlice> body, SmartContract::Args args,
+                                    int selector) {
   td::Ref<vm::Stack> stack_ref{true};
   td::RefInt256 acc_addr{true};
   //CHECK(acc_addr.write().import_bits(account.addr.cbits(), 256));
   vm::Stack& stack = stack_ref.write();
-  if(args.balance) {
+  if (args.balance) {
     stack.push_int(td::make_refint(args.balance));
   } else {
     stack.push_int(td::make_refint(10000000000));
   }
   stack.push_int(amount);
-  if(selector == 0) {
+  if (selector == 0) {
     stack.push_cell(build_internal_message(amount, body, args));
   } else {
     stack.push_cell(build_external_message(amount, body, args));
@@ -217,8 +214,9 @@ std::shared_ptr<const block::Config> try_fetch_config_from_c7(td::Ref<vm::Tuple>
       config_addr_cs.fetch_bits_to(config_addr);
     }
   }
-  auto global_config = block::Config(config_cell, std::move(config_addr), 
-      block::Config::needWorkchainInfo | block::Config::needSpecialSmc | block::Config::needCapabilities);
+  auto global_config =
+      block::Config(config_cell, std::move(config_addr),
+                    block::Config::needWorkchainInfo | block::Config::needSpecialSmc | block::Config::needCapabilities);
   auto unpack_res = global_config.unpack();
   if (unpack_res.is_error()) {
     LOG(ERROR) << "Failed to unpack config: " << unpack_res.error();
@@ -403,6 +401,7 @@ SmartContract::Answer SmartContract::send_external_message(td::Ref<vm::Cell> cel
 }
 SmartContract::Answer SmartContract::send_internal_message(td::Ref<vm::Cell> cell, Args args) {
   return run_method(
-      args.set_stack(prepare_vm_stack(td::make_refint(args.amount), vm::load_cell_slice_ref(cell), args, 0)).set_method_id(0));
+      args.set_stack(prepare_vm_stack(td::make_refint(args.amount), vm::load_cell_slice_ref(cell), args, 0))
+          .set_method_id(0));
 }
 }  // namespace ton

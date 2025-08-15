@@ -39,8 +39,8 @@ std::string tl_name = "ton_api";
 
 template <class T>
 void gen_to_json_constructor(StringBuilder &sb, const T *constructor, bool is_header) {
-  sb << "void to_json(JsonValueScope &jv, "
-     << "const " << tl_name << "::" << tl::simple::gen_cpp_name(constructor->name) << " &object)";
+  sb << "void to_json(JsonValueScope &jv, " << "const " << tl_name
+     << "::" << tl::simple::gen_cpp_name(constructor->name) << " &object)";
   if (is_header) {
     sb << ";\n\n";
     return;

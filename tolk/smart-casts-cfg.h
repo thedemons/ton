@@ -37,11 +37,15 @@ class TypeInferringUnifyStrategy {
   TypePtr unified_result = nullptr;
   bool different_types_became_union = false;
 
-public:
+ public:
   void unify_with(TypePtr next, TypePtr dest_hint = nullptr);
 
-  TypePtr get_result() const { return unified_result; }
-  bool is_union_of_different_types() const { return different_types_became_union; }
+  TypePtr get_result() const {
+    return unified_result;
+  }
+  bool is_union_of_different_types() const {
+    return different_types_became_union;
+  }
 };
 
 /*
@@ -53,22 +57,28 @@ public:
  * Note, that globals are NOT sink: don't encourage to use a global twice, it costs gas, better assign it to a local.
  */
 struct SinkExpression {
-  LocalVarPtr const var_ref;            // smart casts and data flow applies only to locals
-  const uint64_t index_path;            // 0 for just `v`; for `v.N` it's (N+1), for `v.N.M` it's (N+1) + (M+1)<<8, etc.
+  LocalVarPtr const var_ref;  // smart casts and data flow applies only to locals
+  const uint64_t index_path;  // 0 for just `v`; for `v.N` it's (N+1), for `v.N.M` it's (N+1) + (M+1)<<8, etc.
 
-  SinkExpression()
-    : var_ref(nullptr), index_path(0) {}
-  explicit SinkExpression(LocalVarPtr var_ref)
-    : var_ref(var_ref), index_path(0) {}
-  explicit SinkExpression(LocalVarPtr var_ref, uint64_t index_path)
-    : var_ref(var_ref), index_path(index_path) {}
+  SinkExpression() : var_ref(nullptr), index_path(0) {
+  }
+  explicit SinkExpression(LocalVarPtr var_ref) : var_ref(var_ref), index_path(0) {
+  }
+  explicit SinkExpression(LocalVarPtr var_ref, uint64_t index_path) : var_ref(var_ref), index_path(index_path) {
+  }
 
   SinkExpression(const SinkExpression&) = default;
   SinkExpression& operator=(const SinkExpression&) = delete;
 
-  bool operator==(const SinkExpression& rhs) const { return var_ref == rhs.var_ref && index_path == rhs.index_path; }
-  bool operator<(const SinkExpression& rhs) const { return var_ref == rhs.var_ref ? index_path < rhs.index_path : var_ref < rhs.var_ref; }
-  explicit operator bool() const { return var_ref != nullptr; }
+  bool operator==(const SinkExpression& rhs) const {
+    return var_ref == rhs.var_ref && index_path == rhs.index_path;
+  }
+  bool operator<(const SinkExpression& rhs) const {
+    return var_ref == rhs.var_ref ? index_path < rhs.index_path : var_ref < rhs.var_ref;
+  }
+  explicit operator bool() const {
+    return var_ref != nullptr;
+  }
 
   std::string to_string() const;
   SinkExpression get_child_s_expr(int field_idx) const;
@@ -78,7 +88,7 @@ struct SinkExpression {
 // example: `return;` interrupts control flow
 // example: `if (true) ... else ...` inside "else" flow is unreachable because it can't happen
 enum class UnreachableKind {
-  Unknown,     // no definite info or not unreachable
+  Unknown,  // no definite info or not unreachable
   CantHappen,
   ThrowStatement,
   ReturnStatement,
@@ -88,22 +98,22 @@ enum class UnreachableKind {
 // SignState is "definitely positive", etc.
 // example: inside `if (x > 0)`, x is Positive, in `else` it's NonPositive (if x is local, until reassigned)
 enum class SignState {
-  Unknown,     // no definite info
+  Unknown,  // no definite info
   Positive,
   Negative,
   Zero,
   NonNegative,
   NonPositive,
-  Never        // can't happen, like "never" type
+  Never  // can't happen, like "never" type
 };
 
 // BoolState is "definitely true" or "definitely false"
 // example: inside `if (x)`, x is AlwaysTrue, in `else` it's AlwaysFalse
 enum class BoolState {
-  Unknown,     // no definite info
+  Unknown,  // no definite info
   AlwaysTrue,
   AlwaysFalse,
-  Never        // can't happen, like "never" type
+  Never  // can't happen, like "never" type
 };
 
 // FactsAboutExpr represents "everything known about SinkExpression at a given execution point"
@@ -116,14 +126,15 @@ enum class BoolState {
 // it's a potential improvement for the future, for example `if (x > 0) { ... if (x < 0)` to warn always false
 // their purpose for now is to show, that data flow is not only about smart casts, but eventually for other facts also
 struct FactsAboutExpr {
-  TypePtr expr_type;        // originally declared type or smart cast (Unknown if no info)
-  SignState sign_state;     // definitely positive, etc. (Unknown if no info)
-  BoolState bool_state;     // definitely true/false (Unknown if no info)
+  TypePtr expr_type;     // originally declared type or smart cast (Unknown if no info)
+  SignState sign_state;  // definitely positive, etc. (Unknown if no info)
+  BoolState bool_state;  // definitely true/false (Unknown if no info)
 
-  FactsAboutExpr()
-    : expr_type(nullptr), sign_state(SignState::Unknown), bool_state(BoolState::Unknown) {}
+  FactsAboutExpr() : expr_type(nullptr), sign_state(SignState::Unknown), bool_state(BoolState::Unknown) {
+  }
   FactsAboutExpr(TypePtr smart_cast_type, SignState sign_state, BoolState bool_state)
-    : expr_type(smart_cast_type), sign_state(sign_state), bool_state(bool_state) {}
+      : expr_type(smart_cast_type), sign_state(sign_state), bool_state(bool_state) {
+  }
 
   bool operator==(const FactsAboutExpr& rhs) const = default;
 };
@@ -134,17 +145,19 @@ struct FactsAboutExpr {
 // on branching, like if/else, input context is cloned, two contexts for each branch calculated, and merged to a result
 class FlowContext {
   // std::map, not std::unordered_map, because LLDB visualises it better, for debugging
-  std::map<SinkExpression, FactsAboutExpr> known_facts;     // all local vars plus (optionally) indices/fields of tensors/tuples/objects
-  bool unreachable = false;                                 // if execution can't reach this point (after `return`, for example)
+  std::map<SinkExpression, FactsAboutExpr>
+      known_facts;           // all local vars plus (optionally) indices/fields of tensors/tuples/objects
+  bool unreachable = false;  // if execution can't reach this point (after `return`, for example)
 
   FlowContext(std::map<SinkExpression, FactsAboutExpr>&& known_facts, bool unreachable)
-    : known_facts(std::move(known_facts)), unreachable(unreachable) {}
+      : known_facts(std::move(known_facts)), unreachable(unreachable) {
+  }
 
   void invalidate_all_subfields(LocalVarPtr var_ref, uint64_t parent_path, uint64_t parent_mask);
 
   friend std::ostream& operator<<(std::ostream& os, const FlowContext& flow);
 
-public:
+ public:
   FlowContext() = default;
   FlowContext(FlowContext&&) noexcept = default;
   FlowContext(const FlowContext&) = delete;
@@ -156,7 +169,9 @@ public:
     return FlowContext(std::move(copy), unreachable);
   }
 
-  bool is_unreachable() const { return unreachable; }
+  bool is_unreachable() const {
+    return unreachable;
+  }
 
   TypePtr smart_cast_if_exists(SinkExpression s_expr) const {
     auto it = known_facts.find(s_expr);
@@ -177,11 +192,9 @@ struct ExprFlow {
   FlowContext false_flow;
 
   ExprFlow(FlowContext&& out_flow, FlowContext&& true_flow, FlowContext&& false_flow)
-    : out_flow(std::move(out_flow))
-    , true_flow(std::move(true_flow))
-    , false_flow(std::move(false_flow)) {}
-  ExprFlow(FlowContext&& out_flow, const bool clone_flow_for_condition)
-    : out_flow(std::move(out_flow)) {
+      : out_flow(std::move(out_flow)), true_flow(std::move(true_flow)), false_flow(std::move(false_flow)) {
+  }
+  ExprFlow(FlowContext&& out_flow, const bool clone_flow_for_condition) : out_flow(std::move(out_flow)) {
     if (clone_flow_for_condition) {
       true_flow = this->out_flow.clone();
       false_flow = this->out_flow.clone();
@@ -195,7 +208,7 @@ struct ExprFlow {
 
   int get_always_true_false_state() const {
     if (true_flow.is_unreachable() != false_flow.is_unreachable()) {
-      return false_flow.is_unreachable() ? 1 : 2;   // 1 is "always true"
+      return false_flow.is_unreachable() ? 1 : 2;  // 1 is "always true"
     }
     return 0;
   }
@@ -208,4 +221,4 @@ SinkExpression extract_sink_expression_from_vertex(AnyExprV v);
 TypePtr calc_declared_type_before_smart_cast(AnyExprV v);
 TypePtr calc_smart_cast_type_on_assignment(TypePtr lhs_declared_type, TypePtr rhs_inferred_type);
 
-} // namespace tolk
+}  // namespace tolk

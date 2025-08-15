@@ -224,19 +224,19 @@ td::Result<typename T::ReturnType> fetch_result(const td::BufferSlice &message, 
 }
 
 template <class Type, class... Args>
-td::BufferSlice create_serialize_tl_object(Args &&... args) {
+td::BufferSlice create_serialize_tl_object(Args &&...args) {
   Type object(std::forward<Args>(args)...);
   return serialize_tl_object(&object, true);
 }
 
 template <class Type, class... Args>
-td::BufferSlice create_serialize_tl_object_suffix(td::Slice suffix, Args &&... args) {
+td::BufferSlice create_serialize_tl_object_suffix(td::Slice suffix, Args &&...args) {
   Type object(std::forward<Args>(args)...);
   return serialize_tl_object(&object, true, suffix);
 }
 
 template <class Type, class... Args>
-auto create_hash_tl_object(Args &&... args) {
+auto create_hash_tl_object(Args &&...args) {
   Type object(std::forward<Args>(args)...);
   return get_tl_object_sha_bits256(&object);
 }

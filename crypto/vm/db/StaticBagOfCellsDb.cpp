@@ -39,7 +39,7 @@ class RootCell : public Cell {
   struct PrivateTag {};
 
  public:
-  td::Status set_data_cell(Ref<DataCell> &&data_cell) const override {
+  td::Status set_data_cell(Ref<DataCell>&& data_cell) const override {
     return cell_->set_data_cell(std::move(data_cell));
   }
   td::Result<LoadedCell> load_cell() const override {
@@ -371,12 +371,14 @@ class StaticBagOfCellsDbLazyImpl : public StaticBagOfCellsDb {
     }
     if (std::numeric_limits<std::size_t>::max() - res.begin < info_.data_offset ||
         std::numeric_limits<std::size_t>::max() - res.end < info_.data_offset) {
-      return td::Status::Error(PSTRING() << "bag-of-cell error: invalid cell location (1) " << res.begin << ":" << res.end);
+      return td::Status::Error(PSTRING() << "bag-of-cell error: invalid cell location (1) " << res.begin << ":"
+                                         << res.end);
     }
     res.begin += static_cast<std::size_t>(info_.data_offset);
     res.end += static_cast<std::size_t>(info_.data_offset);
     if (res.begin > res.end) {
-      return td::Status::Error(PSTRING() << "bag-of-cell error: invalid cell location (2) " << res.begin << ":" << res.end);
+      return td::Status::Error(PSTRING() << "bag-of-cell error: invalid cell location (2) " << res.begin << ":"
+                                         << res.end);
     }
     return res;
   }

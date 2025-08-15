@@ -43,7 +43,7 @@ void KeyringImpl::start_up() {
   }
 }
 
-td::Result<KeyringImpl::PrivateKeyDescr *> KeyringImpl::load_key(PublicKeyHash key_hash) {
+td::Result<KeyringImpl::PrivateKeyDescr*> KeyringImpl::load_key(PublicKeyHash key_hash) {
   auto it = map_.find(key_hash);
   if (it != map_.end()) {
     return it->second.get();

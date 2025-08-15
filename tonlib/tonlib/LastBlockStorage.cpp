@@ -53,7 +53,7 @@ std::string get_file_name(td::Slice name) {
 }  // namespace
 
 td::Result<LastBlockState> LastBlockStorage::get_state(td::Slice name) {
-  // This migration addresses an issue in the old version of Tonlib, where the td::buffer_to_hex 
+  // This migration addresses an issue in the old version of Tonlib, where the td::buffer_to_hex
   // incorrectly reversed the order of nibbles in hex representation.
   auto data_r = kv_->get(get_file_name(name));
   if (data_r.is_error()) {

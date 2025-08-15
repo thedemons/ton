@@ -283,7 +283,8 @@ int main(int argc, char* const argv[]) {
         dump = 0;
         break;
       case 'V':
-        std::cout << "dump-block build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+        std::cout << "dump-block build information: [ Commit: " << GitMetadata::CommitSHA1()
+                  << ", Date: " << GitMetadata::CommitDate() << "]\n";
         std::exit(0);
         break;
       case 'h':

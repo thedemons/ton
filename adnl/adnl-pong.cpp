@@ -99,7 +99,8 @@ int main(int argc, char *argv[]) {
     SET_VERBOSITY_LEVEL(v);
   });
   p.add_option('V', "version", "shows adnl-pong build information", [&]() {
-    std::cout << "adnl-pong build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+    std::cout << "adnl-pong build information: [ Commit: " << GitMetadata::CommitSHA1()
+              << ", Date: " << GitMetadata::CommitDate() << "]\n";
     std::exit(0);
   });
   p.add_option('h', "help", "prints_help", [&]() {

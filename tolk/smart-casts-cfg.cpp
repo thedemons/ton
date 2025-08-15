@@ -114,10 +114,10 @@ std::string SinkExpression::to_string() const {
 }
 
 SinkExpression SinkExpression::get_child_s_expr(int field_idx) const {
-  uint64_t new_index_path = index_path;    // if we have c.1 (index_path = 2) and construct c.1.N, calc (N<<8 + 2)
+  uint64_t new_index_path = index_path;  // if we have c.1 (index_path = 2) and construct c.1.N, calc (N<<8 + 2)
   for (int empty_byte = 0; empty_byte < 8; ++empty_byte) {
-    if ((index_path & (0xFF << (empty_byte*8))) == 0) {
-      new_index_path += (field_idx + 1) << (empty_byte*8);
+    if ((index_path & (0xFF << (empty_byte * 8))) == 0) {
+      new_index_path += (field_idx + 1) << (empty_byte * 8);
       break;
     }
   }
@@ -227,7 +227,7 @@ static bool is_type_unknown_from_var_lhs_decl(TypePtr t) {
   if (const auto* t_tensor = t->try_as<TypeDataTensor>()) {
     bool all_unknown = true;
     for (TypePtr item : t_tensor->items) {
-      all_unknown &=is_type_unknown_from_var_lhs_decl(item);
+      all_unknown &= is_type_unknown_from_var_lhs_decl(item);
     }
     return all_unknown;
   }
@@ -245,15 +245,19 @@ SignState calculate_sign_lca(SignState a, SignState b) {
   //    example: x is known > 0 already, given code `if (x > 0) {} else {}` merges Positive (always true) and Never
   // 3) handle all other combinations carefully
   static constexpr SignState transformations[7][7] = {
-    //               b=        Unknown |   Positive    |    Negative   |      Zero     |  NonNegative  |  NonPositive  |    Never     |
-    /* a=Unknown     */ {s::Unknown, s::Unknown,     s::Unknown,     s::Unknown,     s::Unknown,     s::Unknown,     s::Unknown    },
-    /* a=Positive    */ {s::Unknown, s::Positive,    s::Unknown,     s::NonNegative, s::NonNegative, s::Unknown,     s::Positive   },
-    /* a=Negative    */ {s::Unknown, s::Unknown,     s::Negative,    s::NonPositive, s::Unknown,     s::NonPositive, s::Negative   },
-    /* a=Zero        */ {s::Unknown, s::NonNegative, s::NonPositive, s::Zero,        s::NonNegative, s::NonPositive, s::Zero       },
-    /* a=NonNegative */ {s::Unknown, s::NonNegative, s::Unknown,     s::NonNegative, s::NonNegative, s::Unknown,     s::NonNegative},
-    /* a=NonPositive */ {s::Unknown, s::Unknown,     s::NonPositive, s::NonPositive, s::Unknown,     s::NonPositive, s::NonPositive},
-    /* a=Never       */ {s::Unknown, s::Positive,    s::Negative,    s::Zero,        s::NonNegative, s::NonPositive, s::Never      }
-  };
+      //               b=        Unknown |   Positive    |    Negative   |      Zero     |  NonNegative  |  NonPositive  |    Never     |
+      /* a=Unknown     */ {s::Unknown, s::Unknown, s::Unknown, s::Unknown, s::Unknown, s::Unknown, s::Unknown},
+      /* a=Positive    */
+      {s::Unknown, s::Positive, s::Unknown, s::NonNegative, s::NonNegative, s::Unknown, s::Positive},
+      /* a=Negative    */
+      {s::Unknown, s::Unknown, s::Negative, s::NonPositive, s::Unknown, s::NonPositive, s::Negative},
+      /* a=Zero        */
+      {s::Unknown, s::NonNegative, s::NonPositive, s::Zero, s::NonNegative, s::NonPositive, s::Zero},
+      /* a=NonNegative */
+      {s::Unknown, s::NonNegative, s::Unknown, s::NonNegative, s::NonNegative, s::Unknown, s::NonNegative},
+      /* a=NonPositive */
+      {s::Unknown, s::Unknown, s::NonPositive, s::NonPositive, s::Unknown, s::NonPositive, s::NonPositive},
+      /* a=Never       */ {s::Unknown, s::Positive, s::Negative, s::Zero, s::NonNegative, s::NonPositive, s::Never}};
 
   return transformations[static_cast<int>(a)][static_cast<int>(b)];
 }
@@ -264,12 +268,11 @@ SignState calculate_sign_lca(SignState a, SignState b) {
 BoolState calculate_bool_lca(BoolState a, BoolState b) {
   using s = BoolState;
   static constexpr BoolState transformations[4][4] = {
-    //               b=        Unknown |  AlwaysTrue   |  AlwaysFalse  |    Never     |
-    /* a=Unknown     */ {s::Unknown, s::Unknown,     s::Unknown,     s::Unknown    },
-    /* a=AlwaysTrue  */ {s::Unknown, s::AlwaysTrue,  s::Unknown,     s::AlwaysTrue },
-    /* a=AlwaysFalse */ {s::Unknown, s::Unknown,     s::AlwaysFalse, s::AlwaysFalse},
-    /* a=Never       */ {s::Unknown, s::AlwaysTrue,  s::AlwaysFalse, s::Never      }
-  };
+      //               b=        Unknown |  AlwaysTrue   |  AlwaysFalse  |    Never     |
+      /* a=Unknown     */ {s::Unknown, s::Unknown, s::Unknown, s::Unknown},
+      /* a=AlwaysTrue  */ {s::Unknown, s::AlwaysTrue, s::Unknown, s::AlwaysTrue},
+      /* a=AlwaysFalse */ {s::Unknown, s::Unknown, s::AlwaysFalse, s::AlwaysFalse},
+      /* a=Never       */ {s::Unknown, s::AlwaysTrue, s::AlwaysFalse, s::Never}};
 
   return transformations[static_cast<int>(a)][static_cast<int>(b)];
 }
@@ -279,7 +282,8 @@ BoolState calculate_bool_lca(BoolState a, BoolState b) {
 void TypeInferringUnifyStrategy::unify_with(TypePtr next, TypePtr dest_hint) {
   // example: `var r = ... ? int8 : int16`, will be inferred as `int8 | int16` (via unification)
   // but `var r: int = ... ? int8 : int16`, will be inferred as `int` (it's dest_hint)
-  if (dest_hint && !is_type_unknown_from_var_lhs_decl(dest_hint) && !dest_hint->unwrap_alias()->try_as<TypeDataUnion>()) {
+  if (dest_hint && !is_type_unknown_from_var_lhs_decl(dest_hint) &&
+      !dest_hint->unwrap_alias()->try_as<TypeDataUnion>()) {
     if (dest_hint->can_rhs_be_assigned(next)) {
       next = dest_hint;
     }
@@ -343,7 +347,6 @@ void FlowContext::mark_unreachable(UnreachableKind reason) {
   static_cast<void>(reason);
 }
 
-
 // "merge" two data-flow contexts occurs on control flow rejoins (if/else branches merging, for example)
 // it's generating a new context that describes "knowledge that definitely outcomes from these two"
 // example: in one branch x is `int`, in x is `null`, result is `int?` unless any of them is unreachable
@@ -369,11 +372,10 @@ FlowContext FlowContext::merge_flow(FlowContext&& c1, FlowContext&& c2) {
     for (const auto& [s_expr, i1] : c1.known_facts) {
       if (auto it2 = c2.known_facts.find(s_expr); it2 != c2.known_facts.end()) {
         const FactsAboutExpr& i2 = it2->second;
-        unified.emplace(s_expr, i1 == i2 ? i1 : FactsAboutExpr(
-          calculate_type_lca(i1.expr_type, i2.expr_type),
-          calculate_sign_lca(i1.sign_state, i2.sign_state),
-          calculate_bool_lca(i1.bool_state, i2.bool_state)
-        ));
+        unified.emplace(s_expr, i1 == i2 ? i1
+                                         : FactsAboutExpr(calculate_type_lca(i1.expr_type, i2.expr_type),
+                                                          calculate_sign_lca(i1.sign_state, i2.sign_state),
+                                                          calculate_bool_lca(i1.bool_state, i2.bool_state)));
       }
     }
   }
@@ -438,9 +440,8 @@ SinkExpression extract_sink_expression_from_vertex(AnyExprV v) {
     V<ast_dot_access> cur_dot = as_dot;
     uint64_t index_path = 0;
     while (cur_dot->is_target_indexed_access() || cur_dot->is_target_struct_field()) {
-      int index_at = cur_dot->is_target_indexed_access()
-          ? std::get<int>(cur_dot->target)
-          : std::get<StructFieldPtr>(cur_dot->target)->field_idx;
+      int index_at = cur_dot->is_target_indexed_access() ? std::get<int>(cur_dot->target)
+                                                         : std::get<StructFieldPtr>(cur_dot->target)->field_idx;
       index_path = (index_path << 8) + index_at + 1;
       if (auto parent_dot = unwrap_not_null_operator(cur_dot->get_obj())->try_as<ast_dot_access>()) {
         cur_dot = parent_dot;
@@ -485,7 +486,8 @@ TypePtr calc_declared_type_before_smart_cast(AnyExprV v) {
   }
 
   if (auto as_dot = v->try_as<ast_dot_access>()) {
-    TypePtr obj_type = as_dot->get_obj()->inferred_type->unwrap_alias();    // v already inferred; hence, index_at is correct
+    TypePtr obj_type =
+        as_dot->get_obj()->inferred_type->unwrap_alias();  // v already inferred; hence, index_at is correct
     if (as_dot->is_target_struct_field()) {
       StructFieldPtr field_ref = std::get<StructFieldPtr>(as_dot->target);
       return field_ref->declared_type;
@@ -543,7 +545,6 @@ TypePtr calc_smart_cast_type_on_assignment(TypePtr lhs_declared_type, TypePtr rh
   return lhs_declared_type;
 }
 
-
 std::ostream& operator<<(std::ostream& os, const FlowContext& flow) {
   os << "(" << flow.known_facts.size() << " facts) " << (flow.unreachable ? "(unreachable) " : "");
   for (const auto& [s_expr, facts] : flow.known_facts) {
@@ -563,4 +564,4 @@ std::ostream& operator<<(std::ostream& os, const FactsAboutExpr& facts) {
   return os;
 }
 
-} // namespace tolk
+}  // namespace tolk

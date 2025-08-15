@@ -194,13 +194,16 @@ class OpcodeInstrExt : public OpcodeInstr {
 class OpcodeInstrWithVersion : public OpcodeInstr {
  public:
   OpcodeInstrWithVersion() = delete;
-  OpcodeInstrWithVersion(OpcodeInstr* instr, int required_version) :
-      OpcodeInstr(instr->get_opcode_min(), instr->get_opcode_max()), instr(instr), required_version(required_version) {
+  OpcodeInstrWithVersion(OpcodeInstr* instr, int required_version)
+      : OpcodeInstr(instr->get_opcode_min(), instr->get_opcode_max())
+      , instr(instr)
+      , required_version(required_version) {
   }
   ~OpcodeInstrWithVersion() override = default;
   int dispatch(VmState* st, CellSlice& cs, unsigned opcode, unsigned bits) const override;
   std::string dump(CellSlice& cs, unsigned opcode, unsigned bits) const override;
   int instr_len(const CellSlice& cs, unsigned opcode, unsigned bits) const override;
+
  private:
   OpcodeInstr* instr;
   int required_version;

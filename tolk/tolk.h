@@ -27,16 +27,18 @@
 #include <stack>
 #include <iostream>
 
-#define tolk_assert(expr) if(UNLIKELY(!(expr))) on_assertion_failed(#expr, __FILE__, __LINE__);
+#define tolk_assert(expr) \
+  if (UNLIKELY(!(expr)))  \
+    on_assertion_failed(#expr, __FILE__, __LINE__);
 
 namespace tolk {
 
-GNU_ATTRIBUTE_COLD GNU_ATTRIBUTE_NORETURN
-void on_assertion_failed(const char *description, const char *file_name, int line_number);
+GNU_ATTRIBUTE_COLD GNU_ATTRIBUTE_NORETURN void on_assertion_failed(const char* description, const char* file_name,
+                                                                   int line_number);
 
 // fire a general error, just a wrapper over `throw`
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-inline void fire(FunctionPtr cur_f, SrcLocation loc, const std::string& message) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD inline void fire(FunctionPtr cur_f, SrcLocation loc,
+                                                           const std::string& message) {
   throw ParseError(cur_f, loc, message);
 }
 
@@ -49,19 +51,17 @@ inline void fire(FunctionPtr cur_f, SrcLocation loc, const std::string& message)
 typedef int const_idx_t;
 
 struct TmpVar {
-  var_idx_t ir_idx;   // every var in IR represents 1 stack slot
-  TypePtr v_type;     // get_width_on_stack() is 1
-  std::string name;   // "x" for vars originated from user sources; "x.0" for tensor components; empty for implicitly created tmp vars
-  SrcLocation loc;    // location of var declaration in sources or where a tmp var was originated
+  var_idx_t ir_idx;  // every var in IR represents 1 stack slot
+  TypePtr v_type;    // get_width_on_stack() is 1
+  std::string
+      name;  // "x" for vars originated from user sources; "x.0" for tensor components; empty for implicitly created tmp vars
+  SrcLocation loc;  // location of var declaration in sources or where a tmp var was originated
 #ifdef TOLK_DEBUG
-  const char* desc = nullptr; // "origin" of tmp var, for debug output like `'15 (binary-op) '16 (glob-var)`
+  const char* desc = nullptr;  // "origin" of tmp var, for debug output like `'15 (binary-op) '16 (glob-var)`
 #endif
 
   TmpVar(var_idx_t ir_idx, TypePtr v_type, std::string name, SrcLocation loc)
-    : ir_idx(ir_idx)
-    , v_type(v_type)
-    , name(std::move(name))
-    , loc(loc) {
+      : ir_idx(ir_idx), v_type(v_type), name(std::move(name)), loc(loc) {
   }
 
   void show_as_stack_comment(std::ostream& os) const;
@@ -83,12 +83,12 @@ struct VarDescr {
     _Even = 16384,
     _Odd = 32768,
   };
-  static constexpr int ConstZero  = _Int | _Zero | _Pos | _Neg | _Finite | _Even;
-  static constexpr int ConstOne   = _Int | _NonZero | _Pos | _Finite | _Odd;
-  static constexpr int ConstTrue  = _Int | _NonZero | _Neg | _Finite | _Odd;
-  static constexpr int ValBit     = _Int | _Pos | _Finite;
-  static constexpr int ValBool    = _Int | _Neg | _Finite;
-  static constexpr int FiniteInt  = _Int | _Finite;
+  static constexpr int ConstZero = _Int | _Zero | _Pos | _Neg | _Finite | _Even;
+  static constexpr int ConstOne = _Int | _NonZero | _Pos | _Finite | _Odd;
+  static constexpr int ConstTrue = _Int | _NonZero | _Neg | _Finite | _Odd;
+  static constexpr int ValBit = _Int | _Pos | _Finite;
+  static constexpr int ValBool = _Int | _Neg | _Finite;
+  static constexpr int FiniteInt = _Int | _Finite;
   static constexpr int FiniteUInt = _Int | _Finite | _Pos;
   int val;
   td::RefInt256 int_const;
@@ -300,11 +300,9 @@ struct Op {
   std::string str_const;
   Op(SrcLocation loc, OpKind cl) : cl(cl), flags(0), loc(loc) {
   }
-  Op(SrcLocation loc, OpKind cl, const std::vector<var_idx_t>& left)
-      : cl(cl), flags(0), loc(loc), left(left) {
+  Op(SrcLocation loc, OpKind cl, const std::vector<var_idx_t>& left) : cl(cl), flags(0), loc(loc), left(left) {
   }
-  Op(SrcLocation loc, OpKind cl, std::vector<var_idx_t>&& left)
-      : cl(cl), flags(0), loc(loc), left(std::move(left)) {
+  Op(SrcLocation loc, OpKind cl, std::vector<var_idx_t>&& left) : cl(cl), flags(0), loc(loc), left(std::move(left)) {
   }
   Op(SrcLocation loc, OpKind cl, const std::vector<var_idx_t>& left, td::RefInt256 int_const)
       : cl(cl), flags(0), loc(loc), left(left), int_const(std::move(int_const)) {
@@ -322,31 +320,42 @@ struct Op {
      FunctionPtr _fun)
       : cl(cl), flags(0), f_sym(_fun), loc(loc), left(left), right(right) {
   }
-  Op(SrcLocation loc, OpKind cl, std::vector<var_idx_t>&& left, std::vector<var_idx_t>&& right,
-     FunctionPtr fun_ref)
+  Op(SrcLocation loc, OpKind cl, std::vector<var_idx_t>&& left, std::vector<var_idx_t>&& right, FunctionPtr fun_ref)
       : cl(cl), flags(0), f_sym(fun_ref), loc(loc), left(std::move(left)), right(std::move(right)) {
   }
   Op(SrcLocation loc, OpKind cl, const std::vector<var_idx_t>& left, const std::vector<var_idx_t>& right,
      GlobalVarPtr glob_ref)
       : cl(cl), flags(0), g_sym(glob_ref), loc(loc), left(left), right(right) {
   }
-  Op(SrcLocation loc, OpKind cl, std::vector<var_idx_t>&& left, std::vector<var_idx_t>&& right,
-     GlobalVarPtr _gvar)
+  Op(SrcLocation loc, OpKind cl, std::vector<var_idx_t>&& left, std::vector<var_idx_t>&& right, GlobalVarPtr _gvar)
       : cl(cl), flags(0), g_sym(_gvar), loc(loc), left(std::move(left)), right(std::move(right)) {
   }
 
-  bool disabled() const { return flags & _Disabled; }
-  void set_disabled() { flags |= _Disabled; }
+  bool disabled() const {
+    return flags & _Disabled;
+  }
+  void set_disabled() {
+    flags |= _Disabled;
+  }
   void set_disabled(bool flag);
 
-  bool noreturn() const { return flags & _NoReturn; }
-  bool set_noreturn() { flags |= _NoReturn; return true; }
+  bool noreturn() const {
+    return flags & _NoReturn;
+  }
+  bool set_noreturn() {
+    flags |= _NoReturn;
+    return true;
+  }
   bool set_noreturn(bool flag);
 
-  bool impure() const { return flags & _Impure; }
+  bool impure() const {
+    return flags & _Impure;
+  }
   void set_impure_flag();
 
-  bool arg_order_already_equals_asm() const { return flags & _ArgOrderAlreadyEqualsAsm; }
+  bool arg_order_already_equals_asm() const {
+    return flags & _ArgOrderAlreadyEqualsAsm;
+  }
   void set_arg_order_already_equals_asm_flag();
 
   void show(std::ostream& os, const std::vector<TmpVar>& vars, std::string pfx = "", int mode = 0) const;
@@ -443,7 +452,8 @@ struct AsmOp {
   int out_indented(std::ostream& os, bool print_src_line_above) const;
   std::string to_string() const;
   void compute_gconst() {
-    gconst = (is_custom() && (op == "PUSHNULL" || op == "NEWC" || op == "NEWB" || op == "TRUE" || op == "FALSE" || op == "NOW"));
+    gconst = (is_custom() &&
+              (op == "PUSHNULL" || op == "NEWC" || op == "NEWB" || op == "TRUE" || op == "FALSE" || op == "NOW"));
   }
   bool is_nop() const {
     return t == a_nop;
@@ -620,7 +630,7 @@ struct AsmOpList {
     ip->indent = (ip == list_.begin()) ? indent_ : (ip - 1)->indent;
   }
   void indent_all() {
-    for (auto &op : list_) {
+    for (auto& op : list_) {
       ++op.indent;
     }
   }
@@ -702,7 +712,7 @@ struct StackTransform {
   // c := a * b
   static bool compose(const StackTransform& a, const StackTransform& b, StackTransform& c);
   StackTransform& operator*=(const StackTransform& other);
-  StackTransform operator*(const StackTransform& b) const &;
+  StackTransform operator*(const StackTransform& b) const&;
   bool equal(const StackTransform& other, bool relaxed = false) const;
   bool almost_equal(const StackTransform& other) const {
     return equal(other, true);
@@ -919,8 +929,13 @@ struct Stack {
   StackLayoutExt s;
   AsmOpList& o;
   enum {
-    _StackComments = 1, _LineComments = 2, _DisableOut = 128, _Shown = 256,
-    _InlineFunc = 512, _NeedRetAlt = 1024, _InlineAny = 2048,
+    _StackComments = 1,
+    _LineComments = 2,
+    _DisableOut = 128,
+    _Shown = 256,
+    _InlineFunc = 512,
+    _NeedRetAlt = 1024,
+    _InlineAny = 2048,
     _ModeSave = _InlineFunc | _NeedRetAlt | _InlineAny,
     _Garbage = -0x10000
   };
@@ -993,7 +1008,7 @@ struct Stack {
       show();
     }
   }
-  bool operator==(const Stack& y) const & {
+  bool operator==(const Stack& y) const& {
     return s == y.s;
   }
   void apply_wrappers(SrcLocation loc, int callxargs_count) {
@@ -1033,8 +1048,8 @@ typedef std::function<AsmOp(std::vector<VarDescr>&, std::vector<VarDescr>&, SrcL
 struct FunctionBodyBuiltin {
   simple_compile_func_t simple_compile;
 
-  explicit FunctionBodyBuiltin(simple_compile_func_t compile)
-    : simple_compile(std::move(compile)) {}
+  explicit FunctionBodyBuiltin(simple_compile_func_t compile) : simple_compile(std::move(compile)) {
+  }
 
   void compile(AsmOpList& dest, std::vector<VarDescr>& out, std::vector<VarDescr>& in, SrcLocation loc) const;
 };
@@ -1056,7 +1071,8 @@ struct LazyVarRefAtCodegen {
   const LazyVariableLoadedState* var_state;
 
   LazyVarRefAtCodegen(LocalVarPtr var_ref, const LazyVariableLoadedState* var_state)
-    : var_ref(var_ref), var_state(var_state) {}
+      : var_ref(var_ref), var_state(var_state) {
+  }
 };
 
 struct CodeBlob {
@@ -1076,7 +1092,7 @@ struct CodeBlob {
   std::stack<std::unique_ptr<Op>*> cur_ops_stack;
   bool require_callxargs = false;
   explicit CodeBlob(FunctionPtr fun_ref)
-    : var_cnt(0), in_var_cnt(0), fun_ref(fun_ref), name(fun_ref->name), cur_ops(&ops) {
+      : var_cnt(0), in_var_cnt(0), fun_ref(fun_ref), name(fun_ref->name), cur_ops(&ops) {
   }
   template <typename... Args>
   Op& emplace_back(Args&&... args) {
@@ -1136,16 +1152,12 @@ AsmOp push_const(SrcLocation loc, td::RefInt256 x);
 void define_builtins();
 void patch_builtins_after_stdlib_loaded();
 
-
-
 /*
  *
  *   OUTPUT CODE GENERATOR
  *
  */
 
-int tolk_proceed(const std::string &entrypoint_filename);
+int tolk_proceed(const std::string& entrypoint_filename);
 
 }  // namespace tolk
-
-

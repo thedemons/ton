@@ -194,8 +194,8 @@ td::Result<CellLoader::LoadResult> CellLoader::load(td::Slice hash, bool need_da
   return res;
 }
 
-td::Result<std::vector<CellLoader::LoadResult>> CellLoader::load_bulk(td::Span<td::Slice> hashes, bool need_data, 
-                                                                ExtCellCreator &ext_cell_creator) {
+td::Result<std::vector<CellLoader::LoadResult>> CellLoader::load_bulk(td::Span<td::Slice> hashes, bool need_data,
+                                                                      ExtCellCreator &ext_cell_creator) {
   std::vector<std::string> values;
   TRY_RESULT(get_statuses, reader_->get_multi(hashes, &values));
   std::vector<LoadResult> res;

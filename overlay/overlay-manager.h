@@ -57,9 +57,8 @@ class OverlayManager : public Overlays {
                                 OverlayOptions opts) override;
   void create_semiprivate_overlay(adnl::AdnlNodeIdShort local_id, OverlayIdFull overlay_id,
                                   std::vector<adnl::AdnlNodeIdShort> nodes, std::vector<PublicKeyHash> root_public_keys,
-                                  OverlayMemberCertificate certificate,
-                                  std::unique_ptr<Callback> callback, OverlayPrivacyRules rules, td::string scope,
-                                  OverlayOptions opts) override;
+                                  OverlayMemberCertificate certificate, std::unique_ptr<Callback> callback,
+                                  OverlayPrivacyRules rules, td::string scope, OverlayOptions opts) override;
   void create_private_overlay(adnl::AdnlNodeIdShort local_id, OverlayIdFull overlay_id,
                               std::vector<adnl::AdnlNodeIdShort> nodes, std::unique_ptr<Callback> callback,
                               OverlayPrivacyRules rules, std::string scope) override;

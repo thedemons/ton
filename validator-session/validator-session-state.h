@@ -35,7 +35,7 @@ namespace td {
 td::StringBuilder& operator<<(td::StringBuilder& sb, const ton::ton_api::validatorSession_round_Message& message);
 td::StringBuilder& operator<<(td::StringBuilder& sb, const ton::ton_api::validatorSession_round_Message* message);
 
-}
+}  // namespace td
 
 namespace ton {
 
@@ -177,7 +177,6 @@ class ValidatorSessionOldRoundState : public ValidatorSessionDescription::RootOb
   const SessionBlockCandidateSignatureVector* approve_signatures_;
   const HashType hash_;
 };
-
 
 class ValidatorSessionRoundState : public ValidatorSessionDescription::RootObject {
  public:

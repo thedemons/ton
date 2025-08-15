@@ -56,8 +56,8 @@ AcceptBlockQuery::AcceptBlockQuery(BlockIdExt id, td::Ref<BlockData> data, std::
     , manager_(manager)
     , promise_(std::move(promise))
     , perf_timer_("acceptblock", 0.1, [manager](double duration) {
-        send_closure(manager, &ValidatorManager::add_perf_timer_stat, "acceptblock", duration);
-      }) {
+      send_closure(manager, &ValidatorManager::add_perf_timer_stat, "acceptblock", duration);
+    }) {
   state_keep_old_hash_.clear();
   state_old_hash_.clear();
   state_hash_.clear();
@@ -76,8 +76,8 @@ AcceptBlockQuery::AcceptBlockQuery(AcceptBlockQuery::IsFake fake, BlockIdExt id,
     , manager_(manager)
     , promise_(std::move(promise))
     , perf_timer_("acceptblock", 0.1, [manager](double duration) {
-        send_closure(manager, &ValidatorManager::add_perf_timer_stat, "acceptblock", duration);
-      }) {
+      send_closure(manager, &ValidatorManager::add_perf_timer_stat, "acceptblock", duration);
+    }) {
   state_keep_old_hash_.clear();
   state_old_hash_.clear();
   state_hash_.clear();
@@ -93,8 +93,8 @@ AcceptBlockQuery::AcceptBlockQuery(ForceFork ffork, BlockIdExt id, td::Ref<Block
     , manager_(manager)
     , promise_(std::move(promise))
     , perf_timer_("acceptblock", 0.1, [manager](double duration) {
-        send_closure(manager, &ValidatorManager::add_perf_timer_stat, "acceptblock", duration);
-      }) {
+      send_closure(manager, &ValidatorManager::add_perf_timer_stat, "acceptblock", duration);
+    }) {
   state_keep_old_hash_.clear();
   state_old_hash_.clear();
   state_hash_.clear();
@@ -418,15 +418,17 @@ void AcceptBlockQuery::got_block_handle(BlockHandle handle) {
                         : handle_->inited_proof_link())) {
     finish_query();
     return;
-                        }
+  }
   if (data_.is_null()) {
-    td::actor::send_closure(manager_, &ValidatorManager::get_candidate_data_by_block_id_from_db, id_, [SelfId = actor_id(this)](td::Result<td::BufferSlice> R) {
-      if (R.is_ok()) {
-        td::actor::send_closure(SelfId, &AcceptBlockQuery::got_block_candidate_data, R.move_as_ok());
-      } else {
-        td::actor::send_closure(SelfId, &AcceptBlockQuery::got_block_handle_cont);
-      }
-    });
+    td::actor::send_closure(manager_, &ValidatorManager::get_candidate_data_by_block_id_from_db, id_,
+                            [SelfId = actor_id(this)](td::Result<td::BufferSlice> R) {
+                              if (R.is_ok()) {
+                                td::actor::send_closure(SelfId, &AcceptBlockQuery::got_block_candidate_data,
+                                                        R.move_as_ok());
+                              } else {
+                                td::actor::send_closure(SelfId, &AcceptBlockQuery::got_block_handle_cont);
+                              }
+                            });
   } else {
     got_block_handle_cont();
   }

@@ -216,9 +216,7 @@ void DhtQueryFindValue::on_result(td::Result<td::BufferSlice> R, adnl::AdnlNodeI
                   need_stop = true;
                 }
               },
-              [&](ton_api::dht_valueNotFound &v) {
-                add_nodes(DhtNodesList{std::move(v.nodes_), our_network_id()});
-              }));
+              [&](ton_api::dht_valueNotFound &v) { add_nodes(DhtNodesList{std::move(v.nodes_), our_network_id()}); }));
   if (need_stop) {
     stop();
   } else if (send_get_nodes) {

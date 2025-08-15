@@ -50,10 +50,9 @@ static bool is_onBouncedMessage(FunctionPtr fun_ref) {
   return fun_ref->is_entrypoint() && fun_ref->name == "onBouncedMessage";
 }
 
-
 struct TransformOnInternalMessageReplacer final : ASTReplacerInFunctionBody {
   FunctionPtr cur_f = nullptr;
-  LocalVarPtr param_ref = nullptr;         // `in` for `fun onInternalMessage(in: InMessage)`
+  LocalVarPtr param_ref = nullptr;  // `in` for `fun onInternalMessage(in: InMessage)`
 
   static void validate_onBouncedMessage(FunctionPtr f) {
     if (f->inferred_return_type != TypeDataVoid::create() && f->inferred_return_type != TypeDataNever::create()) {
@@ -68,11 +67,15 @@ struct TransformOnInternalMessageReplacer final : ASTReplacerInFunctionBody {
     }
   }
 
-protected:
+ protected:
   AnyExprV replace(V<ast_reference> v) override {
     // don't allow `var v = in` or passing `in` to another function (only `in.someField` is allowed)
     if (v->sym == param_ref) {
-      fire(cur_f, v->loc, "using `" + param_ref->name + "` as an object is prohibited, because `InMessage` is a built-in struct, its fields are mapped to TVM instructions\nhint: use `" + param_ref->name + ".senderAddress` and other fields directly");
+      fire(cur_f, v->loc,
+           "using `" + param_ref->name +
+               "` as an object is prohibited, because `InMessage` is a built-in struct, its fields are mapped to TVM "
+               "instructions\nhint: use `" +
+               param_ref->name + ".senderAddress` and other fields directly");
     }
     return parent::replace(v);
   }
@@ -91,7 +94,7 @@ protected:
     return parent::replace(v);
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return is_onInternalMessage(fun_ref) || is_onBouncedMessage(fun_ref);
   }
@@ -116,4 +119,4 @@ void pipeline_transform_onInternalMessage() {
   replace_ast_of_all_functions<TransformOnInternalMessageReplacer>();
 }
 
-} // namespace tolk
+}  // namespace tolk

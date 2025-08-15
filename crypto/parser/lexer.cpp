@@ -126,8 +126,11 @@ int Lexem::set(std::string _str, const SrcLocation& _loc, int _tp, int _val) {
 
 Lexer::Lexer(SourceReader& _src, bool init, std::string active_chars, std::string eol_cmts, std::string open_cmts,
              std::string close_cmts, std::string quote_chars, std::string multiline_quote)
-    : src(_src), eof(false), lexem("", src.here(), Lexem::Undefined), peek_lexem("", {}, Lexem::Undefined),
-      multiline_quote(std::move(multiline_quote)) {
+    : src(_src)
+    , eof(false)
+    , lexem("", src.here(), Lexem::Undefined)
+    , peek_lexem("", {}, Lexem::Undefined)
+    , multiline_quote(std::move(multiline_quote)) {
   std::memset(char_class, 0, sizeof(char_class));
   unsigned char activity = cc::active;
   for (char c : active_chars) {

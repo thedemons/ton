@@ -329,7 +329,7 @@ td::RefInt256 create_smartcontract(td::RefInt256 smc_addr, Ref<vm::Cell> code, R
   }
   PDO(cb.store_long_bool(ctor, 2));  // addr_std$10 or addr_var$11
   if (fixed_prefix_length) {
-    PDO(cb.store_long_bool(1, 1)                            // just$1
+    PDO(cb.store_long_bool(1, 1)                                    // just$1
         && cb.store_ulong_rchk_bool(fixed_prefix_length, 5)         // depth:(## 5)
         && cb.store_bits_bool(addr.cbits(), fixed_prefix_length));  // rewrite pfx:(depth * Bit)
   } else {
@@ -815,11 +815,11 @@ void usage(const char* progname) {
 void parse_include_path_set(std::string include_path_set, std::vector<std::string>& res) {
   td::Parser parser(include_path_set);
   while (!parser.empty()) {
-    #if TD_WINDOWS
+#if TD_WINDOWS
     auto path_separator = '@';
-    #else
+#else
     auto path_separator = ':';
-    #endif
+#endif
     auto path = parser.read_till_nofail(path_separator);
     if (!path.empty()) {
       res.push_back(path.str());

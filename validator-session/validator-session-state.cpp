@@ -219,8 +219,7 @@ const ValidatorSessionOldRoundState* ValidatorSessionOldRoundState::action(
   auto block_id = state->get_block_id();
   if (act.candidate_ != block_id) {
     VLOG(VALIDATOR_SESSION_WARNING) << "[validator session][node " << desc.get_source_id(src_idx) << "][" << act
-                                    << "]: invalid message: signed wrong block "
-                                    << "should be " << block_id;
+                                    << "]: invalid message: signed wrong block " << "should be " << block_id;
     return state;
   }
   if (act.candidate_ == skip_round_candidate_id()) {

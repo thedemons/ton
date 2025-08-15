@@ -86,8 +86,7 @@ class ExtClient {
               return TonlibError::LiteServer(f->code_, f->message_);
             }
             return ton::fetch_result<QueryT>(std::move(data));
-          }
-          ();
+          }();
           VLOG_IF(lite_server, res.is_ok())
               << "got result from liteserver: " << tag << " " << td::Slice(to_string(res.ok())).truncate(1 << 12);
           VLOG_IF(lite_server, res.is_error()) << "got error from liteserver: " << tag << " " << res.error();

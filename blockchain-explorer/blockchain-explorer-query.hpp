@@ -334,4 +334,3 @@ class HttpQueryStatus : public HttpQueryCommon {
  private:
   CoreActorInterface::RemoteNodeStatusList results_;
 };
-

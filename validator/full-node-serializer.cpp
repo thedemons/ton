@@ -165,15 +165,17 @@ static td::Status deserialize_block_full(ton_api::tonNode_dataFullCompressed& f,
   return td::Status::OK();
 }
 
-static td::Status deserialize_block_full(ton_api::tonNode_dataFullCompressedV2& f, BlockIdExt& id, td::BufferSlice& proof,
-                                         td::BufferSlice& data, bool& is_proof_link, int max_decompressed_size) {
+static td::Status deserialize_block_full(ton_api::tonNode_dataFullCompressedV2& f, BlockIdExt& id,
+                                         td::BufferSlice& proof, td::BufferSlice& data, bool& is_proof_link,
+                                         int max_decompressed_size) {
   TRY_RESULT(roots, vm::boc_decompress(f.compressed_, max_decompressed_size));
   if (roots.size() != 2) {
     return td::Status::Error("expected 2 roots in boc");
   }
   TRY_RESULT_ASSIGN(proof, vm::std_boc_serialize(roots[0], 0));
   TRY_RESULT_ASSIGN(data, vm::std_boc_serialize(roots[1], 31));
-  VLOG(FULL_NODE_DEBUG) << "Decompressing block full V2: " << f.compressed_.size() << " -> " << data.size() + proof.size();
+  VLOG(FULL_NODE_DEBUG) << "Decompressing block full V2: " << f.compressed_.size() << " -> "
+                        << data.size() + proof.size();
   id = create_block_id(f.id_);
   is_proof_link = f.is_link_;
   return td::Status::OK();

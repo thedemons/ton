@@ -65,7 +65,7 @@ class ValidatorSessionDescriptionImpl : public ValidatorSessionDescription {
     ~MemPool();
     void *alloc(size_t size, size_t align);
     void clear();
-    bool contains(const void* ptr) const;
+    bool contains(const void *ptr) const;
 
    private:
     size_t chunk_size_;

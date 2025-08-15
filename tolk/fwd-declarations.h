@@ -62,4 +62,4 @@ enum class FunctionInlineMode {
 
 typedef int var_idx_t;
 
-} // namespace tolk
+}  // namespace tolk

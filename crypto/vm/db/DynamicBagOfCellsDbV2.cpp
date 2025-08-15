@@ -770,9 +770,9 @@ class DynamicBagOfCellsDbImplV2 : public DynamicBagOfCellsDb {
     std::vector<std::pair<std::string, std::string>> result;
     auto s = cell_db_reader_->key_value_reader().for_each_in_range(
         "desc", "desd", [&](const td::Slice &key, const td::Slice &value) {
-           if (result.size() >= max_count) {
-             return td::Status::Error("COUNT_LIMIT");
-           }
+          if (result.size() >= max_count) {
+            return td::Status::Error("COUNT_LIMIT");
+          }
           if (td::begins_with(key, "desc") && key.size() != 32) {
             result.emplace_back(key.str(), value.str());
           }
@@ -1372,14 +1372,12 @@ class DynamicBagOfCellsDbImplV2 : public DynamicBagOfCellsDb {
       }
       auto ref_cnt_diff = info->dec_ref_cnt();
       if (ref_cnt_diff > 0) {
-        LOG_IF(INFO, dbg) << "NOT DEC"
-                          << "\n\t" << info;
+        LOG_IF(INFO, dbg) << "NOT DEC" << "\n\t" << info;
         break;
       }
       auto state = info->state.load();
       if (ref_cnt_diff == 0 && state.in_db) {
-        LOG_IF(INFO, dbg) << "NOT DEC (in_db) "
-                          << "\n\t" << info;
+        LOG_IF(INFO, dbg) << "NOT DEC (in_db) " << "\n\t" << info;
         break;
       }
       if (!state.sync_with_db) {
@@ -1443,9 +1441,10 @@ class DynamicBagOfCellsDbImplV2 : public DynamicBagOfCellsDb {
           CHECK(state.sync_with_db);
           auto data_cell = info->cell->load_cell().move_as_ok().data_cell;
           stats_.diff_full.inc();
-          worker.add_result({.type = CellStorer::Diff::Set,
-                             .key = info->cell->get_hash(),
-                             .value = CellStorer::serialize_value(ref_cnt_diff + state.db_ref_cnt, data_cell, should_compress)});
+          worker.add_result(
+              {.type = CellStorer::Diff::Set,
+               .key = info->cell->get_hash(),
+               .value = CellStorer::serialize_value(ref_cnt_diff + state.db_ref_cnt, data_cell, should_compress)});
         } else {
           stats_.diff_ref_cnt.inc();
           worker.add_result({.type = CellStorer::Diff::Merge,
@@ -1478,10 +1477,10 @@ class DynamicBagOfCellsDbImplV2 : public DynamicBagOfCellsDb {
 
         LOG_IF(ERROR, dbg) << "DEC REFCNT " << *info;
         CHECK(info->cell->is_loaded());
-        worker.add_result(
-            {.type = CellStorer::Diff::Set,
-             .key = info->cell->get_hash(),
-             .value = CellStorer::serialize_value(new_ref_cnt, info->cell->load_cell().move_as_ok().data_cell, should_compress)});
+        worker.add_result({.type = CellStorer::Diff::Set,
+                           .key = info->cell->get_hash(),
+                           .value = CellStorer::serialize_value(
+                               new_ref_cnt, info->cell->load_cell().move_as_ok().data_cell, should_compress)});
         stats_.dec_save_full.inc();
       }
     } else {
@@ -1495,10 +1494,10 @@ class DynamicBagOfCellsDbImplV2 : public DynamicBagOfCellsDb {
         LOG_IF(ERROR, dbg) << "INC REFCNT " << *info;
       }
 
-      worker.add_result(
-          {.type = CellStorer::Diff::Set,
-           .key = info->cell->get_hash(),
-           .value = CellStorer::serialize_value(new_ref_cnt, info->cell->load_cell().move_as_ok().data_cell, should_compress)});
+      worker.add_result({.type = CellStorer::Diff::Set,
+                         .key = info->cell->get_hash(),
+                         .value = CellStorer::serialize_value(
+                             new_ref_cnt, info->cell->load_cell().move_as_ok().data_cell, should_compress)});
       stats_.inc_save_full.inc();
     }
   }

@@ -60,7 +60,8 @@ void usage(const char* progname) {
       << " [-i] [-n] [-I <source-include-path>] {-L <library-fif-file>} <source-file1-fif> <source-file2-fif> ...\n";
   std::cerr << "\t-n\tDo not preload standard preamble file `Fift.fif`\n"
                "\t-i\tForce interactive mode even if explicit source file names are indicated\n"
-               "\t-I<source-search-path>\tSets colon-separated (unix) or at-separated (windows) library source include path. If not indicated, "
+               "\t-I<source-search-path>\tSets colon-separated (unix) or at-separated (windows) library source include "
+               "path. If not indicated, "
                "$FIFTPATH is used instead.\n"
                "\t-L<library-fif-file>\tPre-loads a library source file\n"
                "\t-s\tScript mode: use first argument as a fift source file and import remaining arguments as $n)\n"
@@ -72,11 +73,11 @@ void usage(const char* progname) {
 void parse_include_path_set(std::string include_path_set, std::vector<std::string>& res) {
   td::Parser parser(include_path_set);
   while (!parser.empty()) {
-    #if TD_WINDOWS
+#if TD_WINDOWS
     auto path_separator = '@';
-    #else
+#else
     auto path_separator = ':';
-    #endif
+#endif
     auto path = parser.read_till_nofail(path_separator);
     if (!path.empty()) {
       res.push_back(path.str());
@@ -118,7 +119,8 @@ int main(int argc, char* const argv[]) {
         new_verbosity_level = VERBOSITY_NAME(FATAL) + td::to_integer<int>(td::Slice(optarg));
         break;
       case 'V':
-        std::cout << "Fift build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+        std::cout << "Fift build information: [ Commit: " << GitMetadata::CommitSHA1()
+                  << ", Date: " << GitMetadata::CommitDate() << "]\n";
         std::exit(0);
         break;
 

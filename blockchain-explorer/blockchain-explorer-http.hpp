@@ -136,7 +136,7 @@ class HttpAnswer {
     td::Ref<vm::Cell> root;
     T x;
     template <typename... Args>
-    RawData(td::Ref<vm::Cell> root, Args &&... args) : root(std::move(root)), x(std::forward<Args>(args)...) {
+    RawData(td::Ref<vm::Cell> root, Args &&...args) : root(std::move(root)), x(std::forward<Args>(args)...) {
     }
   };
 

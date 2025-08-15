@@ -46,8 +46,8 @@
 
 namespace tolk {
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_undefined_symbol(FunctionPtr cur_f, V<ast_identifier> v) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_undefined_symbol(FunctionPtr cur_f,
+                                                                                  V<ast_identifier> v) {
   if (v->name == "self") {
     fire(cur_f, v->loc, "using `self` in a non-member function (it does not accept the first `self` parameter)");
   } else {
@@ -55,12 +55,13 @@ static void fire_error_undefined_symbol(FunctionPtr cur_f, V<ast_identifier> v) 
   }
 }
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_type_used_as_symbol(FunctionPtr cur_f, V<ast_identifier> v) {
-  if (v->name == "random") {    // calling `random()`, but it's a struct, correct is `random.uint256()`
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_type_used_as_symbol(FunctionPtr cur_f,
+                                                                                     V<ast_identifier> v) {
+  if (v->name == "random") {  // calling `random()`, but it's a struct, correct is `random.uint256()`
     fire(cur_f, v->loc, "`random` is not a function, you probably want `random.uint256()`");
   } else {
-    fire(cur_f, v->loc, "`" + static_cast<std::string>(v->name) + "` only refers to a type, but is being used as a value here");
+    fire(cur_f, v->loc,
+         "`" + static_cast<std::string>(v->name) + "` only refers to a type, but is being used as a value here");
   }
 }
 
@@ -86,7 +87,7 @@ struct NameAndScopeResolver {
 
   const Symbol* lookup_symbol(std::string_view name) const {
     uint64_t key = key_hash(name);
-    for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) { // NOLINT(*-loop-convert)
+    for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {  // NOLINT(*-loop-convert)
       const auto& scope = *it;
       if (auto it_sym = scope.find(key); it_sym != scope.end()) {
         return it_sym->second;
@@ -99,7 +100,7 @@ struct NameAndScopeResolver {
     if (UNLIKELY(scopes.empty())) {
       throw Fatal("unexpected scope_level = 0");
     }
-    if (v_sym->name.empty()) {    // underscore
+    if (v_sym->name.empty()) {  // underscore
       return;
     }
 
@@ -116,8 +117,11 @@ class AssignSymInsideFunctionVisitor final : public ASTVisitorFunctionBody {
   static NameAndScopeResolver current_scope;
   static FunctionPtr cur_f;
 
-  static LocalVarPtr create_local_var_sym(std::string_view name, SrcLocation loc, AnyTypeV declared_type_node, bool immutable, bool lateinit) {
-    LocalVarData* v_sym = new LocalVarData(static_cast<std::string>(name), loc, declared_type_node, nullptr, immutable * LocalVarData::flagImmutable + lateinit * LocalVarData::flagLateInit, -1);
+  static LocalVarPtr create_local_var_sym(std::string_view name, SrcLocation loc, AnyTypeV declared_type_node,
+                                          bool immutable, bool lateinit) {
+    LocalVarData* v_sym =
+        new LocalVarData(static_cast<std::string>(name), loc, declared_type_node, nullptr,
+                         immutable * LocalVarData::flagImmutable + lateinit * LocalVarData::flagLateInit, -1);
     current_scope.add_local_var(v_sym);
     return v_sym;
   }
@@ -129,7 +133,7 @@ class AssignSymInsideFunctionVisitor final : public ASTVisitorFunctionBody {
     }
   }
 
-protected:
+ protected:
   void visit(V<ast_local_var_lhs> v) override {
     if (v->marked_as_redef) {
       const Symbol* sym = current_scope.lookup_symbol(v->get_name());
@@ -148,7 +152,7 @@ protected:
   }
 
   void visit(V<ast_assign> v) override {
-    parent::visit(v->get_rhs());    // in this order, so that `var x = x` is invalid, "x" on the right unknown
+    parent::visit(v->get_rhs());  // in this order, so that `var x = x` is invalid, "x" on the right unknown
     parent::visit(v->get_lhs());
   }
 
@@ -190,8 +194,8 @@ protected:
   }
 
   void visit(V<ast_match_expression> v) override {
-    current_scope.open_scope(v->loc);   // `match (var a = init_val) { ... }`
-    parent::visit(v);                   // then `a` exists only inside `match` arms
+    current_scope.open_scope(v->loc);  // `match (var a = init_val) { ... }`
+    parent::visit(v);                  // then `a` exists only inside `match` arms
     current_scope.close_scope(v->loc);
   }
 
@@ -203,7 +207,8 @@ protected:
     switch (v->pattern_kind) {
       case MatchArmKind::exact_type: {
         if (auto maybe_ident = v->pattern_type_node->try_as<ast_type_leaf_text>()) {
-          if (const Symbol* sym = current_scope.lookup_symbol(maybe_ident->text); sym && sym->try_as<GlobalConstPtr>()) {
+          if (const Symbol* sym = current_scope.lookup_symbol(maybe_ident->text);
+              sym && sym->try_as<GlobalConstPtr>()) {
             auto v_ident = createV<ast_identifier>(v->loc, sym->name);
             AnyExprV pattern_expr = createV<ast_reference>(v->loc, v_ident, nullptr);
             parent::visit(pattern_expr);
@@ -234,7 +239,7 @@ protected:
   void visit(V<ast_do_while_statement> v) override {
     current_scope.open_scope(v->loc);
     parent::visit(v->get_body());
-    parent::visit(v->get_cond()); // in 'while' condition it's ok to use variables declared inside do
+    parent::visit(v->get_cond());  // in 'while' condition it's ok to use variables declared inside do
     current_scope.close_scope(v->get_body()->loc_end);
   }
 
@@ -249,7 +254,7 @@ protected:
     current_scope.close_scope(v->get_catch_body()->loc_end);
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return fun_ref->is_code_function();
   }
@@ -324,4 +329,4 @@ void pipeline_resolve_identifiers_and_assign_symbols(StructPtr struct_ref) {
   AssignSymInsideFunctionVisitor().start_visiting_struct_fields(struct_ref);
 }
 
-} // namespace tolk
+}  // namespace tolk

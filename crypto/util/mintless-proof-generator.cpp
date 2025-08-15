@@ -58,8 +58,7 @@ void log_mem_stat() {
     return;
   }
   auto stat = r_stat.move_as_ok();
-  LOG(WARNING) << "Memory: "
-               << "res=" << stat.resident_size_ << " (peak=" << stat.resident_size_peak_
+  LOG(WARNING) << "Memory: " << "res=" << stat.resident_size_ << " (peak=" << stat.resident_size_peak_
                << ") virt=" << stat.virtual_size_ << " (peak=" << stat.virtual_size_peak_ << ")";
 }
 

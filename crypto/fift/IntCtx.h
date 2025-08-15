@@ -175,7 +175,7 @@ struct IntCtx {
     return parser ? parser->include_depth : -1;
   }
 
-  operator vm::Stack &() {
+  operator vm::Stack&() {
     return stack;
   }
 

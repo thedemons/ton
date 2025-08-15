@@ -55,4 +55,4 @@ class Hasher {
   std::unique_ptr<HasherImpl> impl_;
 };
 
-}
+}  // namespace vm

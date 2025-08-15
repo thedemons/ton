@@ -54,7 +54,8 @@ void WaitBlockDataDisk::start_up() {
 }
 
 void WaitBlockDataDisk::start() {
-  if (handle_->received() && (handle_->id().is_masterchain() ? handle_->inited_proof() : handle_->inited_proof_link())) {
+  if (handle_->received() &&
+      (handle_->id().is_masterchain() ? handle_->inited_proof() : handle_->inited_proof_link())) {
     auto P = td::PromiseCreator::lambda([SelfId = actor_id(this)](td::Result<td::Ref<BlockData>> R) {
       if (R.is_error()) {
         td::actor::send_closure(SelfId, &WaitBlockDataDisk::abort_query, R.move_as_error_prefix("db error: "));

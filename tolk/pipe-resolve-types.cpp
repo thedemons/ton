@@ -50,10 +50,12 @@ namespace tolk {
 static std::unordered_map<StructPtr, bool> visited_structs;
 static std::unordered_map<AliasDefPtr, bool> visited_aliases;
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_unknown_type_name(FunctionPtr cur_f, SrcLocation loc, std::string_view text) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_unknown_type_name(FunctionPtr cur_f, SrcLocation loc,
+                                                                                   std::string_view text) {
   if (text == "auto") {
-    fire(cur_f, loc, "`auto` type does not exist; just omit a type for local variable (will be inferred from assignment); parameters should always be typed");
+    fire(cur_f, loc,
+         "`auto` type does not exist; just omit a type for local variable (will be inferred from assignment); "
+         "parameters should always be typed");
   }
   if (text == "self") {
     fire(cur_f, loc, "`self` type can be used only as a return type of a function (enforcing it to be chainable)");
@@ -61,13 +63,13 @@ static void fire_error_unknown_type_name(FunctionPtr cur_f, SrcLocation loc, std
   fire(cur_f, loc, "unknown type name `" + static_cast<std::string>(text) + "`");
 }
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_void_type_not_allowed_inside_union(FunctionPtr cur_f, SrcLocation loc, TypePtr disallowed_variant) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_void_type_not_allowed_inside_union(
+    FunctionPtr cur_f, SrcLocation loc, TypePtr disallowed_variant) {
   fire(cur_f, loc, "type `" + disallowed_variant->as_human_readable() + "` is not allowed inside a union");
 }
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_generic_type_used_without_T(FunctionPtr cur_f, SrcLocation loc, const std::string& type_name_with_Ts) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_generic_type_used_without_T(
+    FunctionPtr cur_f, SrcLocation loc, const std::string& type_name_with_Ts) {
   fire(cur_f, loc, "type `" + type_name_with_Ts + "` is generic, you should provide type arguments");
 }
 
@@ -76,7 +78,7 @@ static TypePtr parse_intN_uintN(std::string_view strN, bool is_unsigned) {
   auto result = std::from_chars(strN.data(), strN.data() + strN.size(), n);
   bool parsed = result.ec == std::errc() && result.ptr == strN.data() + strN.size();
   if (!parsed || n <= 0 || n > 257 - static_cast<int>(is_unsigned)) {
-    return nullptr;   // `int1000`, maybe it's user-defined alias, let it be unresolved
+    return nullptr;  // `int1000`, maybe it's user-defined alias, let it be unresolved
   }
   return TypeDataIntN::create(n, is_unsigned, false);
 }
@@ -86,7 +88,7 @@ static TypePtr parse_bytesN_bitsN(std::string_view strN, bool is_bits) {
   auto result = std::from_chars(strN.data(), strN.data() + strN.size(), n);
   bool parsed = result.ec == std::errc() && result.ptr == strN.data() + strN.size();
   if (!parsed || n <= 0 || n > 1024) {
-    return nullptr;   // `bytes9999`, maybe it's user-defined alias, let it be unresolved
+    return nullptr;  // `bytes9999`, maybe it's user-defined alias, let it be unresolved
   }
   return TypeDataBitsN::create(n, is_bits);
 }
@@ -94,34 +96,50 @@ static TypePtr parse_bytesN_bitsN(std::string_view strN, bool is_bits) {
 static TypePtr try_parse_predefined_type(std::string_view str) {
   switch (str.size()) {
     case 3:
-      if (str == "int") return TypeDataInt::create();
+      if (str == "int")
+        return TypeDataInt::create();
       break;
     case 4:
-      if (str == "cell") return TypeDataCell::create();
-      if (str == "void") return TypeDataVoid::create();
-      if (str == "bool") return TypeDataBool::create();
-      if (str == "null") return TypeDataNullLiteral::create();
+      if (str == "cell")
+        return TypeDataCell::create();
+      if (str == "void")
+        return TypeDataVoid::create();
+      if (str == "bool")
+        return TypeDataBool::create();
+      if (str == "null")
+        return TypeDataNullLiteral::create();
       break;
     case 5:
-      if (str == "slice") return TypeDataSlice::create();
-      if (str == "tuple") return TypeDataTuple::create();
-      if (str == "coins") return TypeDataCoins::create();
-      if (str == "never") return TypeDataNever::create();
+      if (str == "slice")
+        return TypeDataSlice::create();
+      if (str == "tuple")
+        return TypeDataTuple::create();
+      if (str == "coins")
+        return TypeDataCoins::create();
+      if (str == "never")
+        return TypeDataNever::create();
       break;
     case 7:
-      if (str == "builder") return TypeDataBuilder::create();
-      if (str == "address") return TypeDataAddress::create();
+      if (str == "builder")
+        return TypeDataBuilder::create();
+      if (str == "address")
+        return TypeDataAddress::create();
       break;
     case 8:
-      if (str == "varint16") return TypeDataIntN::create(16, false, true);
-      if (str == "varint32") return TypeDataIntN::create(32, false, true);
+      if (str == "varint16")
+        return TypeDataIntN::create(16, false, true);
+      if (str == "varint32")
+        return TypeDataIntN::create(32, false, true);
       break;
     case 9:
-      if (str == "varuint16") return TypeDataIntN::create(16, true, true);
-      if (str == "varuint32") return TypeDataIntN::create(32, true, true);
+      if (str == "varuint16")
+        return TypeDataIntN::create(16, true, true);
+      if (str == "varuint32")
+        return TypeDataIntN::create(32, true, true);
       break;
     case 12:
-      if (str == "continuation") return TypeDataContinuation::create();
+      if (str == "continuation")
+        return TypeDataContinuation::create();
       break;
     default:
       break;
@@ -152,10 +170,10 @@ static TypePtr try_parse_predefined_type(std::string_view str) {
 }
 
 class TypeNodesVisitorResolver {
-  FunctionPtr cur_f;                                // exists if we're inside its body
-  const GenericsDeclaration* genericTs;             // `<T>` if we're inside `f<T>` or `f<int>`
-  const GenericsSubstitutions* substitutedTs;       // `T=int` if we're inside `f<int>`
-  bool treat_unresolved_as_genericT;                // used for receivers `fun Container<T>.create()`, T becomes generic
+  FunctionPtr cur_f;                           // exists if we're inside its body
+  const GenericsDeclaration* genericTs;        // `<T>` if we're inside `f<T>` or `f<int>`
+  const GenericsSubstitutions* substitutedTs;  // `T=int` if we're inside `f<int>`
+  bool treat_unresolved_as_genericT;           // used for receivers `fun Container<T>.create()`, T becomes generic
 
   TypePtr parse_ast_type_node(AnyTypeV v, bool allow_without_type_arguments) {
     switch (v->kind) {
@@ -210,7 +228,8 @@ class TypeNodesVisitorResolver {
       }
 
       case ast_type_arrow_callable: {
-        std::vector<TypePtr> params_and_return = finalize_type_node(v->as<ast_type_arrow_callable>()->get_params_and_return());
+        std::vector<TypePtr> params_and_return =
+            finalize_type_node(v->as<ast_type_arrow_callable>()->get_params_and_return());
         TypePtr return_type = params_and_return.back();
         params_and_return.pop_back();
         return TypeDataFunCallable::create(std::move(params_and_return), return_type);
@@ -246,7 +265,8 @@ class TypeNodesVisitorResolver {
   // example: `var w: Wrapper = ...`, here will be an error of generic usage without T
   // example: `w is Wrapper`, here not, it's allowed (instantiated at type inferring later)
   // example: `var w: KKK`, nullptr will be returned
-  static TypePtr try_resolve_user_defined_type(FunctionPtr cur_f, SrcLocation loc, const Symbol* sym, bool allow_without_type_arguments) {
+  static TypePtr try_resolve_user_defined_type(FunctionPtr cur_f, SrcLocation loc, const Symbol* sym,
+                                               bool allow_without_type_arguments) {
     if (AliasDefPtr alias_ref = sym->try_as<AliasDefPtr>()) {
       if (alias_ref->is_generic_alias() && !allow_without_type_arguments) {
         fire_error_generic_type_used_without_T(cur_f, loc, alias_ref->as_human_readable());
@@ -270,7 +290,8 @@ class TypeNodesVisitorResolver {
 
   // given `Wrapper<int>` / `Pair<slice, int>` / `Response<int, cell>`, instantiate a generic struct/alias
   // an error for invalid usage `Pair<int>` / `cell<int>` is also here
-  static TypePtr instantiate_generic_type_or_fire(FunctionPtr cur_f, SrcLocation loc, TypePtr type_to_instantiate, std::vector<TypePtr>&& type_arguments) {
+  static TypePtr instantiate_generic_type_or_fire(FunctionPtr cur_f, SrcLocation loc, TypePtr type_to_instantiate,
+                                                  std::vector<TypePtr>&& type_arguments) {
     // example: `type WrapperAlias<T> = Wrapper<T>`, we are at `Wrapper<T>`, type_arguments = `<T>`
     // they contain generics, so the struct is not ready to be instantiated yet
     bool is_still_generic = false;
@@ -278,25 +299,34 @@ class TypeNodesVisitorResolver {
       is_still_generic |= argT->has_genericT_inside();
     }
 
-    if (const TypeDataStruct* t_struct = type_to_instantiate->try_as<TypeDataStruct>(); t_struct && t_struct->struct_ref->is_generic_struct()) {
+    if (const TypeDataStruct* t_struct = type_to_instantiate->try_as<TypeDataStruct>();
+        t_struct && t_struct->struct_ref->is_generic_struct()) {
       StructPtr struct_ref = t_struct->struct_ref;
       if (struct_ref->genericTs->size() != static_cast<int>(type_arguments.size())) {
-        fire(cur_f, loc, "struct `" + struct_ref->as_human_readable() + "` expects " + std::to_string(struct_ref->genericTs->size()) + " type arguments, but " + std::to_string(type_arguments.size()) + " provided");
+        fire(cur_f, loc,
+             "struct `" + struct_ref->as_human_readable() + "` expects " +
+                 std::to_string(struct_ref->genericTs->size()) + " type arguments, but " +
+                 std::to_string(type_arguments.size()) + " provided");
       }
       if (is_still_generic) {
         return TypeDataGenericTypeWithTs::create(struct_ref, nullptr, std::move(type_arguments));
       }
-      return TypeDataStruct::create(instantiate_generic_struct(struct_ref, GenericsSubstitutions(struct_ref->genericTs, type_arguments)));
+      return TypeDataStruct::create(
+          instantiate_generic_struct(struct_ref, GenericsSubstitutions(struct_ref->genericTs, type_arguments)));
     }
-    if (const TypeDataAlias* t_alias = type_to_instantiate->try_as<TypeDataAlias>(); t_alias && t_alias->alias_ref->is_generic_alias()) {
+    if (const TypeDataAlias* t_alias = type_to_instantiate->try_as<TypeDataAlias>();
+        t_alias && t_alias->alias_ref->is_generic_alias()) {
       AliasDefPtr alias_ref = t_alias->alias_ref;
       if (alias_ref->genericTs->size() != static_cast<int>(type_arguments.size())) {
-        fire(cur_f, loc, "type `" + alias_ref->as_human_readable() + "` expects " + std::to_string(alias_ref->genericTs->size()) + " type arguments, but " + std::to_string(type_arguments.size()) + " provided");
+        fire(cur_f, loc,
+             "type `" + alias_ref->as_human_readable() + "` expects " + std::to_string(alias_ref->genericTs->size()) +
+                 " type arguments, but " + std::to_string(type_arguments.size()) + " provided");
       }
       if (is_still_generic) {
         return TypeDataGenericTypeWithTs::create(nullptr, alias_ref, std::move(type_arguments));
       }
-      return TypeDataAlias::create(instantiate_generic_alias(alias_ref, GenericsSubstitutions(alias_ref->genericTs, type_arguments)));
+      return TypeDataAlias::create(
+          instantiate_generic_alias(alias_ref, GenericsSubstitutions(alias_ref->genericTs, type_arguments)));
     }
     if (const TypeDataGenericT* asT = type_to_instantiate->try_as<TypeDataGenericT>()) {
       fire_error_unknown_type_name(cur_f, loc, asT->nameT);
@@ -313,13 +343,14 @@ class TypeNodesVisitorResolver {
     }
   }
 
-public:
-
-  TypeNodesVisitorResolver(FunctionPtr cur_f, const GenericsDeclaration* genericTs, const GenericsSubstitutions* substitutedTs, bool treat_unresolved_as_genericT)
-    : cur_f(cur_f)
-    , genericTs(genericTs)
-    , substitutedTs(substitutedTs)
-    , treat_unresolved_as_genericT(treat_unresolved_as_genericT) {}
+ public:
+  TypeNodesVisitorResolver(FunctionPtr cur_f, const GenericsDeclaration* genericTs,
+                           const GenericsSubstitutions* substitutedTs, bool treat_unresolved_as_genericT)
+      : cur_f(cur_f)
+      , genericTs(genericTs)
+      , substitutedTs(substitutedTs)
+      , treat_unresolved_as_genericT(treat_unresolved_as_genericT) {
+  }
 
   TypePtr finalize_type_node(AnyTypeV type_node, bool allow_without_type_arguments = false) {
 #ifdef TOLK_DEBUG
@@ -414,9 +445,9 @@ public:
       TypeNodesVisitorResolver visitor(nullptr, nullptr, nullptr, false);
       for (int i = 0; i < v_list->size(); ++i) {
         auto v_item = v_list->get_item(i);
-        auto it_existing = std::find_if(itemsT.begin(), itemsT.end(), [v_item](const GenericsDeclaration::ItemT& prevT) {
-          return prevT.nameT == v_item->nameT;
-        });
+        auto it_existing =
+            std::find_if(itemsT.begin(), itemsT.end(),
+                         [v_item](const GenericsDeclaration::ItemT& prevT) { return prevT.nameT == v_item->nameT; });
         if (it_existing != itemsT.end()) {
           v_item->error("duplicate generic parameter `" + static_cast<std::string>(v_item->nameT) + "`");
         }
@@ -439,8 +470,7 @@ class ResolveTypesInsideFunctionVisitor final : public ASTVisitorFunctionBody {
     return type_nodes_visitor.finalize_type_node(type_node, allow_without_type_arguments);
   }
 
-protected:
-
+ protected:
   void visit(V<ast_local_var_lhs> v) override {
     if (v->type_node) {
       TypePtr declared_type = finalize_type_node(v->type_node);
@@ -478,7 +508,7 @@ protected:
       if (obj_ref->sym == nullptr || obj_ref->sym->try_as<FunctionPtr>()) {
         std::string_view obj_type_name = obj_ref->get_identifier()->name;
         AnyTypeV obj_type_node = createV<ast_type_leaf_text>(obj_ref->loc, obj_type_name);
-        if (obj_ref->has_instantiationTs()) {     // Container<int>.create
+        if (obj_ref->has_instantiationTs()) {  // Container<int>.create
           std::vector<AnyTypeV> inner_and_args;
           inner_and_args.reserve(1 + obj_ref->get_instantiationTs()->size());
           inner_and_args.push_back(obj_type_node);
@@ -488,7 +518,8 @@ protected:
           obj_type_node = createV<ast_type_triangle_args>(obj_ref->loc, std::move(inner_and_args));
         }
         TypePtr type_as_reference = finalize_type_node(obj_type_node);
-        const Symbol* type_as_symbol = new TypeReferenceUsedAsSymbol(static_cast<std::string>(obj_type_name), obj_ref->loc, type_as_reference);
+        const Symbol* type_as_symbol =
+            new TypeReferenceUsedAsSymbol(static_cast<std::string>(obj_type_name), obj_ref->loc, type_as_reference);
         obj_ref->mutate()->assign_sym(type_as_symbol);
       }
     }
@@ -520,7 +551,7 @@ protected:
     parent::visit(v->get_body());
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return !fun_ref->is_builtin_function();
   }
@@ -538,7 +569,8 @@ public:
       G.symtable.add_function(fun_ref);
     }
     if (v->genericsT_list || (fun_ref->receiver_type && fun_ref->receiver_type->has_genericT_inside())) {
-      const GenericsDeclaration* genericTs = TypeNodesVisitorResolver::construct_genericTs(fun_ref->receiver_type, v->genericsT_list);
+      const GenericsDeclaration* genericTs =
+          TypeNodesVisitorResolver::construct_genericTs(fun_ref->receiver_type, v->genericsT_list);
       fun_ref->mutate()->assign_resolved_genericTs(genericTs);
     }
 
@@ -614,7 +646,7 @@ class InfiniteStructSizeDetector {
     called_stack.pop_back();
   }
 
-public:
+ public:
   static void detect_and_fire_if_any_struct_is_infinite() {
     for (auto [struct_ref, _] : visited_structs) {
       check_struct_for_infinite_size(struct_ref);
@@ -679,4 +711,4 @@ void pipeline_resolve_types_and_aliases(AliasDefPtr alias_ref) {
   TypeNodesVisitorResolver::visit_symbol(alias_ref);
 }
 
-} // namespace tolk
+}  // namespace tolk

@@ -492,26 +492,26 @@ void PeerActor::process_update_peer_parts(const tl_object_ptr<ton_api::storage_U
       notify_node();
     }
   };
-  downcast_call(*update,
-                td::overloaded(
-                    [&](const ton::ton_api::storage_updateHavePieces &have_pieces) {
-                      LOG(DEBUG) << "Processing updateHavePieces query (" << have_pieces.piece_id_ << " pieces)";
-                      for (auto id : have_pieces.piece_id_) {
-                        add_piece(id);
-                      }
-                    },
-                    [&](const ton::ton_api::storage_updateState &state) {},
-                    [&](const ton::ton_api::storage_updateInit &init) {
-                      LOG(DEBUG) << "Processing updateInit query (offset=" << init.have_pieces_offset_ << ")";
-                      td::Bitset new_bitset;
-                      new_bitset.set_raw(init.have_pieces_.as_slice().str());
-                      size_t offset = init.have_pieces_offset_;
-                      for (auto size = new_bitset.size(), i = (size_t)0; i < size; i++) {
-                        if (new_bitset.get(i)) {
-                          add_piece(static_cast<PartId>(offset + i));
-                        }
-                      }
-                    }));
+  downcast_call(*update, td::overloaded(
+                             [&](const ton::ton_api::storage_updateHavePieces &have_pieces) {
+                               LOG(DEBUG)
+                                   << "Processing updateHavePieces query (" << have_pieces.piece_id_ << " pieces)";
+                               for (auto id : have_pieces.piece_id_) {
+                                 add_piece(id);
+                               }
+                             },
+                             [&](const ton::ton_api::storage_updateState &state) {},
+                             [&](const ton::ton_api::storage_updateInit &init) {
+                               LOG(DEBUG) << "Processing updateInit query (offset=" << init.have_pieces_offset_ << ")";
+                               td::Bitset new_bitset;
+                               new_bitset.set_raw(init.have_pieces_.as_slice().str());
+                               size_t offset = init.have_pieces_offset_;
+                               for (auto size = new_bitset.size(), i = (size_t)0; i < size; i++) {
+                                 if (new_bitset.get(i)) {
+                                   add_piece(static_cast<PartId>(offset + i));
+                                 }
+                               }
+                             }));
   state_->peer_ready_parts_.add_elements(std::move(new_peer_ready_parts));
 }
 

@@ -950,8 +950,7 @@ int main() {
 
     for (auto &x : states) {
       if (x.size() == 0) {
-        std::cout << "<EMPTY>"
-                  << "\n";
+        std::cout << "<EMPTY>" << "\n";
       } else {
         auto s = *x.rbegin();
         std::cout << "round=" << s->cur_round_seqno() << "\n";

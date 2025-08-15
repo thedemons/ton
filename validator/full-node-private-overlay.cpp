@@ -99,7 +99,7 @@ void FullNodePrivateBlockOverlay::process_block_candidate_broadcast(PublicKeyHas
 }
 
 void FullNodePrivateBlockOverlay::process_telemetry_broadcast(
-    PublicKeyHash src, const tl_object_ptr<ton_api::validator_telemetry>& telemetry) {
+    PublicKeyHash src, const tl_object_ptr<ton_api::validator_telemetry> &telemetry) {
   if (telemetry->adnl_id_ != src.bits256_value()) {
     VLOG(FULL_NODE_WARNING) << "Invalid telemetry broadcast from " << src << ": adnl_id mismatch";
     return;
@@ -117,9 +117,7 @@ void FullNodePrivateBlockOverlay::process_telemetry_broadcast(
   }
   VLOG(FULL_NODE_DEBUG) << "Got telemetry broadcast from " << src;
   auto s = td::json_encode<std::string>(td::ToJson(*telemetry), false);
-  std::erase_if(s, [](char c) {
-    return c == '\n' || c == '\r';
-  });
+  std::erase_if(s, [](char c) { return c == '\n' || c == '\r'; });
   telemetry_file_ << s << "\n";
   telemetry_file_.flush();
   if (telemetry_file_.fail()) {
@@ -141,9 +139,7 @@ void FullNodePrivateBlockOverlay::receive_broadcast(PublicKeyHash src, td::Buffe
     }
     return;
   }
-  ton_api::downcast_call(*B.move_as_ok(), [src, Self = this](auto& obj) {
-    Self->process_broadcast(src, obj);
-  });
+  ton_api::downcast_call(*B.move_as_ok(), [src, Self = this](auto &obj) { Self->process_broadcast(src, obj); });
 }
 
 void FullNodePrivateBlockOverlay::send_shard_block_info(BlockIdExt block_id, CatchainSeqno cc_seqno,

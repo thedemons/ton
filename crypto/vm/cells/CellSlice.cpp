@@ -985,7 +985,7 @@ void CellSlice::dump(std::ostream& os, int level, bool endl) const {
   if (level > 2) {
     char tmp[64];
     std::snprintf(tmp, sizeof(tmp), "; ptr=data+%ld; z=%016llx",
-                 static_cast<long>(ptr && cell.not_null() ? ptr - cell->get_data() : -1), static_cast<long long>(z));
+                  static_cast<long>(ptr && cell.not_null() ? ptr - cell->get_data() : -1), static_cast<long long>(z));
     os << tmp << " (have " << size() << " bits; " << zd << " preloaded)";
   }
   if (endl) {

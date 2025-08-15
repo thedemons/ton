@@ -42,17 +42,17 @@
 using namespace tolk;
 
 void usage(const char* progname) {
-  std::cerr
-      << "usage: " << progname << " [options] <filename.tolk>\n"
-         "\tGenerates Fift TVM assembler code from a .tolk file\n"
-         "-o<fif-filename>\tWrites generated code into specified .fif file instead of stdout\n"
-         "-b<boc-filename>\tGenerate Fift instructions to save TVM bytecode into .boc file\n"
-         "-O<level>\tSets optimization level (2 by default)\n"
-         "-x<option-names>\tEnables experimental options, comma-separated\n"
-         "-S\tDon't include stack layout comments into Fift output\n"
-         "-L\tDon't include original lines from Tolk src into Fift output\n"
-         "-e\tIncreases verbosity level (extra output into stderr)\n"
-         "-v\tOutput version of Tolk and exit\n";
+  std::cerr << "usage: " << progname
+            << " [options] <filename.tolk>\n"
+               "\tGenerates Fift TVM assembler code from a .tolk file\n"
+               "-o<fif-filename>\tWrites generated code into specified .fif file instead of stdout\n"
+               "-b<boc-filename>\tGenerate Fift instructions to save TVM bytecode into .boc file\n"
+               "-O<level>\tSets optimization level (2 by default)\n"
+               "-x<option-names>\tEnables experimental options, comma-separated\n"
+               "-S\tDon't include stack layout comments into Fift output\n"
+               "-L\tDon't include original lines from Tolk src into Fift output\n"
+               "-e\tIncreases verbosity level (extra output into stderr)\n"
+               "-v\tOutput version of Tolk and exit\n";
   std::exit(2);
 }
 
@@ -69,8 +69,8 @@ static bool get_current_executable_filename(std::string& out) {
 #ifdef TD_DARWIN
   char name_buf[1024];
   unsigned int size = 1024;
-  if (0 == _NSGetExecutablePath(name_buf, &size)) {   // may contain ../, so normalize it
-    char *exe_path = realpath(name_buf, nullptr);
+  if (0 == _NSGetExecutablePath(name_buf, &size)) {  // may contain ../, so normalize it
+    char* exe_path = realpath(name_buf, nullptr);
     if (exe_path != nullptr) {
       out = exe_path;
       return true;
@@ -80,7 +80,7 @@ static bool get_current_executable_filename(std::string& out) {
   char exe_path[1024];
   if (GetModuleFileNameA(nullptr, exe_path, 1024)) {
     out = exe_path;
-    std::replace(out.begin(), out.end(), '\\', '/');    // modern Windows correctly deals with / separator
+    std::replace(out.begin(), out.end(), '\\', '/');  // modern Windows correctly deals with / separator
     return true;
   }
 #else  // linux
@@ -98,7 +98,7 @@ static bool get_current_executable_filename(std::string& out) {
 // simple join "/some/folder/" (guaranteed to end with /) and "../relative/path"
 static std::string join_path(std::string dir, const char* relative) {
   while (relative[0] == '.' && relative[1] == '.' && relative[2] == '/') {
-    size_t slash_pos = dir.find_last_of('/', dir.size() - 2);   // last symbol is slash, find before it
+    size_t slash_pos = dir.find_last_of('/', dir.size() - 2);  // last symbol is slash, find before it
     if (slash_pos != std::string::npos) {
       dir = dir.substr(0, slash_pos + 1);
     }
@@ -150,9 +150,8 @@ td::Result<std::string> fs_read_callback(CompilerSettings::FsReadCallbackKind ki
   switch (kind) {
     case CompilerSettings::FsReadCallbackKind::Realpath: {
       bool is_stdlib = query[0] == '@' && strlen(query) > 8 && !strncmp(query, "@stdlib/", 8);
-      std::string path = is_stdlib
-            ? G.settings.stdlib_folder + static_cast<std::string>(query + 7)
-            : static_cast<std::string>(query);
+      std::string path =
+          is_stdlib ? G.settings.stdlib_folder + static_cast<std::string>(query + 7) : static_cast<std::string>(query);
 
       if (strncmp(path.c_str() + path.size() - 5, ".tolk", 5) != 0) {
         path += ".tolk";
@@ -167,7 +166,7 @@ td::Result<std::string> fs_read_callback(CompilerSettings::FsReadCallbackKind ki
     }
     case CompilerSettings::FsReadCallbackKind::ReadFile: {
       struct stat f_stat;
-      int res = stat(query, &f_stat);   // query here is already resolved realpath
+      int res = stat(query, &f_stat);  // query here is already resolved realpath
       if (res != 0 || (f_stat.st_mode & S_IFMT) != S_IFREG) {
         return td::Status::Error(std::string{"cannot open file "} + query);
       }
@@ -190,7 +189,7 @@ class StdCoutRedirectToFile {
   std::unique_ptr<std::fstream> output_file;
   std::streambuf* backup_sbuf = nullptr;
 
-public:
+ public:
   explicit StdCoutRedirectToFile(const std::string& output_filename) {
     if (!output_filename.empty()) {
       output_file = std::make_unique<std::fstream>(output_filename, std::fstream::trunc | std::fstream::out);
@@ -206,7 +205,9 @@ public:
     }
   }
 
-  bool is_failed() const { return output_file && !output_file->is_open(); }
+  bool is_failed() const {
+    return output_file && !output_file->is_open();
+  }
 };
 
 int main(int argc, char* const argv[]) {
@@ -256,7 +257,8 @@ int main(int argc, char* const argv[]) {
     std::string stdlib_filename = static_cast<std::string>(env_var) + "/common.tolk";
     td::Result<std::string> res = td::realpath(td::CSlice(stdlib_filename.c_str()));
     if (res.is_error()) {
-      std::cerr << "Environment variable TOLK_STDLIB is invalid: " << res.move_as_error().message().c_str() << std::endl;
+      std::cerr << "Environment variable TOLK_STDLIB is invalid: " << res.move_as_error().message().c_str()
+                << std::endl;
       return 2;
     }
     G.settings.stdlib_folder = env_var;

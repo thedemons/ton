@@ -373,7 +373,7 @@ class OrdCont : public Continuation {
   Ref<Stack> get_stack_ref() const {
     return data.stack;
   }
-  Ref<OrdCont> copy_ord() const & {
+  Ref<OrdCont> copy_ord() const& {
     return Ref<OrdCont>{true, *this};
   }
   Ref<OrdCont> copy_ord() && {

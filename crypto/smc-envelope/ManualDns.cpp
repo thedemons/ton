@@ -162,9 +162,8 @@ SmartContract::Args DnsInterface::resolve_args_raw(td::Slice encoded_name, td::B
                                                    block::StdAddress address) {
   SmartContract::Args res;
   res.set_method_id("dnsresolve");
-  res.set_stack(
-      {vm::load_cell_slice_ref(vm::CellBuilder().store_bytes(encoded_name).finalize()),
-       td::bits_to_refint(category.cbits(), 256, false)});
+  res.set_stack({vm::load_cell_slice_ref(vm::CellBuilder().store_bytes(encoded_name).finalize()),
+                 td::bits_to_refint(category.cbits(), 256, false)});
   res.set_address(std::move(address));
   return res;
 }

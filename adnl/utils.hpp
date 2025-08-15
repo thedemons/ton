@@ -41,8 +41,9 @@ inline bool adnl_node_is_older(AdnlNode &a, AdnlNode &b) {
 }
 
 class RateLimiter {
-public:
-  explicit RateLimiter(td::uint32 capacity, double period) : capacity_(capacity), period_(period), remaining_(capacity) {
+ public:
+  explicit RateLimiter(td::uint32 capacity, double period)
+      : capacity_(capacity), period_(period), remaining_(capacity) {
   }
 
   bool take() {
@@ -67,7 +68,7 @@ public:
     return increment_at_;
   }
 
-private:
+ private:
   td::uint32 capacity_;
   double period_;
   td::uint32 remaining_;

@@ -33,19 +33,21 @@
 
 namespace tolk {
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_invalid_mutate_arg_passed(FunctionPtr cur_f, SrcLocation loc, FunctionPtr fun_ref, const LocalVarData& p_sym, bool arg_passed_as_mutate, AnyV arg_expr) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_invalid_mutate_arg_passed(
+    FunctionPtr cur_f, SrcLocation loc, FunctionPtr fun_ref, const LocalVarData& p_sym, bool arg_passed_as_mutate,
+    AnyV arg_expr) {
   std::string arg_str(arg_expr->kind == ast_reference ? arg_expr->as<ast_reference>()->get_name() : "obj");
 
   if (p_sym.is_mutate_parameter() && !arg_passed_as_mutate) {
     // called `mutating_function(arg)`; suggest: `mutate arg`
-    fire(cur_f, loc, "function `" + fun_ref->as_human_readable() + "` mutates parameter `" + p_sym.name + "`\nyou need to specify `mutate` when passing an argument, like `mutate " + arg_str + "`");
+    fire(cur_f, loc,
+         "function `" + fun_ref->as_human_readable() + "` mutates parameter `" + p_sym.name +
+             "`\nyou need to specify `mutate` when passing an argument, like `mutate " + arg_str + "`");
   } else {
     // called `usual_function(mutate arg)`
     fire(cur_f, loc, "incorrect `mutate`, since `" + fun_ref->as_human_readable() + "` does not mutate this parameter");
   }
 }
-
 
 class RefineLvalueForMutateArgumentsVisitor final : public ASTVisitorFunctionBody {
   FunctionPtr cur_f = nullptr;
@@ -94,14 +96,15 @@ class RefineLvalueForMutateArgumentsVisitor final : public ASTVisitorFunctionBod
       const LocalVarData& p_sym = fun_ref->parameters[delta_self + i];
       auto arg_i = v->get_arg(i);
       if (p_sym.is_mutate_parameter() != arg_i->passed_as_mutate) {
-        fire_error_invalid_mutate_arg_passed(cur_f, arg_i->loc, fun_ref, p_sym, arg_i->passed_as_mutate, arg_i->get_expr());
+        fire_error_invalid_mutate_arg_passed(cur_f, arg_i->loc, fun_ref, p_sym, arg_i->passed_as_mutate,
+                                             arg_i->get_expr());
       }
       parent::visit(arg_i);
     }
     parent::visit(v->get_callee());
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return fun_ref->is_code_function() && !fun_ref->is_generic_function();
   }
@@ -116,4 +119,4 @@ void pipeline_refine_lvalue_for_mutate_arguments() {
   visit_ast_of_all_functions<RefineLvalueForMutateArgumentsVisitor>();
 }
 
-} // namespace tolk
+}  // namespace tolk

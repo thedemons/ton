@@ -230,14 +230,14 @@ class TonlibCli : public td::actor::Actor {
         td::actor::ActorShared<> parent_;
       };
       ref_cnt_++;
-      raw_client_ = liteclient::ExtClient::create(config.lite_servers,
-                                                  td::make_unique<Callback>(td::actor::actor_shared()));
+      raw_client_ =
+          liteclient::ExtClient::create(config.lite_servers, td::make_unique<Callback>(td::actor::actor_shared()));
     }
 
     auto config = !options_.config.empty()
-                  ? make_object<tonlib_api::config>(options_.config, options_.name,
-                                                    options_.use_callbacks_for_network, options_.ignore_cache)
-                  : nullptr;
+                      ? make_object<tonlib_api::config>(options_.config, options_.name,
+                                                        options_.use_callbacks_for_network, options_.ignore_cache)
+                      : nullptr;
 
     tonlib_api::object_ptr<tonlib_api::KeyStoreType> ks_type;
     if (options_.in_memory) {
@@ -378,8 +378,10 @@ class TonlibCli : public td::actor::Actor {
       td::TerminalIO::out() << "runmethod <addr> <name> <params>...\tRuns GET method <name> of account "
                                "<addr> with specified parameters\n";
       td::TerminalIO::out() << "getstate <key_id>\tget state of wallet with requested key\n";
-      td::TerminalIO::out() << "getstatebytransaction <key_id> <lt> <hash>\tget state of wallet with requested key after transaction with local time <lt> and hash <hash> (base64url)\n";
-      td::TerminalIO::out() << "getconfig <param>\tshow specified configuration parameter from the latest masterchain state\n";
+      td::TerminalIO::out() << "getstatebytransaction <key_id> <lt> <hash>\tget state of wallet with requested key "
+                               "after transaction with local time <lt> and hash <hash> (base64url)\n";
+      td::TerminalIO::out()
+          << "getconfig <param>\tshow specified configuration parameter from the latest masterchain state\n";
       td::TerminalIO::out() << "guessrevision <key_id>\tsearch of existing accounts corresponding to the given key\n";
       td::TerminalIO::out() << "guessaccount <key_id>\tsearch of existing accounts corresponding to the given key\n";
       td::TerminalIO::out() << "getaddress <key_id>\tget address of wallet with requested key\n";
@@ -1028,8 +1030,8 @@ class TonlibCli : public td::actor::Actor {
         TRY_RESULT_PROMISE(promise, data, tonlib::to_tonlib_api(action.data.value()));
         sb << action.data.value();
         TRY_STATUS_PROMISE(promise, std::move(error));
-        td::TerminalIO::out() << "Set dns entry: " << action.name << ":" << action.category << " "
-                              << sb.as_cslice() << "\n";
+        td::TerminalIO::out() << "Set dns entry: " << action.name << ":" << action.category << " " << sb.as_cslice()
+                              << "\n";
         actions.push_back(make_object<tonlib_api::dns_actionSet>(
             make_object<tonlib_api::dns_entry>(action.name, action.category, std::move(data))));
       }
@@ -1537,13 +1539,11 @@ class TonlibCli : public td::actor::Actor {
   }
 
   void dump_key(size_t i) {
-    td::TerminalIO::out() << "  #" << i << ": Public key: " << keys_[i].public_key << " "
-                          << "    Address: "
+    td::TerminalIO::out() << "  #" << i << ": Public key: " << keys_[i].public_key << " " << "    Address: "
                           << to_account_address(PSLICE() << i, false).move_as_ok().address->account_address_ << "\n";
   }
   void dump_keys() {
-    td::TerminalIO::out() << "Got " << keys_.size() << " keys"
-                          << "\n";
+    td::TerminalIO::out() << "Got " << keys_.size() << " keys" << "\n";
     for (size_t i = 0; i < keys_.size(); i++) {
       dump_key(i);
     }
@@ -2233,7 +2233,8 @@ int main(int argc, char* argv[]) {
     return (verbosity >= 0 && verbosity <= 20) ? td::Status::OK() : td::Status::Error("verbosity must be 0..20");
   });
   p.add_option('V', "version", "show tonlib-cli build information", [&]() {
-    std::cout << "tonlib-cli build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+    std::cout << "tonlib-cli build information: [ Commit: " << GitMetadata::CommitSHA1()
+              << ", Date: " << GitMetadata::CommitDate() << "]\n";
     std::exit(0);
   });
   p.add_checked_option('C', "config-force", "set lite server config, drop config related blockchain cache",

@@ -155,8 +155,7 @@ void ArchiveImporterLocal::process_masterchain_blocks() {
     BlockSeqno expected_seqno = last_masterchain_state_->get_seqno() + 1;
     for (auto &[seqno, _] : masterchain_blocks_) {
       if (seqno != expected_seqno) {
-        abort_query(
-            td::Status::Error(ErrorCode::protoviolation, "non-consecutive masterchain blocks in the archive"));
+        abort_query(td::Status::Error(ErrorCode::protoviolation, "non-consecutive masterchain blocks in the archive"));
         return;
       }
       ++expected_seqno;

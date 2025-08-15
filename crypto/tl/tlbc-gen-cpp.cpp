@@ -2555,8 +2555,7 @@ void CppTypeCode::generate_unpack_method(std::ostream& os, CppTypeCode::ConsReco
   DCHECK(res);
   if (options & 16) {
     // cell unpack version
-    os << "\n  if (cell_ref.is_null()) { return false; }"
-       << "\n  auto cs = load_cell_slice(std::move(cell_ref));"
+    os << "\n  if (cell_ref.is_null()) { return false; }" << "\n  auto cs = load_cell_slice(std::move(cell_ref));"
        << "\n  return " << (options & 1 ? "validate_" : "") << "unpack";
     if (!(options & 8)) {
       os << "(";
@@ -2792,8 +2791,7 @@ void CppTypeCode::generate_pack_method(std::ostream& os, CppTypeCode::ConsRecord
   DCHECK(res);
   if (options & 16) {
     // cell pack version
-    os << "\n  vm::CellBuilder cb;"
-       << "\n  return " << (options & 1 ? "validate_" : "") << "pack";
+    os << "\n  vm::CellBuilder cb;" << "\n  return " << (options & 1 ? "validate_" : "") << "pack";
     if (!(options & 8)) {
       os << "(cb, data";
     } else {

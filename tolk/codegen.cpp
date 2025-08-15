@@ -280,8 +280,9 @@ bool Op::generate_code_step(Stack& stack) {
 
   // detect `throw 123` (actually _IntConst 123 + _Call __throw)
   // don't clear the stack, since dropping unused elements make no sense, an exception is thrown anyway
-  bool will_now_immediate_throw = (cl == _Call && f_sym->is_builtin_function() && f_sym->name == "__throw")
-      || (cl == _IntConst && next->cl == _Call && next->f_sym->is_builtin_function() && next->f_sym->name == "__throw");
+  bool will_now_immediate_throw =
+      (cl == _Call && f_sym->is_builtin_function() && f_sym->name == "__throw") ||
+      (cl == _IntConst && next->cl == _Call && next->f_sym->is_builtin_function() && next->f_sym->name == "__throw");
   if (!will_now_immediate_throw) {
     stack.drop_vars_except(loc, var_info);
     stack.opt_show();
@@ -517,7 +518,8 @@ bool Op::generate_code_step(Stack& stack) {
           }
         }
       } else {
-        if (f_sym->inline_mode == FunctionInlineMode::inlineViaFif || f_sym->inline_mode == FunctionInlineMode::inlineRef) {
+        if (f_sym->inline_mode == FunctionInlineMode::inlineViaFif ||
+            f_sym->inline_mode == FunctionInlineMode::inlineRef) {
           stack.o << AsmOp::Custom(loc, f_sym->name + "() INLINECALLDICT", (int)right.size(), (int)left.size());
         } else if (f_sym->is_code_function() && std::get<FunctionBodyCode*>(f_sym->body)->code->require_callxargs) {
           stack.o << AsmOp::Custom(loc, f_sym->name + ("() PREPAREDICT"), 0, 2);

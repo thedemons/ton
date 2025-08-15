@@ -20,7 +20,7 @@
 
 namespace tolk {
 
-CompilerState G; // the only mutable global variable in tolk internals
+CompilerState G;  // the only mutable global variable in tolk internals
 
 void ExperimentalOption::mark_deprecated(const char* deprecated_from_v, const char* deprecated_reason) {
   this->deprecated_from_v = deprecated_from_v;
@@ -50,8 +50,7 @@ void CompilerSettings::enable_experimental_option(std::string_view name) {
   if (to_enable == nullptr) {
     std::cerr << "unknown experimental option: " << name << std::endl;
   } else if (to_enable->deprecated_from_v) {
-    std::cerr << "experimental option " << name << " "
-              << "is deprecated since Tolk v" << to_enable->deprecated_from_v
+    std::cerr << "experimental option " << name << " " << "is deprecated since Tolk v" << to_enable->deprecated_from_v
               << ": " << to_enable->deprecated_reason << std::endl;
   } else {
     to_enable->enabled = true;
@@ -78,4 +77,4 @@ const std::vector<StructPtr>& get_all_declared_structs() {
   return G.all_structs;
 }
 
-} // namespace tolk
+}  // namespace tolk

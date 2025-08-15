@@ -473,4 +473,3 @@ class FileReference {
 }  // namespace validator
 
 }  // namespace ton
-

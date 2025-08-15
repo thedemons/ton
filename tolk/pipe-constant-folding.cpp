@@ -133,7 +133,7 @@ class ConstantFoldingReplacer final : public ASTReplacerInFunctionBody {
     return v;
   }
 
- AnyExprV replace(V<ast_match_arm> v) override {
+  AnyExprV replace(V<ast_match_arm> v) override {
     parent::replace(v);
 
     // replace `2 + 3 => ...` with `5 => ...`
@@ -145,7 +145,7 @@ class ConstantFoldingReplacer final : public ASTReplacerInFunctionBody {
     return v;
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return fun_ref->is_code_function() && !fun_ref->is_generic_function();
   }
@@ -194,4 +194,4 @@ void pipeline_constant_folding() {
   replace_ast_of_all_functions<ConstantFoldingReplacer>();
 }
 
-} // namespace tolk
+}  // namespace tolk

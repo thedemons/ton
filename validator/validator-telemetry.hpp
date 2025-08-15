@@ -33,19 +33,16 @@ namespace ton::validator {
 class ValidatorManager;
 
 class ValidatorTelemetry : public td::actor::Actor {
-public:
+ public:
   ValidatorTelemetry(PublicKeyHash key, adnl::AdnlNodeIdShort local_id, td::Bits256 zero_state_file_hash,
                      td::actor::ActorId<ValidatorManager> manager)
-    : key_(key)
-    , local_id_(local_id)
-    , zero_state_file_hash_(zero_state_file_hash)
-    , manager_(std::move(manager)) {
+      : key_(key), local_id_(local_id), zero_state_file_hash_(zero_state_file_hash), manager_(std::move(manager)) {
   }
 
   void start_up() override;
   void alarm() override;
 
-private:
+ private:
   PublicKeyHash key_;
   adnl::AdnlNodeIdShort local_id_;
   td::Bits256 zero_state_file_hash_;
@@ -63,4 +60,4 @@ private:
   static constexpr double PERIOD = 600.0;
   static constexpr td::uint32 MAX_SIZE = 8192;
 };
-} // namespace ton::validator
+}  // namespace ton::validator

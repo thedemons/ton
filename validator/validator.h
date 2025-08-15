@@ -51,7 +51,7 @@ class ActionToken {
 
 struct PerfTimerStats {
   std::string name;
-  std::deque<std::pair<double, double>> stats; // <Time::now(), duration>
+  std::deque<std::pair<double, double>> stats;  // <Time::now(), duration>
 };
 
 struct CollatorOptions : public td::CntObject {
@@ -80,9 +80,7 @@ struct CollatorOptions : public td::CntObject {
 };
 
 struct CollatorsList : public td::CntObject {
-  enum SelectMode {
-    mode_random, mode_ordered, mode_round_robin
-  };
+  enum SelectMode { mode_random, mode_ordered, mode_round_robin };
   struct Shard {
     ShardIdFull shard_id;
     SelectMode select_mode = mode_random;
@@ -196,11 +194,11 @@ struct ValidatorManagerOptions : public td::CntObject {
   virtual void set_collator_node_whitelist_enabled(bool enabled) = 0;
   virtual void set_shard_block_verifier_config(td::Ref<ShardBlockVerifierConfig> config) = 0;
 
-  static td::Ref<ValidatorManagerOptions> create(
-      BlockIdExt zero_block_id, BlockIdExt init_block_id,
-      bool allow_blockchain_init = false, double sync_blocks_before = 3600, double block_ttl = 86400,
-      double state_ttl = 86400, double archive_ttl = 86400 * 7, double key_proof_ttl = 86400 * 3650,
-      double max_mempool_num = 999999, bool initial_sync_disabled = false);
+  static td::Ref<ValidatorManagerOptions> create(BlockIdExt zero_block_id, BlockIdExt init_block_id,
+                                                 bool allow_blockchain_init = false, double sync_blocks_before = 3600,
+                                                 double block_ttl = 86400, double state_ttl = 86400,
+                                                 double archive_ttl = 86400 * 7, double key_proof_ttl = 86400 * 3650,
+                                                 double max_mempool_num = 999999, bool initial_sync_disabled = false);
 };
 
 class ValidatorManagerInterface : public td::actor::Actor {

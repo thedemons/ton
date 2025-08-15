@@ -23,9 +23,9 @@
 namespace td {
 
 bool TD_TL_writer_jni_h::is_built_in_simple_type(const std::string &name) const {
-  return name == "Bool" || name == "Int32" || name == "Int53" || name == "Int64" || name == "Int128" || name == "Int256" || name == "Double" ||
-         name == "String" || name == "Bytes" || name == "SecureString" || name == "SecureBytes" || name == "Function" ||
-         name == "Object";
+  return name == "Bool" || name == "Int32" || name == "Int53" || name == "Int64" || name == "Int128" ||
+         name == "Int256" || name == "Double" || name == "String" || name == "Bytes" || name == "SecureString" ||
+         name == "SecureBytes" || name == "Function" || name == "Object";
 }
 
 bool TD_TL_writer_jni_h::is_built_in_complex_type(const std::string &name) const {

@@ -476,9 +476,7 @@ class OverlayImpl : public Overlay {
   OverlayOptions opts_;
 
   struct CachedCertificate : td::ListNode {
-    CachedCertificate(PublicKeyHash source, td::Bits256 cert_hash)
-      : source(source)
-      , cert_hash(cert_hash) {
+    CachedCertificate(PublicKeyHash source, td::Bits256 cert_hash) : source(source), cert_hash(cert_hash) {
     }
 
     PublicKeyHash source;

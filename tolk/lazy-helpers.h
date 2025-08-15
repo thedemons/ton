@@ -37,10 +37,9 @@ struct LazyStructLoadInfo {
   StructPtr hidden_struct;                        // "lazy Point" — only requested fields, matching binary shape
   std::vector<ActionWithField> ith_field_action;  // each for corresponding field of a struct
 
-  LazyStructLoadInfo(StructPtr original_struct, StructPtr hidden_struct, std::vector<ActionWithField>&& ith_field_action)
-    : original_struct(original_struct)
-    , hidden_struct(hidden_struct)
-    , ith_field_action(std::move(ith_field_action)) {
+  LazyStructLoadInfo(StructPtr original_struct, StructPtr hidden_struct,
+                     std::vector<ActionWithField>&& ith_field_action)
+      : original_struct(original_struct), hidden_struct(hidden_struct), ith_field_action(std::move(ith_field_action)) {
   }
 };
 
@@ -48,22 +47,26 @@ struct LazyStructLoadInfo {
 // For example, variable `var p = lazy Point.fromSlice(s); aux "load x"; return p.x` is initially "nothing loaded",
 // and after "load x" ith_field_action[0] becomes true (and `p` is updated on a stack and becomes `valueX null`).
 struct LazyStructLoadedState {
-  StructPtr original_struct;                      // original (e.g. `Point`)
-  StructPtr hidden_struct = nullptr;              // "lazy Point" — only requested fields, matching binary shape
-  std::vector<bool> ith_field_was_loaded;         // each for corresponding field of hidden_struct
+  StructPtr original_struct;               // original (e.g. `Point`)
+  StructPtr hidden_struct = nullptr;       // "lazy Point" — only requested fields, matching binary shape
+  std::vector<bool> ith_field_was_loaded;  // each for corresponding field of hidden_struct
   std::vector<std::pair<StructFieldPtr, std::vector<var_idx_t>>> aside_gaps_and_tail;
 
-  explicit LazyStructLoadedState(StructPtr original_struct)
-    : original_struct(original_struct) {}
+  explicit LazyStructLoadedState(StructPtr original_struct) : original_struct(original_struct) {
+  }
 
   void on_started_loading(StructPtr hidden_struct);
   void on_original_field_loaded(StructFieldPtr hidden_field);
   void on_aside_field_loaded(StructFieldPtr hidden_field, std::vector<var_idx_t>&& ir_field_gap);
 
-  bool was_loaded_once() const { return hidden_struct != nullptr; }
+  bool was_loaded_once() const {
+    return hidden_struct != nullptr;
+  }
   std::vector<var_idx_t> get_ir_loaded_aside_field(StructFieldPtr hidden_field) const;
 
-  LazyStructLoadedState* mutate() const { return const_cast<LazyStructLoadedState*>(this); }
+  LazyStructLoadedState* mutate() const {
+    return const_cast<LazyStructLoadedState*>(this);
+  }
 };
 
 // LazyVariableLoadedState contains a state of a whole lazy variable while generating AST to Ops.
@@ -77,15 +80,18 @@ struct LazyVariableLoadedState {
   LazyStructLoadedState loaded_state;                 // for struct: filled; for union: empty
   std::vector<LazyStructLoadedState> variants_state;  // variants of a lazy union or the last field if it's a union
 
-  LazyVariableLoadedState(TypePtr declared_type, std::vector<var_idx_t>&& ir_slice, std::vector<var_idx_t>&& ir_options);
+  LazyVariableLoadedState(TypePtr declared_type, std::vector<var_idx_t>&& ir_slice,
+                          std::vector<var_idx_t>&& ir_options);
 
-  bool is_struct() const { return loaded_state.original_struct != nullptr; }
-  bool is_union() const { return loaded_state.original_struct == nullptr; }
+  bool is_struct() const {
+    return loaded_state.original_struct != nullptr;
+  }
+  bool is_union() const {
+    return loaded_state.original_struct == nullptr;
+  }
 
   const LazyStructLoadedState* get_struct_state(StructPtr original_struct) const;
   void assert_field_loaded(StructPtr original_struct, StructFieldPtr original_field) const;
 };
 
-
-} // namespace tolk
-
+}  // namespace tolk

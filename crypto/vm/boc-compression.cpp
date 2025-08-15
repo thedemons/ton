@@ -41,7 +41,8 @@ td::Result<td::BufferSlice> boc_compress_baseline_lz4(const std::vector<td::Ref<
   return compressed_with_size;
 }
 
-td::Result<std::vector<td::Ref<vm::Cell>>> boc_decompress_baseline_lz4(td::Slice compressed, int max_decompressed_size) {
+td::Result<std::vector<td::Ref<vm::Cell>>> boc_decompress_baseline_lz4(td::Slice compressed,
+                                                                       int max_decompressed_size) {
   // Check minimum input size for decompressed size header
   if (compressed.size() < kDecompressedSizeBytes) {
     return td::Status::Error("BOC decompression failed: input too small for header");
@@ -282,7 +283,7 @@ td::Result<td::BufferSlice> boc_compress_improved_structure_lz4(const std::vecto
       if (rank[boc_graph[node][j]] <= i + 1)
         continue;
 
-      int delta = rank[boc_graph[node][j]] - i - 2; // Always >= 0 because of above check
+      int delta = rank[boc_graph[node][j]] - i - 2;  // Always >= 0 because of above check
       size_t required_bits = 1 + (31 ^ __builtin_clz(node_count - i - 3));
 
       if (required_bits < 8 - (result.size() + 1) % 8 + 1) {
@@ -339,7 +340,8 @@ td::Result<td::BufferSlice> boc_compress_improved_structure_lz4(const std::vecto
   return compressed_with_size;
 }
 
-td::Result<std::vector<td::Ref<vm::Cell>>> boc_decompress_improved_structure_lz4(td::Slice compressed, int max_decompressed_size) {
+td::Result<std::vector<td::Ref<vm::Cell>>> boc_decompress_improved_structure_lz4(td::Slice compressed,
+                                                                                 int max_decompressed_size) {
   constexpr size_t kMaxCellDataLengthBits = 1024;
 
   // Check minimum input size for decompressed size header
@@ -390,7 +392,6 @@ td::Result<std::vector<td::Ref<vm::Cell>>> boc_decompress_improved_structure_lz4
   if (node_count > decompressed_size) {
     return td::Status::Error("BOC decompression failed: incorrect node count provided");
   }
-
 
   // Validate root indexes
   for (int i = 0; i < root_count; ++i) {
@@ -595,7 +596,7 @@ td::Result<td::BufferSlice> boc_compress(const std::vector<td::Ref<vm::Cell>>& b
   } else if (algo == CompressionAlgorithm::ImprovedStructureLZ4) {
     TRY_RESULT_ASSIGN(compressed, boc_compress_improved_structure_lz4(boc_roots));
   } else {
-      return td::Status::Error("Unknown compression algorithm");
+    return td::Status::Error("Unknown compression algorithm");
   }
 
   td::BufferSlice compressed_with_algo(compressed.size() + 1);

@@ -198,11 +198,14 @@ Result<std::vector<RocksDb::GetStatus>> RocksDb::get_multi(td::Span<Slice> keys,
   rocksdb::ReadOptions options;
   if (snapshot_) {
     options.snapshot = snapshot_.get();
-    db_->MultiGet(options, db_->DefaultColumnFamily(), keys_rocksdb.size(), keys_rocksdb.data(), values_rocksdb.data(), statuses.data());
+    db_->MultiGet(options, db_->DefaultColumnFamily(), keys_rocksdb.size(), keys_rocksdb.data(), values_rocksdb.data(),
+                  statuses.data());
   } else if (transaction_) {
-    transaction_->MultiGet(options, db_->DefaultColumnFamily(), keys_rocksdb.size(), keys_rocksdb.data(), values_rocksdb.data(), statuses.data());
+    transaction_->MultiGet(options, db_->DefaultColumnFamily(), keys_rocksdb.size(), keys_rocksdb.data(),
+                           values_rocksdb.data(), statuses.data());
   } else {
-    db_->MultiGet(options, db_->DefaultColumnFamily(), keys_rocksdb.size(), keys_rocksdb.data(), values_rocksdb.data(), statuses.data());
+    db_->MultiGet(options, db_->DefaultColumnFamily(), keys_rocksdb.size(), keys_rocksdb.data(), values_rocksdb.data(),
+                  statuses.data());
   }
   std::vector<GetStatus> res(statuses.size());
   values->resize(statuses.size());

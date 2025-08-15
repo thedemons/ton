@@ -75,19 +75,20 @@ struct StateWhileTraversingFunction {
   int n_globals = 0;
   int max_block_depth = 0;
 
-  explicit StateWhileTraversingFunction(FunctionPtr fun_ref)
-    : fun_ref(fun_ref) {}
+  explicit StateWhileTraversingFunction(FunctionPtr fun_ref) : fun_ref(fun_ref) {
+  }
 
   int calculate_ast_cost() const {
-    return n_function_calls + n_binary_operators + n_statements * 2
-         + n_control_flow * 10 + n_globals * 5 + (max_block_depth - 1) * 10;
+    return n_function_calls + n_binary_operators + n_statements * 2 + n_control_flow * 10 + n_globals * 5 +
+           (max_block_depth - 1) * 10;
   }
 
   bool is_inlining_prevented_even_if_annotated() const {
     // even if user specified `@inline`, we can't do anything about recursions, for example;
     // in this case, in-place inlining won't happen, we'll generate `PROCINLINE` to Fift
     bool is_inside_recursion = fun_ref->n_times_called >= 9999;
-    return has_returns_in_the_middle || is_inside_recursion || fun_ref->is_used_as_noncall() || !fun_ref->is_code_function();
+    return has_returns_in_the_middle || is_inside_recursion || fun_ref->is_used_as_noncall() ||
+           !fun_ref->is_code_function();
   }
 
   bool should_auto_inline_if_not_prevented() const {
@@ -113,9 +114,9 @@ struct StateWhileTraversingFunction {
 class DetectIfToInlineFunctionInPlaceVisitor final : ASTVisitorFunctionBody {
   StateWhileTraversingFunction cur_state{nullptr};
   int block_depth = 0;
-  std::vector<V<ast_function_call>> collected_expect_inline;    // `__expect_inline()` compiler assertions
+  std::vector<V<ast_function_call>> collected_expect_inline;  // `__expect_inline()` compiler assertions
 
-protected:
+ protected:
   void visit(V<ast_function_call> v) override {
     if (v->fun_maybe && v->fun_maybe->is_builtin_function() && v->fun_maybe->name == "__expect_inline") {
       collected_expect_inline.push_back(v);
@@ -191,7 +192,8 @@ protected:
   void visit(V<ast_return_statement> v) override {
     // detect if `return` the last return statement in a function's body
     // (currently in-place inlining for functions with returns in the middle is not supported)
-    auto body_block = cur_state.fun_ref->ast_root->as<ast_function_declaration>()->get_body()->as<ast_block_statement>();
+    auto body_block =
+        cur_state.fun_ref->ast_root->as<ast_function_declaration>()->get_body()->as<ast_block_statement>();
     bool is_last_statement = body_block->get_item(body_block->size() - 1) == v;
     cur_state.has_returns_in_the_middle |= !is_last_statement;
     parent::visit(v);
@@ -255,7 +257,7 @@ protected:
 class CallGraphBuilderVisitor final : ASTVisitorFunctionBody {
   FunctionPtr cur_f{nullptr};
 
-protected:
+ protected:
   void visit(V<ast_function_call> v) override {
     if (FunctionPtr called_f = v->fun_maybe) {
       if (called_f->is_code_function()) {
@@ -299,7 +301,7 @@ static void detect_recursive_functions() {
       return false;
     };
     if (!it.second.empty() && is_recursive_dfs(f_start_from)) {
-      f_start_from->mutate()->n_times_called = 9999;      // means "recursive"
+      f_start_from->mutate()->n_times_called = 9999;  // means "recursive"
     }
   }
 }
@@ -310,4 +312,4 @@ void pipeline_detect_inline_in_place() {
   call_graph.clear();
 }
 
-} // namespace tolk
+}  // namespace tolk

@@ -35,9 +35,9 @@ class Atom : public td::CntObject {
 
  public:
   Atom(const Atom&) = delete;
-  Atom &operator=(const Atom&) = delete;
+  Atom& operator=(const Atom&) = delete;
   Atom(Atom&&) = delete;
-  Atom &operator=(Atom&&) = delete;
+  Atom& operator=(Atom&&) = delete;
   ~Atom() override = default;
   Atom(std::string name, int index) : name_(name), index_(index) {
   }

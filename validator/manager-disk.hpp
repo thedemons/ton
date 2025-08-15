@@ -403,15 +403,15 @@ class ValidatorManagerImpl : public ValidatorManager {
     get_shard_state_from_db_short(block_id, std::move(promise));
   }
   void get_block_by_lt_for_litequery(AccountIdPrefixFull account, LogicalTime lt,
-                                             td::Promise<ConstBlockHandle> promise) override {
+                                     td::Promise<ConstBlockHandle> promise) override {
     get_block_by_lt_from_db(account, lt, std::move(promise));
   }
   void get_block_by_unix_time_for_litequery(AccountIdPrefixFull account, UnixTime ts,
-                                                    td::Promise<ConstBlockHandle> promise) override {
+                                            td::Promise<ConstBlockHandle> promise) override {
     get_block_by_unix_time_from_db(account, ts, std::move(promise));
   }
   void get_block_by_seqno_for_litequery(AccountIdPrefixFull account, BlockSeqno seqno,
-                                                td::Promise<ConstBlockHandle> promise) override {
+                                        td::Promise<ConstBlockHandle> promise) override {
     get_block_by_seqno_from_db(account, seqno, std::move(promise));
   }
   void get_block_candidate_for_litequery(PublicKey source, BlockIdExt block_id, FileHash collated_data_hash,

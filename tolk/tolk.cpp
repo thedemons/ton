@@ -32,9 +32,9 @@
 
 namespace tolk {
 
-
-void on_assertion_failed(const char *description, const char *file_name, int line_number) {
-  std::string message = static_cast<std::string>("Assertion failed at ") + file_name + ":" + std::to_string(line_number) + ": " + description;
+void on_assertion_failed(const char* description, const char* file_name, int line_number) {
+  std::string message = static_cast<std::string>("Assertion failed at ") + file_name + ":" +
+                        std::to_string(line_number) + ": " + description;
 #ifdef TOLK_DEBUG
 #ifdef __arm64__
   // when developing, it's handy when the debugger stops on assertion failure (stacktraces and watches are available)
@@ -45,7 +45,7 @@ void on_assertion_failed(const char *description, const char *file_name, int lin
   throw Fatal(std::move(message));
 }
 
-int tolk_proceed(const std::string &entrypoint_filename) {
+int tolk_proceed(const std::string& entrypoint_filename) {
   type_system_init();
   define_builtins();
   lexer_init();

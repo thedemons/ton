@@ -68,7 +68,7 @@ class CatChainReceiver : public CatChainReceiverInterface {
   virtual ~CatChainReceiver() = default;
 };
 
-td::uint64 get_max_block_height(const CatChainOptions& opts, size_t sources_cnt);
+td::uint64 get_max_block_height(const CatChainOptions &opts, size_t sources_cnt);
 
 }  // namespace catchain
 

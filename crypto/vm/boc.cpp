@@ -1287,7 +1287,6 @@ void ProofStorageStat::add_loaded_cells(const ProofStorageStat& other) {
   }
 }
 
-
 td::uint64 ProofStorageStat::estimate_proof_size() const {
   return proof_size_;
 }

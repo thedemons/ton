@@ -110,9 +110,8 @@ class KeyValueDir : public KeyValue {
       return false;
     }
 
-    return std::all_of(key.begin(), key.end(), [](char c) {
-      return std::isalnum(c) || c == '_' || c == '-' || c == '.';
-    });
+    return std::all_of(key.begin(), key.end(),
+                       [](char c) { return std::isalnum(c) || c == '_' || c == '-' || c == '.'; });
   }
 };
 
@@ -149,7 +148,7 @@ class KeyValueInmemory : public KeyValue {
     return td::Status::OK();
   }
   void foreach_key(std::function<void(td::Slice)> f) override {
-    for (auto &it : map_) {
+    for (auto& it : map_) {
       f(it.first);
     }
   }

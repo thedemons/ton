@@ -59,7 +59,8 @@ int main(int argc, char *argv[]) {
     std::exit(2);
   });
   p.add_option('V', "version", "shows generate-random-id build information", [&]() {
-    std::cout << "generate-random-id build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+    std::cout << "generate-random-id build information: [ Commit: " << GitMetadata::CommitSHA1()
+              << ", Date: " << GitMetadata::CommitDate() << "]\n";
     std::exit(0);
   });
   p.add_option('n', "name", "path to save private keys to", [&](td::Slice arg) { name = arg.str(); });

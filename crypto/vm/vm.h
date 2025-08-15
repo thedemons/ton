@@ -101,7 +101,7 @@ class VmState final : public VmStateInterface {
   bool chksig_always_succeed{false};
   bool stop_on_accept_message{false};
   td::optional<td::Bits256> missing_library;
-  td::uint16 max_data_depth = 512; // Default value
+  td::uint16 max_data_depth = 512;  // Default value
   int global_version{0};
   size_t chksgn_counter = 0;
   size_t get_extra_balance_counter = 0;
@@ -170,8 +170,8 @@ class VmState final : public VmStateInterface {
     get_extra_balance_cheap_max_gas_price = 200
   };
   VmState();
-  VmState(Ref<CellSlice> _code, int global_version, Ref<Stack> _stack, const GasLimits& _gas, int flags = 0, Ref<Cell> _data = {},
-          VmLog log = {}, std::vector<Ref<Cell>> _libraries = {}, Ref<Tuple> init_c7 = {});
+  VmState(Ref<CellSlice> _code, int global_version, Ref<Stack> _stack, const GasLimits& _gas, int flags = 0,
+          Ref<Cell> _data = {}, VmLog log = {}, std::vector<Ref<Cell>> _libraries = {}, Ref<Tuple> init_c7 = {});
   VmState(Ref<Cell> _code, int global_version, Ref<Stack> _stack, const GasLimits& _gas, int flags = 0,
           Ref<Cell> _data = {}, VmLog log = {}, std::vector<Ref<Cell>> _libraries = {}, Ref<Tuple> init_c7 = {})
       : VmState(convert_code_cell(std::move(_code), global_version, _libraries), global_version, std::move(_stack),

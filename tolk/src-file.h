@@ -34,21 +34,19 @@ struct SrcFile {
     const SrcFile* imported_file;
   };
 
-  int file_id;                          // an incremental counter through all parsed files
-  bool is_stdlib_file;                  // is a part of Tolk distribution, imported via "@stdlib/..."
-  std::string realpath;                 // what "realpath" returned to locate (either abs path or what tolk-js returns)
-  std::string text;                     // file contents loaded into memory, every Token::str_val points inside it
-  AnyV ast = nullptr;                   // when a file has been parsed, its ast_tolk_file is kept here
-  std::vector<ImportDirective> imports; // to check strictness (can't use a symbol without importing its file)
+  int file_id;                           // an incremental counter through all parsed files
+  bool is_stdlib_file;                   // is a part of Tolk distribution, imported via "@stdlib/..."
+  std::string realpath;                  // what "realpath" returned to locate (either abs path or what tolk-js returns)
+  std::string text;                      // file contents loaded into memory, every Token::str_val points inside it
+  AnyV ast = nullptr;                    // when a file has been parsed, its ast_tolk_file is kept here
+  std::vector<ImportDirective> imports;  // to check strictness (can't use a symbol without importing its file)
 
   SrcFile(int file_id, bool is_stdlib_file, std::string realpath, std::string&& text)
-    : file_id(file_id)
-    , is_stdlib_file(is_stdlib_file)
-    , realpath(std::move(realpath))
-    , text(std::move(text)) { }
+      : file_id(file_id), is_stdlib_file(is_stdlib_file), realpath(std::move(realpath)), text(std::move(text)) {
+  }
 
   SrcFile(const SrcFile& other) = delete;
-  SrcFile &operator=(const SrcFile&) = delete;
+  SrcFile& operator=(const SrcFile&) = delete;
 
   bool is_offset_valid(int offset) const;
   SrcPosition convert_offset(int offset) const;
@@ -57,7 +55,6 @@ struct SrcFile {
   std::string extract_dirname() const;
 };
 
-
 // SrcLocation points to a location (line, column) in some loaded .tolk source SrcFile.
 // Note, that instead of storing src_file, line_no, etc., only 2 ints are stored.
 // The purpose is: sizeof(SrcLocation) == 8, so it's just passed/stored without pointers/refs, just like int64_t.
@@ -65,17 +62,20 @@ struct SrcFile {
 class SrcLocation {
   friend class Lexer;
 
-  int file_id = -1;       // = SrcFile::file_id (note, that get_src_file() does linear search)
-  int char_offset = -1;   // offset from SrcFile::text
+  int file_id = -1;      // = SrcFile::file_id (note, that get_src_file() does linear search)
+  int char_offset = -1;  // offset from SrcFile::text
 
-public:
-
+ public:
   SrcLocation() = default;
   explicit SrcLocation(const SrcFile* src_file) : file_id(src_file->file_id) {
   }
 
-  bool is_defined() const { return file_id != -1; }
-  bool is_stdlib() const { return file_id == 0; }
+  bool is_defined() const {
+    return file_id != -1;
+  }
+  bool is_stdlib() const {
+    return file_id == 0;
+  }
   const SrcFile* get_src_file() const;
 
   // similar to `this->get_src_file() == symbol->get_src_file() || symbol->get_src_file()->is_stdlib()`
@@ -101,15 +101,21 @@ class AllRegisteredSrcFiles {
   std::vector<const SrcFile*> all_src_files;
   int last_parsed_file_id = -1;
 
-public:
-  const SrcFile* get_file(int file_id) const { return all_src_files.at(file_id); }
+ public:
+  const SrcFile* get_file(int file_id) const {
+    return all_src_files.at(file_id);
+  }
   const SrcFile* find_file(const std::string& realpath) const;
 
   const SrcFile* locate_and_register_source_file(const std::string& filename, SrcLocation included_from);
   SrcFile* get_next_unparsed_file();
 
-  auto begin() const { return all_src_files.begin(); }
-  auto end() const { return all_src_files.end(); }
+  auto begin() const {
+    return all_src_files.begin();
+  }
+  auto end() const {
+    return all_src_files.end();
+  }
 };
 
 struct Fatal final : std::exception {
@@ -129,10 +135,11 @@ struct ParseError : std::exception {
   SrcLocation loc;
   std::string message;
 
-  ParseError(SrcLocation loc, std::string message)
-    : current_function(nullptr), loc(loc), message(std::move(message)) {}
+  ParseError(SrcLocation loc, std::string message) : current_function(nullptr), loc(loc), message(std::move(message)) {
+  }
   ParseError(FunctionPtr current_function, SrcLocation loc, std::string message)
-    : current_function(current_function), loc(loc), message(std::move(message)) {}
+      : current_function(current_function), loc(loc), message(std::move(message)) {
+  }
 
   const char* what() const noexcept override {
     return message.c_str();

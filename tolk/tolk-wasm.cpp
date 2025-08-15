@@ -34,7 +34,7 @@
 
 using namespace tolk;
 
-static td::Result<std::string> compile_internal(char *config_json) {
+static td::Result<std::string> compile_internal(char* config_json) {
   TRY_RESULT(input_json, td::json_decode(td::MutableSlice(config_json)))
   td::JsonObject& config = input_json.get_object();
 
@@ -108,7 +108,7 @@ const char* version() {
   return strdup(version_json.string_builder().as_cslice().c_str());
 }
 
-const char *tolk_compile(char *config_json, WasmFsReadCallback callback) {
+const char* tolk_compile(char* config_json, WasmFsReadCallback callback) {
   G.settings.read_callback = wrap_wasm_read_callback(callback);
 
   td::Result<std::string> res = compile_internal(config_json);
@@ -126,4 +126,4 @@ const char *tolk_compile(char *config_json, WasmFsReadCallback callback) {
   return strdup(res_string.c_str());
 }
 
-} // extern "C"
+}  // extern "C"

@@ -26,8 +26,8 @@
 
 namespace tolk {
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_impure_operation_inside_pure_function(FunctionPtr cur_f, SrcLocation loc) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_impure_operation_inside_pure_function(
+    FunctionPtr cur_f, SrcLocation loc) {
   fire(cur_f, loc, "an impure operation in a pure function");
 }
 
@@ -82,7 +82,7 @@ class CheckImpureOperationsInPureFunctionVisitor final : public ASTVisitorFuncti
     fire_error_impure_operation_inside_pure_function(cur_f, v->loc);
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return fun_ref->is_code_function() && !fun_ref->is_generic_function() && fun_ref->is_marked_as_pure();
   }
@@ -97,4 +97,4 @@ void pipeline_check_pure_impure_operations() {
   visit_ast_of_all_functions<CheckImpureOperationsInPureFunctionVisitor>();
 }
 
-} // namespace tolk
+}  // namespace tolk

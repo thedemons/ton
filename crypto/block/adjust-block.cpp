@@ -158,7 +158,8 @@ int main(int argc, char* const argv[]) {
         new_verbosity_level = VERBOSITY_NAME(FATAL) + (verbosity = td::to_integer<int>(td::Slice(optarg)));
         break;
       case 'V':
-        std::cout << "adjust-block build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+        std::cout << "adjust-block build information: [ Commit: " << GitMetadata::CommitSHA1()
+                  << ", Date: " << GitMetadata::CommitDate() << "]\n";
         std::exit(0);
         break;
       default:

@@ -231,6 +231,7 @@ struct NamedPerfCounter {
   friend StringBuilder &operator<<(StringBuilder &sb, const NamedPerfCounter &counter) {
     return sb << counter.counter_;
   }
+
  private:
   NamedThreadSafeCounter counter_;
 };

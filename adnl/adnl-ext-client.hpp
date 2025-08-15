@@ -86,7 +86,7 @@ class AdnlExtClientImpl : public AdnlExtClient {
     if (!conn_.empty() && conn_.get() == conn) {
       callback_->on_stop_ready();
       conn_ = {};
-      for (auto& q : out_queries_) {
+      for (auto &q : out_queries_) {
         td::actor::send_closure(q.second, &AdnlQuery::set_error, td::Status::Error(ErrorCode::cancelled));
       }
       alarm_timestamp() = next_create_at_;

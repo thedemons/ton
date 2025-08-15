@@ -526,7 +526,7 @@ td::Status OverlayImpl::check_date(td::uint32 date) {
   return td::Status::OK();
 }
 
-BroadcastCheckResult OverlayImpl::check_source_eligible(const PublicKeyHash& source, const Certificate* cert,
+BroadcastCheckResult OverlayImpl::check_source_eligible(const PublicKeyHash &source, const Certificate *cert,
                                                         td::uint32 size, bool is_fec) {
   if (size == 0) {
     return BroadcastCheckResult::Forbidden;
@@ -543,15 +543,15 @@ BroadcastCheckResult OverlayImpl::check_source_eligible(const PublicKeyHash& sou
                         /* skip_check_signature = */ cached);
   if (r2 != BroadcastCheckResult::Forbidden) {
     if (cached_cert == checked_certificates_cache_.end()) {
-      cached_cert = checked_certificates_cache_.emplace(
-          source, std::make_unique<CachedCertificate>(source, cert_hash)).first;
+      cached_cert =
+          checked_certificates_cache_.emplace(source, std::make_unique<CachedCertificate>(source, cert_hash)).first;
     } else {
       cached_cert->second->cert_hash = cert_hash;
       cached_cert->second->remove();
     }
     checked_certificates_cache_lru_.put(cached_cert->second.get());
     while (checked_certificates_cache_.size() > max_checked_certificates_cache_size_) {
-      auto to_remove = (CachedCertificate*)checked_certificates_cache_lru_.get();
+      auto to_remove = (CachedCertificate *)checked_certificates_cache_lru_.get();
       CHECK(to_remove);
       to_remove->remove();
       checked_certificates_cache_.erase(to_remove->source);
@@ -561,7 +561,7 @@ BroadcastCheckResult OverlayImpl::check_source_eligible(const PublicKeyHash& sou
   return broadcast_check_result_max(r, r2);
 }
 
-BroadcastCheckResult OverlayImpl::check_source_eligible(PublicKey source, const Certificate* cert, td::uint32 size,
+BroadcastCheckResult OverlayImpl::check_source_eligible(PublicKey source, const Certificate *cert, td::uint32 size,
                                                         bool is_fec) {
   return check_source_eligible(source.compute_short_id(), cert, size, is_fec);
 }

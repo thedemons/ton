@@ -140,7 +140,8 @@ struct Token {
   std::string_view str_val;
 
   Token() = default;
-  Token(TokenType type, std::string_view str_val): type(type), str_val(str_val) {}
+  Token(TokenType type, std::string_view str_val) : type(type), str_val(str_val) {
+  }
 };
 
 // Lexer::next() is a method to be used externally (while parsing tolk file to AST).
@@ -160,8 +161,7 @@ class Lexer {
     location.char_offset = static_cast<int>(p_next - p_start);
   }
 
-public:
-
+ public:
   struct SavedPositionForLookahead {
     const char* p_next = nullptr;
     int cur_token_idx = 0;
@@ -171,7 +171,7 @@ public:
 
   explicit Lexer(const SrcFile* file);
   Lexer(const Lexer&) = delete;
-  Lexer &operator=(const Lexer&) = delete;
+  Lexer& operator=(const Lexer&) = delete;
 
   void add_token(TokenType type, std::string_view str) {
     tokens_circularbuf[++last_token_idx & 7] = Token(type, str);
@@ -200,14 +200,28 @@ public:
     return p_next >= p_end;
   }
 
-  char char_at() const { return *p_next; }
-  char char_at(int shift) const { return *(p_next + shift); }
-  const char* c_str() const { return p_next; }
+  char char_at() const {
+    return *p_next;
+  }
+  char char_at(int shift) const {
+    return *(p_next + shift);
+  }
+  const char* c_str() const {
+    return p_next;
+  }
 
-  TokenType tok() const { return cur_token.type; }
-  std::string_view cur_str() const { return cur_token.str_val; }
-  SrcLocation cur_location() const { return location; }
-  const SrcFile* cur_file() const { return file; }
+  TokenType tok() const {
+    return cur_token.type;
+  }
+  std::string_view cur_str() const {
+    return cur_token.str_val;
+  }
+  SrcLocation cur_location() const {
+    return location;
+  }
+  const SrcFile* cur_file() const {
+    return file;
+  }
 
   void next();
   void next_special(TokenType parse_next_as, const char* str_expected);
@@ -218,7 +232,7 @@ public:
 
   void check(TokenType next_tok, const char* str_expected) const {
     if (cur_token.type != next_tok) {
-      unexpected(str_expected); // unlikely path, not inlined
+      unexpected(str_expected);  // unlikely path, not inlined
     }
   }
   void expect(TokenType next_tok, const char* str_expected) {
@@ -228,10 +242,8 @@ public:
     next();
   }
 
-  GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-  void unexpected(const char* str_expected) const;
-  GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-  void error(const std::string& err_msg) const;
+  GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD void unexpected(const char* str_expected) const;
+  GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD void error(const std::string& err_msg) const;
 };
 
 void lexer_init();

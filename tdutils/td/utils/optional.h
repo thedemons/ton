@@ -90,15 +90,15 @@ class optional {
   }
 
   template <class... ArgsT>
-  void emplace(ArgsT &&... args) {
+  void emplace(ArgsT &&...args) {
     impl_.emplace(std::forward<ArgsT>(args)...);
   }
 
-  bool operator==(const optional& other) const {
+  bool operator==(const optional &other) const {
     return (bool)*this == (bool)other && (!(bool)*this || value() == other.value());
   }
 
-  bool operator!=(const optional& other) const {
+  bool operator!=(const optional &other) const {
     return !(*this == other);
   }
 

@@ -46,7 +46,7 @@ class ActorInfoCreator {
       return *this;
     }
 
-    Options& with_actor_stat_id(td::uint32 new_id) {
+    Options &with_actor_stat_id(td::uint32 new_id) {
       actor_stat_id = new_id;
       return *this;
     }

@@ -33,12 +33,7 @@
 
 namespace tolk {
 
-enum class MarkingState {
-  None,
-  LValue,
-  RValue,
-  LValueAndRValue
-};
+enum class MarkingState { None, LValue, RValue, LValueAndRValue };
 
 class CalculateRvalueLvalueVisitor final : public ASTVisitorFunctionBody {
   MarkingState cur_state = MarkingState::None;
@@ -73,7 +68,7 @@ class CalculateRvalueLvalueVisitor final : public ASTVisitorFunctionBody {
   void visit(V<ast_empty_expression> v) override {
     mark_vertex(v);
   }
-  
+
   void visit(V<ast_parenthesized_expression> v) override {
     mark_vertex(v);
     MarkingState saved = enter_rvalue_if_none();
@@ -101,7 +96,7 @@ class CalculateRvalueLvalueVisitor final : public ASTVisitorFunctionBody {
     parent::visit(v);
     restore_state(saved);
   }
-  
+
   void visit(V<ast_bracket_tuple> v) override {
     mark_vertex(v);
     MarkingState saved = enter_rvalue_if_none();
@@ -205,7 +200,8 @@ class CalculateRvalueLvalueVisitor final : public ASTVisitorFunctionBody {
 
   void visit(V<ast_cast_as_operator> v) override {
     mark_vertex(v);
-    parent::visit(v->get_expr());   // leave lvalue state unchanged, for `mutate (t.0 as int)` both `t.0 as int` and `t.0` are lvalue
+    parent::visit(
+        v->get_expr());  // leave lvalue state unchanged, for `mutate (t.0 as int)` both `t.0 as int` and `t.0` are lvalue
   }
 
   void visit(V<ast_is_type_operator> v) override {
@@ -217,7 +213,7 @@ class CalculateRvalueLvalueVisitor final : public ASTVisitorFunctionBody {
 
   void visit(V<ast_not_null_operator> v) override {
     mark_vertex(v);
-    parent::visit(v->get_expr());   // leave lvalue state unchanged, for `mutate x!` both `x!` and `x` are lvalue
+    parent::visit(v->get_expr());  // leave lvalue state unchanged, for `mutate x!` both `x!` and `x` are lvalue
   }
 
   void visit(V<ast_lazy_operator> v) override {
@@ -327,7 +323,7 @@ class CalculateRvalueLvalueVisitor final : public ASTVisitorFunctionBody {
     parent::visit(v->get_catch_body());
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return fun_ref->is_code_function() && !fun_ref->is_generic_function();
   }
@@ -344,4 +340,4 @@ void pipeline_calculate_rvalue_lvalue(FunctionPtr fun_ref) {
   }
 }
 
-} // namespace tolk
+}  // namespace tolk

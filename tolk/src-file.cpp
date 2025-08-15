@@ -34,10 +34,12 @@ const SrcFile* AllRegisteredSrcFiles::find_file(const std::string& realpath) con
   return nullptr;
 }
 
-const SrcFile* AllRegisteredSrcFiles::locate_and_register_source_file(const std::string& filename, SrcLocation included_from) {
+const SrcFile* AllRegisteredSrcFiles::locate_and_register_source_file(const std::string& filename,
+                                                                      SrcLocation included_from) {
   bool is_stdlib = filename.size() > 8 && filename.starts_with("@stdlib/");
 
-  td::Result<std::string> path = G.settings.read_callback(CompilerSettings::FsReadCallbackKind::Realpath, filename.c_str());
+  td::Result<std::string> path =
+      G.settings.read_callback(CompilerSettings::FsReadCallbackKind::Realpath, filename.c_str());
   if (path.is_error()) {
     if (included_from.is_defined()) {
       throw ParseError(included_from, "Failed to import: " + path.move_as_error().message().str());
@@ -50,7 +52,8 @@ const SrcFile* AllRegisteredSrcFiles::locate_and_register_source_file(const std:
     return file;
   }
 
-  td::Result<std::string> text = G.settings.read_callback(CompilerSettings::FsReadCallbackKind::ReadFile, realpath.c_str());
+  td::Result<std::string> text =
+      G.settings.read_callback(CompilerSettings::FsReadCallbackKind::ReadFile, realpath.c_str());
   if (text.is_error()) {
     if (included_from.is_defined()) {
       throw ParseError(included_from, "Failed to import: " + text.move_as_error().message().str());
@@ -58,7 +61,7 @@ const SrcFile* AllRegisteredSrcFiles::locate_and_register_source_file(const std:
     throw Fatal("Failed to read " + realpath + ": " + text.move_as_error().message().str());
   }
 
-  int file_id = static_cast<int>(all_src_files.size());   // SrcFile::file_id is the index in all files
+  int file_id = static_cast<int>(all_src_files.size());  // SrcFile::file_id is the index in all files
   SrcFile* created = new SrcFile(file_id, is_stdlib, std::move(realpath), text.move_as_ok());
   if (G.is_verbosity(1)) {
     std::cerr << "register file_id " << created->file_id << " " << created->realpath << std::endl;
@@ -119,9 +122,9 @@ std::string SrcFile::extract_short_name() const {
   if (last_slash == std::string::npos) {
     return realpath;
   }
-  std::string short_name = realpath.substr(last_slash + 1);    // "file.tolk" (no path)
+  std::string short_name = realpath.substr(last_slash + 1);  // "file.tolk" (no path)
 
-  if (is_stdlib_file) {   // not "common.tolk", but "@stdlib/common"
+  if (is_stdlib_file) {  // not "common.tolk", but "@stdlib/common"
     return "@stdlib/" + short_name.substr(0, short_name.size() - 5);
   }
   return short_name;
@@ -134,7 +137,6 @@ std::string SrcFile::extract_dirname() const {
   }
   return realpath.substr(0, last_slash + 1);
 }
-
 
 std::ostream& operator<<(std::ostream& os, const SrcFile* src_file) {
   return os << (src_file ? src_file->realpath : "unknown-location");
@@ -180,7 +182,7 @@ void SrcLocation::show_context(std::ostream& os) const {
 // is preceded by an original line as a comment
 void SrcLocation::show_line_to_fif_output(std::ostream& os, int indent, int* last_line_no) const {
   SrcFile::SrcPosition pos = G.all_src_files.get_file(file_id)->convert_offset(char_offset);
-  
+
   // avoid duplicating one line multiple times in fift output
   if (pos.line_no == *last_line_no) {
     return;
@@ -191,12 +193,16 @@ void SrcLocation::show_line_to_fif_output(std::ostream& os, int indent, int* las
   std::string_view s = pos.line_str;
   int b = 0, e = static_cast<int>(s.size() - 1);
   while (std::isspace(s[b]) || s[b] == '}') {
-    if (b < e) b++;
-    else break;
+    if (b < e)
+      b++;
+    else
+      break;
   }
   while (std::isspace(s[e]) || s[e] == '{' || s[e] == ';' || s[e] == ',') {
-    if (e > b) e--;
-    else break;
+    if (e > b)
+      e--;
+    else
+      break;
   }
 
   if (b < e) {

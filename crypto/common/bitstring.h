@@ -284,7 +284,7 @@ class BitSliceGen {
     ensure_throw(set_size_bool(bits));
     return *this;
   }
-  BitSliceGen subslice(unsigned from, unsigned bits) const & {
+  BitSliceGen subslice(unsigned from, unsigned bits) const& {
     return BitSliceGen(*this, from, bits);
   }
   BitSliceGen subslice(unsigned from, unsigned bits) && {

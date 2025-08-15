@@ -339,7 +339,8 @@ class Collator final : public td::actor::Actor {
   bool is_our_address(Ref<vm::CellSlice> addr_ref) const;
   bool is_our_address(ton::AccountIdPrefixFull addr_prefix) const;
   bool is_our_address(const ton::StdSmcAddress& addr) const;
-  void after_get_external_messages(td::Result<std::vector<std::pair<Ref<ExtMessage>, int>>> res, td::PerfLogAction token);
+  void after_get_external_messages(td::Result<std::vector<std::pair<Ref<ExtMessage>, int>>> res,
+                                   td::PerfLogAction token);
   td::Result<bool> register_external_message_cell(Ref<vm::Cell> ext_msg, const ExtMessage::Hash& ext_hash,
                                                   int priority);
   // td::Result<bool> register_external_message(td::Slice ext_msg_boc);

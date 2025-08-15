@@ -488,7 +488,7 @@ td::Result<WorkchainSet> Config::unpack_workchain_list(Ref<vm::Cell> root) {
 }
 
 class ValidatorSetCache {
-public:
+ public:
   ValidatorSetCache() {
     cache_.reserve(MAX_CACHE_SIZE + 1);
   }
@@ -523,7 +523,7 @@ public:
     }
   }
 
-private:
+ private:
   std::mutex mutex_;
 
   struct CacheEntry : td::ListNode {

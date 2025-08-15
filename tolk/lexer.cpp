@@ -27,7 +27,7 @@ namespace tolk {
 // We store all valid chunks lexers in a prefix tree (LexingTrie), see below.
 struct ChunkLexerBase {
   ChunkLexerBase(const ChunkLexerBase&) = delete;
-  ChunkLexerBase &operator=(const ChunkLexerBase&) = delete;
+  ChunkLexerBase& operator=(const ChunkLexerBase&) = delete;
   ChunkLexerBase() = default;
 
   virtual bool parse(Lexer* lex) const = 0;
@@ -43,8 +43,8 @@ static T* singleton() {
 // LexingTrie is a prefix tree storing all available Tolk language constructs.
 // It's effectively a map of a prefix to ChunkLexerBase.
 class LexingTrie {
-  LexingTrie** next{nullptr};   // either nullptr or [256]
-  ChunkLexerBase* val{nullptr}; // non-null for leafs
+  LexingTrie** next{nullptr};    // either nullptr or [256]
+  ChunkLexerBase* val{nullptr};  // non-null for leafs
 
   GNU_ATTRIBUTE_ALWAYS_INLINE void ensure_next_allocated() {
     if (next == nullptr) {
@@ -59,7 +59,7 @@ class LexingTrie {
     }
   }
 
-public:
+ public:
   // Maps a prefix onto a chunk lexer.
   // E.g. "    -> ChunkString
   // E.g. """  -> ChunkMultilineString
@@ -90,7 +90,7 @@ public:
       std::string to_append;
       if (*c == '[') {
         c++;
-        while (*c != ']') { // assume that input is corrent, no out-of-string checks
+        while (*c != ']') {  // assume that input is corrent, no out-of-string checks
           if (*(c + 1) == '-') {
             char l = *c, r = *(c + 2);
             for (char symbol = l; symbol <= r; ++symbol) {
@@ -163,7 +163,7 @@ struct ChunkMultilineComment final : ChunkLexerBase {
       }
       lex->skip_chars(1);
     }
-    return true; // it's okay if comment extends past end of file
+    return true;  // it's okay if comment extends past end of file
   }
 };
 
@@ -233,16 +233,14 @@ struct ChunkAnnotation final : ChunkLexerBase {
 struct ChunkNumber final : ChunkLexerBase {
   static bool parse_hex_or_bin(Lexer* lex, bool bin) {
     const char* str_begin = lex->c_str();
-    lex->skip_chars(2);     // 0x / 0b
+    lex->skip_chars(2);  // 0x / 0b
     if (lex->is_eof()) {
       return false;
     }
 
     while (!lex->is_eof()) {
       char c = lex->char_at();
-      bool ok = bin
-        ? c == '0' || c == '1'
-        : (c >= '0' && c <= '9') || ((c | 0x20) >= 'a' && (c | 0x20) <= 'f');
+      bool ok = bin ? c == '0' || c == '1' : (c >= '0' && c <= '9') || ((c | 0x20) >= 'a' && (c | 0x20) <= 'f');
       if (!ok) {
         break;
       }
@@ -285,7 +283,8 @@ struct ChunkSimpleToken final : ChunkLexerBase {
   TokenType tp;
   int len;
 
-  ChunkSimpleToken(TokenType tp, int len) : tp(tp), len(len) {}
+  ChunkSimpleToken(TokenType tp, int len) : tp(tp), len(len) {
+  }
 
   bool parse(Lexer* lex) const override {
     std::string_view str_val(lex->c_str(), len);
@@ -332,58 +331,96 @@ struct ChunkIdentifierOrKeyword final : ChunkLexerBase {
   static TokenType maybe_keyword(std::string_view str) {
     switch (str.size()) {
       case 1:
-        if (str == "_") return tok_underscore;
+        if (str == "_")
+          return tok_underscore;
         break;
       case 2:
-        if (str == "do") return tok_do;
-        if (str == "if") return tok_if;
-        if (str == "is") return tok_is;
-        if (str == "as") return tok_as;
+        if (str == "do")
+          return tok_do;
+        if (str == "if")
+          return tok_if;
+        if (str == "is")
+          return tok_is;
+        if (str == "as")
+          return tok_as;
         break;
       case 3:
-        if (str == "var") return tok_var;
-        if (str == "fun") return tok_fun;
-        if (str == "asm") return tok_asm;
-        if (str == "try") return tok_try;
-        if (str == "val") return tok_val;
+        if (str == "var")
+          return tok_var;
+        if (str == "fun")
+          return tok_fun;
+        if (str == "asm")
+          return tok_asm;
+        if (str == "try")
+          return tok_try;
+        if (str == "val")
+          return tok_val;
         break;
       case 4:
-        if (str == "else") return tok_else;
-        if (str == "true") return tok_true;
-        if (str == "null") return tok_null;
-        if (str == "self") return tok_self;
-        if (str == "tolk") return tok_tolk;
-        if (str == "type") return tok_type;
-        if (str == "lazy") return tok_lazy;
-        if (str == "enum") return tok_enum;
+        if (str == "else")
+          return tok_else;
+        if (str == "true")
+          return tok_true;
+        if (str == "null")
+          return tok_null;
+        if (str == "self")
+          return tok_self;
+        if (str == "tolk")
+          return tok_tolk;
+        if (str == "type")
+          return tok_type;
+        if (str == "lazy")
+          return tok_lazy;
+        if (str == "enum")
+          return tok_enum;
         break;
       case 5:
-        if (str == "const") return tok_const;
-        if (str == "false") return tok_false;
-        if (str == "match") return tok_match;
-        if (str == "redef") return tok_redef;
-        if (str == "while") return tok_while;
-        if (str == "break") return tok_break;
-        if (str == "throw") return tok_throw;
-        if (str == "catch") return tok_catch;
-        if (str == "infix") return tok_infix;
+        if (str == "const")
+          return tok_const;
+        if (str == "false")
+          return tok_false;
+        if (str == "match")
+          return tok_match;
+        if (str == "redef")
+          return tok_redef;
+        if (str == "while")
+          return tok_while;
+        if (str == "break")
+          return tok_break;
+        if (str == "throw")
+          return tok_throw;
+        if (str == "catch")
+          return tok_catch;
+        if (str == "infix")
+          return tok_infix;
         break;
       case 6:
-        if (str == "return") return tok_return;
-        if (str == "assert") return tok_assert;
-        if (str == "import") return tok_import;
-        if (str == "global") return tok_global;
-        if (str == "mutate") return tok_mutate;
-        if (str == "repeat") return tok_repeat;
-        if (str == "struct") return tok_struct;
-        if (str == "export") return tok_export;
+        if (str == "return")
+          return tok_return;
+        if (str == "assert")
+          return tok_assert;
+        if (str == "import")
+          return tok_import;
+        if (str == "global")
+          return tok_global;
+        if (str == "mutate")
+          return tok_mutate;
+        if (str == "repeat")
+          return tok_repeat;
+        if (str == "struct")
+          return tok_struct;
+        if (str == "export")
+          return tok_export;
         break;
       case 7:
-        if (str == "builtin") return tok_builtin;
+        if (str == "builtin")
+          return tok_builtin;
         break;
       case 8:
-        if (str == "continue") return tok_continue;
-        if (str == "operator") return tok_operator;
+        if (str == "continue")
+          return tok_continue;
+        if (str == "operator")
+          return tok_operator;
         break;
       default:
         break;
@@ -551,11 +588,7 @@ LexingTrie TolkLanguageGrammar::trie;
 //
 
 Lexer::Lexer(const SrcFile* file)
-  : file(file)
-  , p_start(file->text.data())
-  , p_end(p_start + file->text.size())
-  , p_next(p_start)
-  , location(file) {
+    : file(file), p_start(file->text.data()), p_end(p_start + file->text.size()), p_next(p_start), location(file) {
   next();
 }
 

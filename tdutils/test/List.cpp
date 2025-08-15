@@ -69,9 +69,7 @@ static void do_run_list_test(ListRootT &root, std::atomic<td::uint64> &id) {
 
   td::Random::Xorshift128plus rnd(123);
 
-  auto next_id = [&] {
-    return ++id;
-  };
+  auto next_id = [&] { return ++id; };
   auto add_node = [&] {
     if (nodes.size() >= 20) {
       return;

@@ -184,7 +184,7 @@ void StateDb::update_hardforks(std::vector<BlockIdExt> blocks, td::Promise<td::U
 
   std::vector<tl_object_ptr<ton_api::tonNode_blockIdExt>> vec;
 
-  for (auto &e : blocks) {
+  for (auto& e : blocks) {
     vec.push_back(create_tl_block_id(e));
   }
 
@@ -210,7 +210,7 @@ void StateDb::get_hardforks(td::Promise<std::vector<BlockIdExt>> promise) {
   auto f = F.move_as_ok();
 
   std::vector<BlockIdExt> vec;
-  for (auto &e : f->blocks_) {
+  for (auto& e : f->blocks_) {
     vec.push_back(create_block_id(e));
   }
 

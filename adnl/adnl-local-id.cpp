@@ -41,7 +41,7 @@ AdnlAddressList AdnlLocalId::get_addr_list() const {
 }
 
 void AdnlLocalId::receive(td::IPAddress addr, td::BufferSlice data) {
-  InboundRateLimiter& rate_limiter = inbound_rate_limiter_[addr];
+  InboundRateLimiter &rate_limiter = inbound_rate_limiter_[addr];
   if (!rate_limiter.rate_limiter.take()) {
     VLOG(ADNL_NOTICE) << this << ": dropping IN message: rate limit exceeded";
     add_dropped_packet_stats(addr);
@@ -370,7 +370,6 @@ tl_object_ptr<ton_api::adnl_stats_localIdPackets> AdnlLocalId::PacketStats::tl(b
   }
   return obj;
 }
-
 
 }  // namespace adnl
 

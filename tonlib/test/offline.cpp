@@ -689,7 +689,7 @@ TEST(Tonlib, ConfigCache) {
   sync_send(client, make_object<tonlib_api::options_setConfig>(
                         make_object<tonlib_api::config>(testnet, "testnet", true, false)))
       .ensure();
-  sync_send(client, make_object<tonlib_api::options_setConfig>(
-                        make_object<tonlib_api::config>(custom, "testnet", true, false)))
+  sync_send(client,
+            make_object<tonlib_api::options_setConfig>(make_object<tonlib_api::config>(custom, "testnet", true, false)))
       .ensure_error();
 }

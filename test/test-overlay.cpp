@@ -238,7 +238,7 @@ int main(int argc, char *argv[]) {
             (n1.can_receive ? 0 : ton::overlay::OverlayMemberFlags::DoNotReceiveBroadcasts);
 
         ton::overlay::OverlayMemberCertificate cert(root_nodes[i / node_slaves_cnt].id_full, 0, i % node_slaves_cnt,
-                                                  2000000000, td::BufferSlice());
+                                                    2000000000, td::BufferSlice());
         auto buf = cert.to_sign_data(n1.adnl_id);
         auto dec = root_nodes[i / node_slaves_cnt].pk.create_decryptor().move_as_ok();
         auto signature = dec->sign(buf.as_slice()).move_as_ok();

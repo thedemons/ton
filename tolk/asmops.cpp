@@ -71,7 +71,6 @@ int AsmOp::SReg::calc_out_strlen() const {
   }
 }
 
-
 AsmOp AsmOp::Const(SrcLocation loc, int arg, const std::string& push_op) {
   std::ostringstream os;
   os << arg << ' ' << push_op;
@@ -223,7 +222,8 @@ AsmOp AsmOp::Parse(SrcLocation loc, const std::string& custom_op) {
     return AsmOp::Push(loc, 0);
   } else if (custom_op == "OVER") {
     return AsmOp::Push(loc, 1);
-  } else if (custom_op.ends_with(" PUSHINT") && custom_op[0] >= '1' && custom_op[0] <= '9' && custom_op.find(' ') == custom_op.rfind(' ')) {
+  } else if (custom_op.ends_with(" PUSHINT") && custom_op[0] >= '1' && custom_op[0] <= '9' &&
+             custom_op.find(' ') == custom_op.rfind(' ')) {
     return AsmOp::IntConst(loc, td::string_to_int256(custom_op.substr(0, custom_op.find(' '))));
   } else {
     return AsmOp::Custom(loc, custom_op);
@@ -242,7 +242,7 @@ AsmOp AsmOp::Parse(SrcLocation loc, std::string custom_op, int args, int retv) {
 int AsmOp::out(std::ostream& os) const {
   if (!op.empty()) {
     os << op;
-    return static_cast<int>(op.size());   // return strlen to align a comment at the right
+    return static_cast<int>(op.size());  // return strlen to align a comment at the right
   }
   switch (t) {
     case a_nop:
@@ -336,7 +336,7 @@ void AsmOpList::out(std::ostream& os, int mode) const {
     const AsmOp& op = list_[i];
     if (!op.is_comment() && i + 1 < n && list_[i + 1].is_comment()) {
       int len = op.out_indented(os, mode & Stack::_LineComments);
-      while (len < 28) {    // align stack comments at the right
+      while (len < 28) {  // align stack comments at the right
         os << ' ';
         len++;
       }

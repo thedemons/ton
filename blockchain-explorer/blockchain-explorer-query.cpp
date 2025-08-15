@@ -1187,8 +1187,7 @@ void HttpQuerySendForm::finish_query() {
         << "send\" method=\"post\" enctype=\"multipart/form-data\"><div class=\"form-group-row\">"
         << "<label for=\"filedata\">bag of cells</label>"
         << "<input type=\"file\" class=\"form-control-file\" id=\"filedata\" name=\"filedata\">"
-        << "<button type=\"submit\" class=\"btn btn-primary\">send</button>"
-        << "</div></form></div>";
+        << "<button type=\"submit\" class=\"btn btn-primary\">send</button>" << "</div></form></div>";
       return A.finish();
     }();
     auto R = MHD_create_response_from_buffer(page.length(), const_cast<char *>(page.c_str()), MHD_RESPMEM_MUST_COPY);

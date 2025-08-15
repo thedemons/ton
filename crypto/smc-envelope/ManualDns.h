@@ -351,6 +351,7 @@ class ManualDns : public ton::SmartContract, public DnsInterface {
     return res;
   }
   td::Result<td::Ref<vm::Cell>> create_update_query(CombinedActions<Action>& combined) const;
+
  private:
   block::StdAddress address_;
 };

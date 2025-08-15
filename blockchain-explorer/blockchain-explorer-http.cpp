@@ -132,7 +132,7 @@ HttpAnswer& HttpAnswer::operator<<(MessageCell msg) {
             << "<tr><th>destination</th><td>" << AddressCell{info.dest} << "</td></tr>\n"
             << "<tr><th>lt</th><td>" << info.created_lt << "</td></tr>\n"
             << "<tr><th>time</th><td>" << info.created_at << " (" << time_to_human(info.created_at) << ")</td></tr>\n"
-            << "<tr><th>value</th><td>" << currency_collection.to_str()<< "</td></tr>\n";
+            << "<tr><th>value</th><td>" << currency_collection.to_str() << "</td></tr>\n";
       break;
     }
     default:
@@ -156,132 +156,88 @@ HttpAnswer& HttpAnswer::operator<<(ton::BlockId block_id) {
 }
 
 HttpAnswer& HttpAnswer::operator<<(BlockSearch bs) {
-  *this << "<form class=\"container\" action=\"" << prefix_ << "search\" method=\"get\">"
-        << "<div class=\"row\">"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>workchain</label>"
+  *this << "<form class=\"container\" action=\"" << prefix_ << "search\" method=\"get\">" << "<div class=\"row\">"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>workchain</label>"
         << "<input type=\"text\" class=\"form-control mr-2\" name=\"workchain\" value=\""
-        << (bs.block_id.is_valid() ? std::to_string(bs.block_id.id.workchain) : "") << "\">"
-        << "</div>\n"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>shard/account</label>"
+        << (bs.block_id.is_valid() ? std::to_string(bs.block_id.id.workchain) : "") << "\">" << "</div>\n"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>shard/account</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"shard\" value=\""
         << (bs.block_id.is_valid() ? ton::shard_to_str(bs.block_id.id.shard) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>seqno</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>seqno</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"seqno\" value=\""
         << (bs.block_id.is_valid() ? std::to_string(bs.block_id.id.seqno) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label class=\"d-none d-lg-block\">&nbsp;</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label class=\"d-none d-lg-block\">&nbsp;</label>"
         << "<div><button type=\"submit\" class=\"btn btn-primary mr-2\">Submit</button></div>"
-        << "</div></div><div class=\"row\">"
-        << "<div class=\"form-group col-md-6\">"
-        << "<label>logical time</label>"
-        << "<input type=\"text\" class=\"form-control mr-2\" name=\"lt\">"
-        << "</div>\n"
-        << "<div class=\"form-group col-md-6\">"
-        << "<label>unix time</label>"
-        << "<input type =\"text\" class=\"form-control mr-2\" name=\"utime\"></div>"
-        << "</div><div class=\"row\">"
-        << "<div class=\"form-group col-md-6\">"
-        << "<label>root hash</label>"
+        << "</div></div><div class=\"row\">" << "<div class=\"form-group col-md-6\">" << "<label>logical time</label>"
+        << "<input type=\"text\" class=\"form-control mr-2\" name=\"lt\">" << "</div>\n"
+        << "<div class=\"form-group col-md-6\">" << "<label>unix time</label>"
+        << "<input type =\"text\" class=\"form-control mr-2\" name=\"utime\"></div>" << "</div><div class=\"row\">"
+        << "<div class=\"form-group col-md-6\">" << "<label>root hash</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"roothash\" value=\""
         //<< (!bs.block_id.id.is_valid() || bs.block_id.root_hash.is_zero() ? "" : bs.block_id.root_hash.to_hex())
-        << "\"></div>"
-        << "<div class=\"col-md-6\">"
-        << "<label>file hash</label>"
+        << "\"></div>" << "<div class=\"col-md-6\">" << "<label>file hash</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"filehash\" value=\""
         //<< (!bs.block_id.id.is_valid() || bs.block_id.file_hash.is_zero() ? "" : bs.block_id.file_hash.to_hex())
-        << "\"></div>"
-        << "</div></form>\n";
+        << "\"></div>" << "</div></form>\n";
   return *this;
 }
 
 HttpAnswer& HttpAnswer::operator<<(AccountSearch bs) {
-  *this << "<form class=\"container\" action=\"" << prefix_ << "account\" method=\"get\">"
-        << "<div class=\"row\">"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>workchain</label>"
+  *this << "<form class=\"container\" action=\"" << prefix_ << "account\" method=\"get\">" << "<div class=\"row\">"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>workchain</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"workchain\" value=\""
         << (bs.block_id.is_valid() ? std::to_string(bs.block_id.id.workchain) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>shard</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>shard</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"shard\" value=\""
         << (bs.block_id.is_valid() ? ton::shard_to_str(bs.block_id.id.shard) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>seqno</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>seqno</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"seqno\" value=\""
         << (bs.block_id.is_valid() ? std::to_string(bs.block_id.id.seqno) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label class=\"d-none d-lg-block\">&nbsp;</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label class=\"d-none d-lg-block\">&nbsp;</label>"
         << "<div><button type=\"submit\" class=\"btn btn-primary mr-2\">Submit</button>"
         << "<button class=\"btn btn-outline-primary\" type=\"reset\">Reset</button></div>"
-        << "</div></div><div class=\"row\">"
-        << "<div class=\"form-group col-md-6\">"
-        << "<label>root hash</label>"
+        << "</div></div><div class=\"row\">" << "<div class=\"form-group col-md-6\">" << "<label>root hash</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"roothash\" value=\""
         << (!bs.block_id.id.is_valid() || bs.block_id.root_hash.is_zero() ? "" : bs.block_id.root_hash.to_hex())
-        << "\"></div>"
-        << "<div class=\"form-group col-md-6\">"
-        << "<label>file hash</label>"
+        << "\"></div>" << "<div class=\"form-group col-md-6\">" << "<label>file hash</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"filehash\" value=\""
         << (!bs.block_id.id.is_valid() || bs.block_id.file_hash.is_zero() ? "" : bs.block_id.file_hash.to_hex())
-        << "\"></div>"
-        << "</div><div class=\"row\">"
-        << "<div class=\"form-group col-md-12\">"
-        << "<label>account id</label>"
-        << "<input type =\"text\" class=\"form-control mr-2\" name=\"account\" value=\""
-        << (bs.addr.addr.is_zero() ? "" : bs.addr.rserialize(true)) << "\"></div>"
-        << "</div>\n"
+        << "\"></div>" << "</div><div class=\"row\">" << "<div class=\"form-group col-md-12\">"
+        << "<label>account id</label>" << "<input type =\"text\" class=\"form-control mr-2\" name=\"account\" value=\""
+        << (bs.addr.addr.is_zero() ? "" : bs.addr.rserialize(true)) << "\"></div>" << "</div>\n"
         << "</form>\n";
   return *this;
 }
 
 HttpAnswer& HttpAnswer::operator<<(TransactionSearch bs) {
-  *this << "<form class=\"container\" action=\"" << prefix_ << "transaction\" method=\"get\">"
-        << "<div class=\"row\">"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>workchain</label>"
+  *this << "<form class=\"container\" action=\"" << prefix_ << "transaction\" method=\"get\">" << "<div class=\"row\">"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>workchain</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"workchain\" value=\""
         << (bs.block_id.is_valid() ? std::to_string(bs.block_id.id.workchain) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>shard</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>shard</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"shard\" value=\""
         << (bs.block_id.is_valid() ? ton::shard_to_str(bs.block_id.id.shard) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label>seqno</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label>seqno</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"seqno\" value=\""
         << (bs.block_id.is_valid() ? std::to_string(bs.block_id.id.seqno) : "") << "\"></div>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<label class=\"d-none d-lg-block\">&nbsp;</label>"
+        << "<div class=\"form-group col-lg-3 col-md-4\">" << "<label class=\"d-none d-lg-block\">&nbsp;</label>"
         << "<div><button type=\"submit\" class=\"btn btn-primary mr-2\">Submit</button>"
         << "<button class=\"btn btn-outline-primary\" type=\"reset\">Reset</button></div>"
-        << "</div></div><div class=\"row\">"
-        << "<div class=\"form-group col-md-6\">"
-        << "<label>root hash</label>"
+        << "</div></div><div class=\"row\">" << "<div class=\"form-group col-md-6\">" << "<label>root hash</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"roothash\" value=\""
         << (!bs.block_id.id.is_valid() || bs.block_id.root_hash.is_zero() ? "" : bs.block_id.root_hash.to_hex())
-        << "\"></div>"
-        << "<div class=\"form-group col-md-6\">"
-        << "<label>file hash</label>"
+        << "\"></div>" << "<div class=\"form-group col-md-6\">" << "<label>file hash</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"filehash\" value=\""
         << (!bs.block_id.id.is_valid() || bs.block_id.file_hash.is_zero() ? "" : bs.block_id.file_hash.to_hex())
-        << "\"></div>"
-        << "</div><div class=\"row\">"
-        << "<div class=\"form-group col-md-12\">"
-        << "<label>account id</label>"
-        << "<input type =\"text\" class=\"form-control mr-2\" name=\"account\" value=\""
-        << (bs.addr.addr.is_zero() ? "" : bs.addr.rserialize(true)) << "\"></div>"
-        << "</div><div class=\"row\">"
-        << "<div class=\"form-group col-md-3\">"
-        << "<label>transaction lt</label>"
+        << "\"></div>" << "</div><div class=\"row\">" << "<div class=\"form-group col-md-12\">"
+        << "<label>account id</label>" << "<input type =\"text\" class=\"form-control mr-2\" name=\"account\" value=\""
+        << (bs.addr.addr.is_zero() ? "" : bs.addr.rserialize(true)) << "\"></div>" << "</div><div class=\"row\">"
+        << "<div class=\"form-group col-md-3\">" << "<label>transaction lt</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"lt\" value=\""
-        << (bs.lt ? std::to_string(bs.lt) : "") << "\"></div>"
-        << "<div class=\"form-group col-md-9\">"
+        << (bs.lt ? std::to_string(bs.lt) : "") << "\"></div>" << "<div class=\"form-group col-md-9\">"
         << "<label>transaction hash</label>"
         << "<input type =\"text\" class=\"form-control mr-2\" name=\"hash\" value=\""
-        << (bs.hash.is_zero() ? "" : bs.hash.to_hex()) << "\"></div>"
-        << "</div>\n"
+        << (bs.hash.is_zero() ? "" : bs.hash.to_hex()) << "\"></div>" << "</div>\n"
         << "</form>\n";
   return *this;
 }
@@ -299,11 +255,10 @@ HttpAnswer& HttpAnswer::operator<<(TransactionCell trans_c) {
   *this << "<div class=\"table-responsive my-3\">\n"
         << "<table class=\"table-sm table-striped\">\n"
         << "<tr><th>block</th><td><a href=\"" << BlockLink{trans_c.block_id} << "\">" << trans_c.block_id.id.to_str()
-        << "</a></td></tr>"
-        << "<tr><th>workchain</th><td>" << trans_c.addr.workchain << "</td></tr>"
-        << "<tr><th>account hex</th><td>" << trans_c.addr.addr.to_hex() << "</td></tr>"
-        << "<tr><th>account</th><td>" << trans_c.addr.rserialize(true) << "</td></tr>"
-        << "<tr><th>hash</th><td>" << trans_c.root->get_hash().to_hex() << "</td></tr>\n"
+        << "</a></td></tr>" << "<tr><th>workchain</th><td>" << trans_c.addr.workchain << "</td></tr>"
+        << "<tr><th>account hex</th><td>" << trans_c.addr.addr.to_hex() << "</td></tr>" << "<tr><th>account</th><td>"
+        << trans_c.addr.rserialize(true) << "</td></tr>" << "<tr><th>hash</th><td>" << trans_c.root->get_hash().to_hex()
+        << "</td></tr>\n"
         << "<tr><th>lt</th><td>" << trans.lt << "</td></tr>\n"
         << "<tr><th>time</th><td>" << trans.now << " (" << time_to_human(trans.now) << ")</td></tr>\n"
         << "<tr><th>out messages</th><td>";
@@ -424,12 +379,9 @@ HttpAnswer& HttpAnswer::operator<<(AccountCell acc_c) {
     return *this;
   }
 
-  *this << "<form class=\"container\" action=\"" << prefix_ << "runmethod\" method=\"get\">"
-        << "<div class=\"row\">"
-        << "<p>Run get method<p>"
-        << "<div class=\"form-group col-lg-3 col-md-4\">"
-        << "<input type=\"text\" class=\"form-control mr-2\" name=\"method\" placeholder=\"method\">"
-        << "</div>\n"
+  *this << "<form class=\"container\" action=\"" << prefix_ << "runmethod\" method=\"get\">" << "<div class=\"row\">"
+        << "<p>Run get method<p>" << "<div class=\"form-group col-lg-3 col-md-4\">"
+        << "<input type=\"text\" class=\"form-control mr-2\" name=\"method\" placeholder=\"method\">" << "</div>\n"
         << "<div class=\"form-group col-lg-4 col-md-6\">"
         << "<input type=\"text\" class=\"form-control mr-2\" name=\"params\" placeholder=\"parameters\"></div>"
         << "<input type=\"hidden\" name=\"account\" value=\"" << acc_c.addr.rserialize(true) << "\">"
@@ -438,8 +390,7 @@ HttpAnswer& HttpAnswer::operator<<(AccountCell acc_c) {
         << "<input type=\"hidden\" name=\"seqno\" value=\"" << block_id.id.seqno << "\">"
         << "<input type=\"hidden\" name=\"roothash\" value=\"" << block_id.root_hash.to_hex() << "\">"
         << "<input type=\"hidden\" name=\"filehash\" value=\"" << block_id.file_hash.to_hex() << "\">"
-        << "<div><button type=\"submit\" class=\"btn btn-primary mr-2\">Run!</button></div>"
-        << "</div></form>\n";
+        << "<div><button type=\"submit\" class=\"btn btn-primary mr-2\">Run!</button></div>" << "</div></form>\n";
 
   *this << "<div class=\"table-responsive my-3\">\n"
         << "<table class=\"table-sm table-striped\">\n";
@@ -450,8 +401,8 @@ HttpAnswer& HttpAnswer::operator<<(AccountCell acc_c) {
   *this << "<tr><th>account</th><td>" << acc_c.addr.rserialize(true) << "</td></tr>";
   *this << "<tr><th>balance</th><td>" << balance.to_str() << "</td></tr>";
   if (last_trans_lt > 0) {
-    *this << "<tr><th>last transaction</th><td>"
-          << "<a href=\"" << TransactionLink{acc_c.addr, last_trans_lt, last_trans_hash} << "\">lt=" << last_trans_lt
+    *this << "<tr><th>last transaction</th><td>" << "<a href=\""
+          << TransactionLink{acc_c.addr, last_trans_lt, last_trans_hash} << "\">lt=" << last_trans_lt
           << " hash=" << last_trans_hash.to_hex() << "</a></td></tr>\n";
   } else {
     *this << "<tr><th>last transaction</th><td>no transactions</td></tr>";
@@ -544,8 +495,8 @@ HttpAnswer& HttpAnswer::operator<<(BlockHeaderCell head_c) {
   }
 
   *this << "<p><a class=\"btn btn-primary mr-2\" href=\"" << BlockDownloadLink{block_id} << "\" download=\""
-        << block_id.file_hash << ".boc\">download block</a>"
-        << "<a class=\"btn btn-primary\" href=\"" << BlockViewLink{block_id} << "\">view block</a>\n";
+        << block_id.file_hash << ".boc\">download block</a>" << "<a class=\"btn btn-primary\" href=\""
+        << BlockViewLink{block_id} << "\">view block</a>\n";
   if (block_id.is_masterchain()) {
     *this << "<a class=\"btn btn-primary\" href=\"" << ConfigViewLink{block_id} << "\">view config</a>\n";
   }
@@ -565,14 +516,9 @@ HttpAnswer& HttpAnswer::operator<<(BlockShardsCell shards_c) {
           << "<table class=\"table\">\n<tbody>\n"
           << "<thead>\n"
           << "<tr>\n"
-          << "<th scope=\"col\">shard</th>"
-          << "<th scope=\"col\">seqno</th>"
-          << "<th scope=\"col\">created</th>"
-          << "<th scope=\"col\">wantsplit</th>"
-          << "<th scope=\"col\">wantmerge</th>"
-          << "<th scope=\"col\">beforesplit</th>"
-          << "<th scope=\"col\">beforemerge</th>"
-          << "</tr>\n"
+          << "<th scope=\"col\">shard</th>" << "<th scope=\"col\">seqno</th>" << "<th scope=\"col\">created</th>"
+          << "<th scope=\"col\">wantsplit</th>" << "<th scope=\"col\">wantmerge</th>"
+          << "<th scope=\"col\">beforesplit</th>" << "<th scope=\"col\">beforemerge</th>" << "</tr>\n"
           << "</thead>\n";
     for (auto id : ids) {
       auto ref = sh_conf.get_shard_hash(ton::ShardIdFull(id));
@@ -588,11 +534,9 @@ HttpAnswer& HttpAnswer::operator<<(BlockShardsCell shards_c) {
       if (ref.not_null()) {
         *this << "<td>" << shard.to_str() << "</td><td><a href=\"" << HttpAnswer::BlockLink{ref->top_block_id()}
               << "\">" << ref->top_block_id().id.seqno << "</a></td><td><span title=\""
-              << time_to_human(ref->created_at()) << "\">" << ref->created_at() << "</span></td>"
-              << "<td>" << ref->want_split_ << "</td>"
-              << "<td>" << ref->want_merge_ << "</td>"
-              << "<td>" << ref->before_split_ << "</td>"
-              << "<td>" << ref->before_merge_ << "</td>";
+              << time_to_human(ref->created_at()) << "\">" << ref->created_at() << "</span></td>" << "<td>"
+              << ref->want_split_ << "</td>" << "<td>" << ref->want_merge_ << "</td>" << "<td>" << ref->before_split_
+              << "</td>" << "<td>" << ref->before_merge_ << "</td>";
       } else {
         *this << "<td>" << shard.to_str() << "</td>";
       }
@@ -616,8 +560,8 @@ HttpAnswer& HttpAnswer::operator<<(MessageLink msg) {
 }
 
 HttpAnswer& HttpAnswer::operator<<(TransactionLink trans) {
-  return *this << prefix_ << "transaction?"
-               << "account=" << trans.account_id.rserialize(true) << "&lt=" << trans.lt << "&hash=" << trans.hash;
+  return *this << prefix_ << "transaction?" << "account=" << trans.account_id.rserialize(true) << "&lt=" << trans.lt
+               << "&hash=" << trans.hash;
 }
 
 HttpAnswer& HttpAnswer::operator<<(TransactionLinkShort trans) {
@@ -655,26 +599,18 @@ HttpAnswer& HttpAnswer::operator<<(TransactionList trans) {
         << "<table class=\"table\">\n<tbody>\n"
         << "<thead>\n"
         << "<tr>\n"
-        << "<th scope=\"col\">seq</th>"
-        << "<th scope=\"col\">account</th>"
-        << "<th scope=\"col\">lt</th>"
-        << "<th scope=\"col\">hash</th>"
-        << "<th scope=\"col\">link</th>"
-        << "</tr>\n"
+        << "<th scope=\"col\">seq</th>" << "<th scope=\"col\">account</th>" << "<th scope=\"col\">lt</th>"
+        << "<th scope=\"col\">hash</th>" << "<th scope=\"col\">link</th>" << "</tr>\n"
         << "</thead>\n";
   td::uint32 idx = 0;
   for (auto& x : trans.vec) {
     *this << "<tr><td><a href=\"" << TransactionLink{x.addr, x.lt, x.hash} << "\">" << ++idx << "</a></td>"
           << "<td><a href=\"" << AccountLink{x.addr, trans.block_id} << "\">" << x.addr.rserialize(true) << "</a></td>"
-          << "<td>" << x.lt << "</td>"
-          << "<td>" << x.hash.to_hex() << "</td>"
-          << "<td><a href=\"" << TransactionLink{x.addr, x.lt, x.hash} << "\">view</a></td></tr>";
+          << "<td>" << x.lt << "</td>" << "<td>" << x.hash.to_hex() << "</td>" << "<td><a href=\""
+          << TransactionLink{x.addr, x.lt, x.hash} << "\">view</a></td></tr>";
   }
   if (trans.vec.size() == trans.req_count_) {
-    *this << "<tr><td>" << ++idx << "</td>"
-          << "<td>more</td>"
-          << "<td>more</td>"
-          << "<td>more</td></tr>";
+    *this << "<tr><td>" << ++idx << "</td>" << "<td>more</td>" << "<td>more</td>" << "<td>more</td></tr>";
   }
   return *this << "</tbody></table></div>";
 }
@@ -725,8 +661,7 @@ std::string HttpAnswer::header() {
         << "<!-- Latest compiled and minified CSS -->\n"
         << "<link rel=\"stylesheet\" href=\"" << (local_scripts ? "/" : "https://")
         << "maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\">\n"
-        << "<!-- jQuery library -->"
-        << "<script src=\"" << (local_scripts ? "/" : "https://")
+        << "<!-- jQuery library -->" << "<script src=\"" << (local_scripts ? "/" : "https://")
         << "ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js\"></script>\n"
         << "<!-- Popper JS -->\n"
         << "<script src=\"" << (local_scripts ? "/" : "https://")
@@ -747,8 +682,7 @@ std::string HttpAnswer::header() {
         << "name=\"account\">";
   *this << "<div class=\"input-group-append\"><button class=\"btn btn-outline-primary rounded\" "
            "type=\"submit\">view</button></div>"
-        << "</div></form>"
-        << "</nav>\n";
+        << "</div></form>" << "</nav>\n";
 
   *this << "<p>\n"
         << "<a class=\"btn btn-primary mt-1\" data-toggle=\"collapse\" href=\"#blocksearch\" role=\"button\" "

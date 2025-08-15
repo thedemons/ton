@@ -1337,8 +1337,7 @@ TEST(Torrent, Peer) {
   scheduler.run_in_context([&] {
     auto peer_manager = td::actor::create_actor<PeerManager>("PeerManager");
     guard->push_back(td::actor::create_actor<ton::NodeActor>(
-        "Node#1", 1, std::move(torrent),
-        td::make_unique<TorrentCallback>(stop_watcher, complete_watcher),
+        "Node#1", 1, std::move(torrent), td::make_unique<TorrentCallback>(stop_watcher, complete_watcher),
         td::make_unique<PeerCreator>(peer_manager.get(), 1, gen_peers(1, 2)), nullptr, ton::SpeedLimiters{}));
     for (size_t i = 2; i <= peers_n; i++) {
       ton::Torrent::Options options;
@@ -1347,8 +1346,7 @@ TEST(Torrent, Peer) {
       auto node_actor = td::actor::create_actor<ton::NodeActor>(
           PSLICE() << "Node#" << i, i, std::move(other_torrent),
           td::make_unique<TorrentCallback>(stop_watcher, complete_watcher),
-          td::make_unique<PeerCreator>(peer_manager.get(), i, gen_peers(i, 2)),
-          nullptr, ton::SpeedLimiters{});
+          td::make_unique<PeerCreator>(peer_manager.get(), i, gen_peers(i, 2)), nullptr, ton::SpeedLimiters{});
 
       if (i == 3) {
         td::actor::create_actor<StatsActor>("StatsActor", node_actor.get()).release();

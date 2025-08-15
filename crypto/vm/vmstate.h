@@ -33,9 +33,9 @@ class VmStateInterface : public td::Context<VmStateInterface> {
       td::ConstBitPtr hash) {  // may throw a dictionary exception; returns nullptr if library is not found
     return {};
   }
-  virtual void register_cell_load(const CellHash& cell_hash){};
-  virtual void register_cell_create(){};
-  virtual void register_new_cell(Ref<DataCell>& cell){};
+  virtual void register_cell_load(const CellHash& cell_hash) {};
+  virtual void register_cell_create() {};
+  virtual void register_new_cell(Ref<DataCell>& cell) {};
   virtual bool register_op(int op_units = 1) {
     return true;
   };

@@ -53,7 +53,8 @@ int main(int argc, char *argv[]) {
   p.add_option('o', "out", "output", [&](td::Slice key) { out_f = key.str(); });
   p.add_option('r', "reverse", "read tlo, print json", [&]() { reverse_ = !reverse_; });
   p.add_option('V', "version", "shows json2tlo build information", [&]() {
-    std::cout << "json2tlo build information: [ Commit: " << GitMetadata::CommitSHA1() << ", Date: " << GitMetadata::CommitDate() << "]\n";
+    std::cout << "json2tlo build information: [ Commit: " << GitMetadata::CommitSHA1()
+              << ", Date: " << GitMetadata::CommitDate() << "]\n";
     std::exit(0);
   });
   p.add_option('h', "help", "prints_help", [&]() {
@@ -110,4 +111,3 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-

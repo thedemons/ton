@@ -662,7 +662,7 @@ void ValidatorManagerImpl::add_cached_block_data(BlockIdExt block_id, td::Buffer
   if (block_id.is_masterchain()) {
     return;
   }
-  td::BufferSlice& block_data = cached_block_data_.get(block_id);
+  td::BufferSlice &block_data = cached_block_data_.get(block_id);
   if (!block_data.empty()) {
     return;
   }
@@ -1823,8 +1823,7 @@ void ValidatorManagerImpl::send_get_block_proof_link_request(BlockIdExt block_id
       // Proof link can be created from the cached block data
       LOG(DEBUG) << "send_get_block_proof_link_request: creating proof link from cached block data for "
                  << block_id.to_str();
-      TRY_RESULT_PROMISE_PREFIX(promise, block_root, vm::std_boc_deserialize(*cached),
-                                "failed to create proof link: ");
+      TRY_RESULT_PROMISE_PREFIX(promise, block_root, vm::std_boc_deserialize(*cached), "failed to create proof link: ");
       TRY_RESULT_PROMISE_PREFIX(promise, proof_link, WaitBlockData::generate_proof_link(block_id, block_root),
                                 "failed to create proof link: ");
       promise.set_result(std::move(proof_link));

@@ -52,9 +52,8 @@ void pipeline_discover_and_parse_sources(const std::string& stdlib_filename, con
     for (AnyV v_toplevel : file->ast->as<ast_tolk_file>()->get_toplevel_declarations()) {
       if (auto v_import = v_toplevel->try_as<ast_import_directive>()) {
         std::string imported_str = v_import->get_file_name();
-        std::string rel_filename = imported_str[0] == '@'
-          ? std::move(imported_str)
-          : file->extract_dirname() + imported_str;
+        std::string rel_filename =
+            imported_str[0] == '@' ? std::move(imported_str) : file->extract_dirname() + imported_str;
 
         const SrcFile* imported = G.all_src_files.locate_and_register_source_file(rel_filename, v_import->loc);
         file->imports.push_back(SrcFile::ImportDirective{imported});
@@ -67,4 +66,4 @@ void pipeline_discover_and_parse_sources(const std::string& stdlib_filename, con
   // lexer_measure_performance(G.all_src_files);
 }
 
-} // namespace tolk
+}  // namespace tolk

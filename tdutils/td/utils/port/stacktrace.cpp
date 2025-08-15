@@ -58,7 +58,7 @@ void print_backtrace(void) {
     SymFromAddr(process, (DWORD64)(stack[i]), nullptr, symbol);
     // Don't use sprintf here because it is not signal-safe
     char buf[256 + 32];
-    char* buf_ptr = buf;
+    char *buf_ptr = buf;
     if (frames - i - 1 < 10) {
       strcpy(buf_ptr, " ");
       buf_ptr += strlen(buf_ptr);

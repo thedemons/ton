@@ -20,4 +20,4 @@ namespace tolk {
 
 constexpr const char* TOLK_VERSION = "1.0.0";
 
-} // namespace tolk
+}  // namespace tolk

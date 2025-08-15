@@ -1142,7 +1142,8 @@ TEST(Actor2, test_stats) {
         td::actor::create_actor<QueueWorker>("queue_worker").release();
       }
       void alarm() override {
-        td::actor::send_closure(stats_, &ActorStats::prepare_stats, td::promise_send_closure(actor_id(this), &Master::on_stats));
+        td::actor::send_closure(stats_, &ActorStats::prepare_stats,
+                                td::promise_send_closure(actor_id(this), &Master::on_stats));
         alarm_timestamp() = td::Timestamp::in(5);
       }
       void on_stats(td::Result<std::string> r_stats) {
@@ -1155,7 +1156,7 @@ TEST(Actor2, test_stats) {
      private:
       std::shared_ptr<td::Destructor> watcher_;
       td::actor::ActorOwn<ActorStats> stats_;
-      int cnt_={2};
+      int cnt_ = {2};
     };
     td::actor::create_actor<Master>("Master", watcher).release();
   });

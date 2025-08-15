@@ -131,7 +131,7 @@ class PeerActor : public td::actor::Actor {
   void on_get_info_result(td::Result<td::BufferSlice> r_answer);
 
   template <class T, class... ArgsT>
-  td::uint64 create_and_send_query(ArgsT &&... args);
+  td::uint64 create_and_send_query(ArgsT &&...args);
   td::uint64 send_query(td::BufferSlice query);
 
   void schedule_loop();

@@ -29,17 +29,19 @@
 
 namespace tolk {
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_cannot_be_used_as_lvalue(FunctionPtr cur_f, AnyV v, const std::string& details) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_cannot_be_used_as_lvalue(FunctionPtr cur_f, AnyV v,
+                                                                                          const std::string& details) {
   // example: `f() = 32`
   // example: `loadUint(c.beginParse(), 32)` (since `loadUint()` mutates the first argument)
   throw ParseError(cur_f, v->loc, details + " can not be used as lvalue");
 }
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_modifying_immutable_variable(FunctionPtr cur_f, SrcLocation loc, LocalVarPtr var_ref) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_modifying_immutable_variable(FunctionPtr cur_f,
+                                                                                              SrcLocation loc,
+                                                                                              LocalVarPtr var_ref) {
   if (var_ref->param_idx == 0 && var_ref->name == "self") {
-    throw ParseError(cur_f, loc, "modifying `self`, which is immutable by default; probably, you want to declare `mutate self`");
+    throw ParseError(cur_f, loc,
+                     "modifying `self`, which is immutable by default; probably, you want to declare `mutate self`");
   } else {
     throw ParseError(cur_f, loc, "modifying immutable variable `" + var_ref->name + "`");
   }
@@ -49,10 +51,15 @@ static void fire_error_modifying_immutable_variable(FunctionPtr cur_f, SrcLocati
 // it's not a generic function (ensured earlier at type inferring) and has some more restrictions
 static void validate_function_used_as_noncall(FunctionPtr cur_f, AnyExprV v, FunctionPtr fun_ref) {
   if (!fun_ref->arg_order.empty() || !fun_ref->ret_order.empty()) {
-    fire(cur_f, v->loc, "saving `" + fun_ref->name + "` into a variable will most likely lead to invalid usage, since it changes the order of variables on the stack");
+    fire(cur_f, v->loc,
+         "saving `" + fun_ref->name +
+             "` into a variable will most likely lead to invalid usage, since it changes the order of variables on the "
+             "stack");
   }
   if (fun_ref->has_mutate_params()) {
-    fire(cur_f, v->loc, "saving `" + fun_ref->name + "` into a variable is impossible, since it has `mutate` parameters and thus can only be called directly");
+    fire(cur_f, v->loc,
+         "saving `" + fun_ref->name +
+             "` into a variable is impossible, since it has `mutate` parameters and thus can only be called directly");
   }
 }
 
@@ -252,7 +259,7 @@ class CheckRValueLvalueVisitor final : public ASTVisitorFunctionBody {
     parent::visit(v->get_catch_body());
   }
 
-public:
+ public:
   bool should_visit_function(FunctionPtr fun_ref) override {
     return fun_ref->is_code_function() && !fun_ref->is_generic_function();
   }
@@ -268,4 +275,4 @@ void pipeline_check_rvalue_lvalue() {
   visit_ast_of_all_functions<CheckRValueLvalueVisitor>();
 }
 
-} // namespace tolk
+}  // namespace tolk

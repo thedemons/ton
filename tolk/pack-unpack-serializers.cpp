@@ -37,10 +37,17 @@
 namespace tolk {
 
 class LValContext;
-std::vector<var_idx_t> pre_compile_expr(AnyExprV v, CodeBlob& code, TypePtr target_type = nullptr, LValContext* lval_ctx = nullptr);
-std::vector<var_idx_t> pre_compile_is_type(CodeBlob& code, TypePtr expr_type, TypePtr cmp_type, const std::vector<var_idx_t>& expr_ir_idx, SrcLocation loc, const char* debug_desc);
-std::vector<var_idx_t> transition_to_target_type(std::vector<var_idx_t>&& rvect, CodeBlob& code, TypePtr original_type, TypePtr target_type, SrcLocation loc);
-std::vector<var_idx_t> gen_inline_fun_call_in_place(CodeBlob& code, TypePtr ret_type, SrcLocation loc, FunctionPtr f_inlined, AnyExprV self_obj, bool is_before_immediate_return, const std::vector<std::vector<var_idx_t>>& vars_per_arg);
+std::vector<var_idx_t> pre_compile_expr(AnyExprV v, CodeBlob& code, TypePtr target_type = nullptr,
+                                        LValContext* lval_ctx = nullptr);
+std::vector<var_idx_t> pre_compile_is_type(CodeBlob& code, TypePtr expr_type, TypePtr cmp_type,
+                                           const std::vector<var_idx_t>& expr_ir_idx, SrcLocation loc,
+                                           const char* debug_desc);
+std::vector<var_idx_t> transition_to_target_type(std::vector<var_idx_t>&& rvect, CodeBlob& code, TypePtr original_type,
+                                                 TypePtr target_type, SrcLocation loc);
+std::vector<var_idx_t> gen_inline_fun_call_in_place(CodeBlob& code, TypePtr ret_type, SrcLocation loc,
+                                                    FunctionPtr f_inlined, AnyExprV self_obj,
+                                                    bool is_before_immediate_return,
+                                                    const std::vector<std::vector<var_idx_t>>& vars_per_arg);
 
 bool is_type_cellT(TypePtr any_type) {
   if (const TypeDataStruct* t_struct = any_type->try_as<TypeDataStruct>()) {
@@ -76,94 +83,95 @@ FunctionPtr get_custom_pack_unpack_function(TypePtr receiver_type, bool is_pack)
 // serialization assumes that stdlib exists and is loaded correctly
 //
 
-
-PackContext::PackContext(CodeBlob& code, SrcLocation loc, std::vector<var_idx_t> ir_builder, const std::vector<var_idx_t>& ir_options)
-  : code(code)
-  , loc(loc)
-  , f_storeInt(lookup_function("builder.storeInt"))
-  , f_storeUint(lookup_function("builder.storeUint"))
-  , ir_builder(std::move(ir_builder))
-  , ir_builder0(this->ir_builder[0])
-  , option_skipBitsNValidation(ir_options[0]) {
+PackContext::PackContext(CodeBlob& code, SrcLocation loc, std::vector<var_idx_t> ir_builder,
+                         const std::vector<var_idx_t>& ir_options)
+    : code(code)
+    , loc(loc)
+    , f_storeInt(lookup_function("builder.storeInt"))
+    , f_storeUint(lookup_function("builder.storeUint"))
+    , ir_builder(std::move(ir_builder))
+    , ir_builder0(this->ir_builder[0])
+    , option_skipBitsNValidation(ir_options[0]) {
 }
 
 void PackContext::storeInt(var_idx_t ir_idx, int len) const {
-  std::vector args = { ir_builder0, ir_idx, code.create_int(loc, len, "(storeW)") };
+  std::vector args = {ir_builder0, ir_idx, code.create_int(loc, len, "(storeW)")};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), f_storeInt);
 }
 
 void PackContext::storeUint(var_idx_t ir_idx, int len) const {
-  std::vector args = { ir_builder0, ir_idx, code.create_int(loc, len, "(storeW)") };
+  std::vector args = {ir_builder0, ir_idx, code.create_int(loc, len, "(storeW)")};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), f_storeUint);
 }
 
 void PackContext::storeUint_var(var_idx_t ir_idx, var_idx_t ir_len) const {
-  std::vector args = { ir_builder0, ir_idx, ir_len };
+  std::vector args = {ir_builder0, ir_idx, ir_len};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), f_storeUint);
 }
 
 void PackContext::storeBool(var_idx_t ir_idx) const {
-  std::vector args = { ir_builder0, ir_idx };
+  std::vector args = {ir_builder0, ir_idx};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), lookup_function("builder.storeBool"));
 }
 
 void PackContext::storeCoins(var_idx_t ir_idx) const {
-  std::vector args = { ir_builder0, ir_idx };
+  std::vector args = {ir_builder0, ir_idx};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), lookup_function("builder.storeCoins"));
 }
 
 void PackContext::storeRef(var_idx_t ir_idx) const {
-  std::vector args = { ir_builder0, ir_idx };
+  std::vector args = {ir_builder0, ir_idx};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), lookup_function("builder.storeRef"));
 }
 
 void PackContext::storeMaybeRef(var_idx_t ir_idx) const {
-  std::vector args = { ir_builder0, ir_idx };
+  std::vector args = {ir_builder0, ir_idx};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), lookup_function("builder.storeMaybeRef"));
 }
 
 void PackContext::storeAddress(var_idx_t ir_idx) const {
-  std::vector args = { ir_builder0, ir_idx };
+  std::vector args = {ir_builder0, ir_idx};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), lookup_function("builder.storeAddress"));
 }
 
 void PackContext::storeBuilder(var_idx_t ir_idx) const {
-  std::vector args = { ir_builder0, ir_idx };
+  std::vector args = {ir_builder0, ir_idx};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), lookup_function("builder.storeBuilder"));
 }
 
 void PackContext::storeSlice(var_idx_t ir_idx) const {
-  std::vector args = { ir_builder0, ir_idx };
+  std::vector args = {ir_builder0, ir_idx};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), lookup_function("builder.storeSlice"));
 }
 
 void PackContext::storeOpcode(PackOpcode opcode) const {
-  std::vector args = { ir_builder0, code.create_int(loc, opcode.pack_prefix, "(struct-prefix)"), code.create_int(loc, opcode.prefix_len, "(storeW)") };
+  std::vector args = {ir_builder0, code.create_int(loc, opcode.pack_prefix, "(struct-prefix)"),
+                      code.create_int(loc, opcode.prefix_len, "(storeW)")};
   code.emplace_back(loc, Op::_Call, ir_builder, std::move(args), f_storeUint);
 }
 
-
-UnpackContext::UnpackContext(CodeBlob& code, SrcLocation loc, std::vector<var_idx_t> ir_slice, const std::vector<var_idx_t>& ir_options)
-  : code(code)
-  , loc(loc)
-  , f_loadInt(lookup_function("slice.loadInt"))
-  , f_loadUint(lookup_function("slice.loadUint"))
-  , f_skipBits(lookup_function("slice.skipBits"))
-  , ir_slice(std::move(ir_slice))
-  , ir_slice0(this->ir_slice[0])
-  , option_assertEndAfterReading(ir_options[0])
-  , option_throwIfOpcodeDoesNotMatch(ir_options[1]) {
+UnpackContext::UnpackContext(CodeBlob& code, SrcLocation loc, std::vector<var_idx_t> ir_slice,
+                             const std::vector<var_idx_t>& ir_options)
+    : code(code)
+    , loc(loc)
+    , f_loadInt(lookup_function("slice.loadInt"))
+    , f_loadUint(lookup_function("slice.loadUint"))
+    , f_skipBits(lookup_function("slice.skipBits"))
+    , ir_slice(std::move(ir_slice))
+    , ir_slice0(this->ir_slice[0])
+    , option_assertEndAfterReading(ir_options[0])
+    , option_throwIfOpcodeDoesNotMatch(ir_options[1]) {
 }
 
 std::vector<var_idx_t> UnpackContext::loadInt(int len, const char* debug_desc) const {
-  std::vector args = { ir_slice0, code.create_int(loc, len, "(loadW)") };
+  std::vector args = {ir_slice0, code.create_int(loc, len, "(loadW)")};
   std::vector result = code.create_tmp_var(TypeDataInt::create(), loc, debug_desc);
   code.emplace_back(loc, Op::_Call, std::vector{ir_slice0, result[0]}, std::move(args), f_loadInt);
   return result;
 }
 
 std::vector<var_idx_t> UnpackContext::loadUint(int len, const char* debug_desc) const {
-  std::vector args = { ir_slice0, code.create_int(loc, len, "(loadW)") };
+  std::vector args = {ir_slice0, code.create_int(loc, len, "(loadW)")};
   std::vector result = code.create_tmp_var(TypeDataInt::create(), loc, debug_desc);
   code.emplace_back(loc, Op::_Call, std::vector{ir_slice0, result[0]}, std::move(args), f_loadUint);
   return result;
@@ -171,20 +179,23 @@ std::vector<var_idx_t> UnpackContext::loadUint(int len, const char* debug_desc) 
 
 void UnpackContext::loadAndCheckOpcode(PackOpcode opcode) const {
   std::vector ir_prefix_eq = code.create_tmp_var(TypeDataInt::create(), loc, "(prefix-eq)");
-  std::vector args = { ir_slice0, code.create_int(loc, opcode.pack_prefix, "(pack-prefix)"), code.create_int(loc, opcode.prefix_len, "(prefix-len)") };
-  code.emplace_back(loc, Op::_Call, std::vector{ir_slice0, ir_prefix_eq[0]}, std::move(args), lookup_function("slice.tryStripPrefix"));
-  std::vector args_assert = { option_throwIfOpcodeDoesNotMatch, ir_prefix_eq[0], code.create_int(loc, 0, "") };
-  Op& op_assert = code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, std::move(args_assert), lookup_function("__throw_if_unless"));
+  std::vector args = {ir_slice0, code.create_int(loc, opcode.pack_prefix, "(pack-prefix)"),
+                      code.create_int(loc, opcode.prefix_len, "(prefix-len)")};
+  code.emplace_back(loc, Op::_Call, std::vector{ir_slice0, ir_prefix_eq[0]}, std::move(args),
+                    lookup_function("slice.tryStripPrefix"));
+  std::vector args_assert = {option_throwIfOpcodeDoesNotMatch, ir_prefix_eq[0], code.create_int(loc, 0, "")};
+  Op& op_assert = code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, std::move(args_assert),
+                                    lookup_function("__throw_if_unless"));
   op_assert.set_impure_flag();
 }
 
 void UnpackContext::skipBits(int len) const {
-  std::vector args = { ir_slice0, code.create_int(loc, len, "(skipW)") };
+  std::vector args = {ir_slice0, code.create_int(loc, len, "(skipW)")};
   code.emplace_back(loc, Op::_Call, ir_slice, std::move(args), f_skipBits);
 }
 
 void UnpackContext::skipBits_var(var_idx_t ir_len) const {
-  std::vector args = { ir_slice0, ir_len };
+  std::vector args = {ir_slice0, ir_len};
   code.emplace_back(loc, Op::_Call, ir_slice, std::move(args), f_skipBits);
 }
 
@@ -192,7 +203,8 @@ void UnpackContext::assertEndIfOption() const {
   Op& if_assertEnd = code.emplace_back(loc, Op::_If, std::vector{option_assertEndAfterReading});
   {
     code.push_set_cur(if_assertEnd.block0);
-    Op& op_ends = code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, ir_slice, lookup_function("slice.assertEnd"));
+    Op& op_ends =
+        code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, ir_slice, lookup_function("slice.assertEnd"));
     op_ends.set_impure_flag();
     code.close_pop_cur(loc);
   }
@@ -203,8 +215,9 @@ void UnpackContext::assertEndIfOption() const {
 }
 
 void UnpackContext::throwInvalidOpcode() const {
-  std::vector args_throw = { option_throwIfOpcodeDoesNotMatch };
-  Op& op_throw = code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, std::move(args_throw), lookup_function("__throw"));
+  std::vector args_throw = {option_throwIfOpcodeDoesNotMatch};
+  Op& op_throw =
+      code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, std::move(args_throw), lookup_function("__throw"));
   op_throw.set_impure_flag();
 }
 
@@ -217,10 +230,13 @@ const LazyMatchOptions::MatchBlock* LazyMatchOptions::find_match_block(TypePtr v
   tolk_assert(false);
 }
 
-void LazyMatchOptions::save_match_result_on_arm_end(CodeBlob& code, SrcLocation loc, const MatchBlock* arm_block, std::vector<var_idx_t>&& ir_arm_result, const std::vector<var_idx_t>& ir_match_expr_result) const {
+void LazyMatchOptions::save_match_result_on_arm_end(CodeBlob& code, SrcLocation loc, const MatchBlock* arm_block,
+                                                    std::vector<var_idx_t>&& ir_arm_result,
+                                                    const std::vector<var_idx_t>& ir_match_expr_result) const {
   if (!is_statement) {
     // if it's `match` expression (not statement), then every arm has a result, assigned to a whole `match` result
-    ir_arm_result = transition_to_target_type(std::move(ir_arm_result), code, arm_block->block_expr_type, match_expr_type, loc);
+    ir_arm_result =
+        transition_to_target_type(std::move(ir_arm_result), code, arm_block->block_expr_type, match_expr_type, loc);
     code.emplace_back(loc, Op::_Let, ir_match_expr_result, std::move(ir_arm_result));
   } else if (add_return_to_all_arms) {
     // if it's `match` statement, even if an arm is an expression, it's void, actually
@@ -228,7 +244,6 @@ void LazyMatchOptions::save_match_result_on_arm_end(CodeBlob& code, SrcLocation 
     code.emplace_back(loc, Op::_Return);
   }
 }
-
 
 // --------------------------------------------
 //    serializers with pack/unpack/skip/estimate
@@ -239,7 +254,6 @@ void LazyMatchOptions::save_match_result_on_arm_end(CodeBlob& code, SrcLocation 
 // some are complicated, e.g., for Either we should check a union type at runtime while packing,
 // and while unpacking, read a prefix, follow different branches, and construct a resulting union
 //
-
 
 struct ISerializer {
   virtual ~ISerializer() = default;
@@ -255,8 +269,8 @@ struct S_IntN final : ISerializer {
   const int n_bits;
   const bool is_unsigned;
 
-  explicit S_IntN(int n_bits, bool is_unsigned)
-    : n_bits(n_bits), is_unsigned(is_unsigned) {}
+  explicit S_IntN(int n_bits, bool is_unsigned) : n_bits(n_bits), is_unsigned(is_unsigned) {
+  }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
     if (is_unsigned) {
@@ -284,21 +298,23 @@ struct S_IntN final : ISerializer {
 };
 
 struct S_VariadicIntN final : ISerializer {
-  const int n_bits;           // only 16 and 32 available
+  const int n_bits;  // only 16 and 32 available
   const bool is_unsigned;
 
-  explicit S_VariadicIntN(int n_bits, bool is_unsigned)
-    : n_bits(n_bits), is_unsigned(is_unsigned) {}
+  explicit S_VariadicIntN(int n_bits, bool is_unsigned) : n_bits(n_bits), is_unsigned(is_unsigned) {
+  }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
     FunctionPtr f_storeVarInt = lookup_function("builder.__storeVarInt");
-    std::vector args = { ctx->ir_builder0, rvect[0], code.create_int(loc, n_bits, "(n-bits)"), code.create_int(loc, is_unsigned, "(is-unsigned)") };
+    std::vector args = {ctx->ir_builder0, rvect[0], code.create_int(loc, n_bits, "(n-bits)"),
+                        code.create_int(loc, is_unsigned, "(is-unsigned)")};
     code.emplace_back(loc, Op::_Call, ctx->ir_builder, std::move(args), f_storeVarInt);
   }
 
   std::vector<var_idx_t> unpack(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
     FunctionPtr f_loadVarInt = lookup_function("slice.__loadVarInt");
-    std::vector args = { ctx->ir_slice0, code.create_int(loc, n_bits, "(n-bits)"), code.create_int(loc, is_unsigned, "(is-unsigned)") };
+    std::vector args = {ctx->ir_slice0, code.create_int(loc, n_bits, "(n-bits)"),
+                        code.create_int(loc, is_unsigned, "(is-unsigned)")};
     std::vector result = code.create_tmp_var(TypeDataInt::create(), loc, "(loaded-varint)");
     code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, result[0]}, std::move(args), f_loadVarInt);
     return result;
@@ -313,7 +329,7 @@ struct S_VariadicIntN final : ISerializer {
     if (n_bits == 32) {
       return PackSize(5, 253);
     } else {
-      return PackSize(4, 124);    // same as `coins`
+      return PackSize(4, 124);  // same as `coins`
     }
   }
 };
@@ -321,8 +337,8 @@ struct S_VariadicIntN final : ISerializer {
 struct S_BitsN final : ISerializer {
   const int n_bits;
 
-  explicit S_BitsN(int n_width, bool is_bits)
-    : n_bits(is_bits ? n_width : n_width * 8) {}
+  explicit S_BitsN(int n_width, bool is_bits) : n_bits(is_bits ? n_width : n_width * 8) {
+  }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
     tolk_assert(rvect.size() == 1);
@@ -337,14 +353,16 @@ struct S_BitsN final : ISerializer {
       FunctionPtr f_assert = lookup_function("__throw_if_unless");
       constexpr int EXCNO = 9;
 
-      std::vector ir_counts = code.create_tmp_var(TypeDataTensor::create({TypeDataInt::create(), TypeDataInt::create()}), loc, "(slice-size)");
+      std::vector ir_counts = code.create_tmp_var(
+          TypeDataTensor::create({TypeDataInt::create(), TypeDataInt::create()}), loc, "(slice-size)");
       code.emplace_back(loc, Op::_Call, ir_counts, rvect, lookup_function("slice.remainingBitsAndRefsCount"));
-      std::vector args_assert0 = { code.create_int(loc, EXCNO, "(excno)"), ir_counts[1], code.create_int(loc, 1, "") };
+      std::vector args_assert0 = {code.create_int(loc, EXCNO, "(excno)"), ir_counts[1], code.create_int(loc, 1, "")};
       Op& op_assert0 = code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, std::move(args_assert0), f_assert);
       op_assert0.set_impure_flag();
       std::vector ir_eq_n = code.create_tmp_var(TypeDataInt::create(), loc, "(eq-n)");
-      code.emplace_back(loc, Op::_Call, ir_eq_n, std::vector{ir_counts[0], code.create_int(loc, n_bits, "(n-bits)")}, lookup_function("_==_"));
-      std::vector args_assertN = { code.create_int(loc, EXCNO, "(excno)"), ir_eq_n[0], code.create_int(loc, 0, "") };
+      code.emplace_back(loc, Op::_Call, ir_eq_n, std::vector{ir_counts[0], code.create_int(loc, n_bits, "(n-bits)")},
+                        lookup_function("_==_"));
+      std::vector args_assertN = {code.create_int(loc, EXCNO, "(excno)"), ir_eq_n[0], code.create_int(loc, 0, "")};
       Op& op_assertN = code.emplace_back(loc, Op::_Call, std::vector<var_idx_t>{}, std::move(args_assertN), f_assert);
       op_assertN.set_impure_flag();
       code.close_pop_cur(loc);
@@ -355,7 +373,7 @@ struct S_BitsN final : ISerializer {
 
   std::vector<var_idx_t> unpack(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
     FunctionPtr f_loadBits = lookup_function("slice.loadBits");
-    std::vector args = { ctx->ir_slice0, code.create_int(loc, n_bits, "(loadW)") };
+    std::vector args = {ctx->ir_slice0, code.create_int(loc, n_bits, "(loadW)")};
     std::vector ir_result = code.create_tmp_var(TypeDataSlice::create(), loc, "(loaded-slice)");
     code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_result[0]}, std::move(args), f_loadBits);
     return ir_result;
@@ -524,16 +542,16 @@ struct S_RemainingBitsAndRefs final : ISerializer {
 struct S_Builder final : ISerializer {
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
     tolk_assert(rvect.size() == 1);
-    std::vector args = { ctx->ir_builder0, rvect[0] };
+    std::vector args = {ctx->ir_builder0, rvect[0]};
     code.emplace_back(loc, Op::_Call, ctx->ir_builder, std::move(args), lookup_function("builder.storeBuilder"));
   }
 
   std::vector<var_idx_t> unpack(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
-    tolk_assert(false);   // `builder` can only be used for writing, checked earlier
+    tolk_assert(false);  // `builder` can only be used for writing, checked earlier
   }
 
   void skip(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
-    tolk_assert(false);   // `builder` can only be used for writing, checked earlier
+    tolk_assert(false);  // `builder` can only be used for writing, checked earlier
   }
 
   PackSize estimate(const EstimateContext* ctx) override {
@@ -548,11 +566,11 @@ struct S_Slice final : ISerializer {
   }
 
   std::vector<var_idx_t> unpack(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
-    tolk_assert(false);   // `slice` can only be used for writing, checked earlier
+    tolk_assert(false);  // `slice` can only be used for writing, checked earlier
   }
 
   void skip(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
-    tolk_assert(false);   // `slice` can only be used for writing, checked earlier
+    tolk_assert(false);  // `slice` can only be used for writing, checked earlier
   }
 
   PackSize estimate(const EstimateContext* ctx) override {
@@ -602,9 +620,7 @@ struct S_Maybe final : ISerializer {
   const TypeDataUnion* t_union;
   TypePtr or_null;
 
-  explicit S_Maybe(const TypeDataUnion* t_union)
-    : t_union(t_union)
-    , or_null(t_union->or_null) {
+  explicit S_Maybe(const TypeDataUnion* t_union) : t_union(t_union), or_null(t_union->or_null) {
   }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
@@ -626,7 +642,7 @@ struct S_Maybe final : ISerializer {
 
   std::vector<var_idx_t> unpack(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
     std::vector ir_result = code.create_tmp_var(t_union, loc, "(loaded-maybe)");
-    std::vector ir_not_null = { ctx->loadUint(1, "(maybeBit)") };
+    std::vector ir_not_null = {ctx->loadUint(1, "(maybeBit)")};
     Op& if_op = code.emplace_back(loc, Op::_If, std::move(ir_not_null));
     {
       code.push_set_cur(if_op.block0);
@@ -647,7 +663,7 @@ struct S_Maybe final : ISerializer {
   }
 
   void skip(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
-    std::vector ir_not_null = { ctx->loadUint(1, "(maybeBit)") };
+    std::vector ir_not_null = {ctx->loadUint(1, "(maybeBit)")};
     Op& if_op = code.emplace_back(loc, Op::_If, std::move(ir_not_null));
     {
       code.push_set_cur(if_op.block0);
@@ -672,9 +688,7 @@ struct S_Either final : ISerializer {
   TypePtr t_right;
 
   explicit S_Either(const TypeDataUnion* t_union)
-    : t_union(t_union)
-    , t_left(t_union->variants[0])
-    , t_right(t_union->variants[1]) {
+      : t_union(t_union), t_left(t_union->variants[0]), t_right(t_union->variants[1]) {
   }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
@@ -717,9 +731,10 @@ struct S_Either final : ISerializer {
     return ir_result;
   }
 
-  std::vector<var_idx_t> lazy_match(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc, const LazyMatchOptions& options) const {
+  std::vector<var_idx_t> lazy_match(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc,
+                                    const LazyMatchOptions& options) const {
     for (const LazyMatchOptions::MatchBlock& m : options.match_blocks) {
-      if (m.arm_variant == nullptr) {   // `else => ...` not allowed for Either
+      if (m.arm_variant == nullptr) {  // `else => ...` not allowed for Either
         // it's not the best place to fire an error, but let it be
         throw ParseError(loc, "`else` is unreachable, because this `match` has only two options (0/1 prefixes)");
       }
@@ -771,8 +786,7 @@ struct S_MultipleConstructors final : ISerializer {
   std::vector<PackOpcode> opcodes;
 
   explicit S_MultipleConstructors(const TypeDataUnion* t_union, std::vector<PackOpcode>&& opcodes)
-    : t_union(t_union)
-    , opcodes(std::move(opcodes)) {
+      : t_union(t_union), opcodes(std::move(opcodes)) {
     tolk_assert(this->opcodes.size() == t_union->variants.size());
   }
 
@@ -795,7 +809,7 @@ struct S_MultipleConstructors final : ISerializer {
     ctx->storeUint(code.create_int(loc, opcodes.back().pack_prefix, "(ith-prefix)"), opcodes.back().prefix_len);
     ctx->generate_pack_any(last_variant, std::move(last_rvect), PrefixWriteMode::DoNothingAlreadyWritten);
     for (int i = 0; i < t_union->size() - 1; ++i) {
-      code.close_pop_cur(loc);    // close all outer IFs
+      code.close_pop_cur(loc);  // close all outer IFs
     }
   }
 
@@ -809,26 +823,29 @@ struct S_MultipleConstructors final : ISerializer {
 
     for (int i = 0; i < t_union->size(); ++i) {
       TypePtr variant = t_union->variants[i];
-      std::vector args = { ctx->ir_slice0, code.create_int(loc, opcodes[i].pack_prefix, "(pack-prefix)"), code.create_int(loc, opcodes[i].prefix_len, "(prefix-len)") };
-      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args), f_tryStripPrefix);
+      std::vector args = {ctx->ir_slice0, code.create_int(loc, opcodes[i].pack_prefix, "(pack-prefix)"),
+                          code.create_int(loc, opcodes[i].prefix_len, "(prefix-len)")};
+      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args),
+                        f_tryStripPrefix);
       Op& if_prefix_eq = code.emplace_back(loc, Op::_If, ir_prefix_eq);
       code.push_set_cur(if_prefix_eq.block0);
       std::vector ith_rvect = ctx->generate_unpack_any(variant, PrefixReadMode::DoNothingAlreadyLoaded);
       ith_rvect = transition_to_target_type(std::move(ith_rvect), code, variant, t_union, loc);
       code.emplace_back(loc, Op::_Let, ir_result, std::move(ith_rvect));
       code.close_pop_cur(loc);
-      code.push_set_cur(if_prefix_eq.block1);    // open ELSE
+      code.push_set_cur(if_prefix_eq.block1);  // open ELSE
     }
 
     // we're inside last ELSE
     ctx->throwInvalidOpcode();
     for (int j = 0; j < t_union->size(); ++j) {
-      code.close_pop_cur(loc);    // close all outer IFs
+      code.close_pop_cur(loc);  // close all outer IFs
     }
     return ir_result;
   }
 
-  std::vector<var_idx_t> lazy_match(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc, const LazyMatchOptions& options) const {
+  std::vector<var_idx_t> lazy_match(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc,
+                                    const LazyMatchOptions& options) const {
     std::vector<int> opcodes_order_mapping(t_union->size(), -1);
     const LazyMatchOptions::MatchBlock* else_block = nullptr;
     for (int i = 0; i < static_cast<int>(options.match_blocks.size()); ++i) {
@@ -849,14 +866,16 @@ struct S_MultipleConstructors final : ISerializer {
 
     for (int i = 0; i < t_union->size(); ++i) {
       StructData::PackOpcode opcode = opcodes[opcodes_order_mapping[i]];
-      std::vector args = { ctx->ir_slice0, code.create_int(loc, opcode.pack_prefix, "(pack-prefix)"), code.create_int(loc, opcode.prefix_len, "(prefix-len)") };
-      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args), f_tryStripPrefix);
+      std::vector args = {ctx->ir_slice0, code.create_int(loc, opcode.pack_prefix, "(pack-prefix)"),
+                          code.create_int(loc, opcode.prefix_len, "(prefix-len)")};
+      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args),
+                        f_tryStripPrefix);
       Op& if_op = code.emplace_back(loc, Op::_If, ir_prefix_eq);
       code.push_set_cur(if_op.block0);
       std::vector ith_result = pre_compile_expr(options.match_blocks[i].v_body, code);
       options.save_match_result_on_arm_end(code, loc, &options.match_blocks[i], std::move(ith_result), ir_result);
       code.close_pop_cur(loc);
-      code.push_set_cur(if_op.block1);    // open ELSE
+      code.push_set_cur(if_op.block1);  // open ELSE
     }
 
     if (else_block) {
@@ -866,7 +885,7 @@ struct S_MultipleConstructors final : ISerializer {
       ctx->throwInvalidOpcode();
     }
     for (int j = 0; j < t_union->size(); ++j) {
-      code.close_pop_cur(loc);    // close all outer IFs
+      code.close_pop_cur(loc);  // close all outer IFs
     }
 
     return ir_result;
@@ -878,19 +897,21 @@ struct S_MultipleConstructors final : ISerializer {
 
     for (int i = 0; i < t_union->size(); ++i) {
       TypePtr variant = t_union->variants[i];
-      std::vector args = { ctx->ir_slice0, code.create_int(loc, opcodes[i].pack_prefix, "(pack-prefix)"), code.create_int(loc, opcodes[i].prefix_len, "(prefix-len)") };
-      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args), f_tryStripPrefix);
+      std::vector args = {ctx->ir_slice0, code.create_int(loc, opcodes[i].pack_prefix, "(pack-prefix)"),
+                          code.create_int(loc, opcodes[i].prefix_len, "(prefix-len)")};
+      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args),
+                        f_tryStripPrefix);
       Op& if_prefix_eq = code.emplace_back(loc, Op::_If, ir_prefix_eq);
       code.push_set_cur(if_prefix_eq.block0);
       ctx->generate_skip_any(variant, PrefixReadMode::DoNothingAlreadyLoaded);
       code.close_pop_cur(loc);
-      code.push_set_cur(if_prefix_eq.block1);    // open ELSE
+      code.push_set_cur(if_prefix_eq.block1);  // open ELSE
     }
 
     // we're inside last ELSE
     ctx->throwInvalidOpcode();
     for (int j = 0; j < t_union->size(); ++j) {
-      code.close_pop_cur(loc);    // close all outer IFs
+      code.close_pop_cur(loc);  // close all outer IFs
     }
   }
 
@@ -899,7 +920,8 @@ struct S_MultipleConstructors final : ISerializer {
     PackSize prefix_size(opcodes[0].prefix_len);
 
     for (int i = 1; i < t_union->size(); ++i) {
-      variants_size = EstimateContext::minmax(variants_size, ctx->estimate_any(t_union->variants[i], PrefixEstimateMode::DoNothingAlreadyIncluded));
+      variants_size = EstimateContext::minmax(
+          variants_size, ctx->estimate_any(t_union->variants[i], PrefixEstimateMode::DoNothingAlreadyIncluded));
       prefix_size = EstimateContext::minmax(prefix_size, PackSize(opcodes[i].prefix_len));
     }
 
@@ -910,8 +932,7 @@ struct S_MultipleConstructors final : ISerializer {
 struct S_Tensor final : ISerializer {
   const TypeDataTensor* t_tensor;
 
-  explicit S_Tensor(const TypeDataTensor* t_tensor)
-    : t_tensor(t_tensor) {
+  explicit S_Tensor(const TypeDataTensor* t_tensor) : t_tensor(t_tensor) {
   }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
@@ -954,8 +975,7 @@ struct S_Tensor final : ISerializer {
 struct S_CustomStruct final : ISerializer {
   StructPtr struct_ref;
 
-  explicit S_CustomStruct(StructPtr struct_ref)
-    : struct_ref(struct_ref) {
+  explicit S_CustomStruct(StructPtr struct_ref) : struct_ref(struct_ref) {
   }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
@@ -989,9 +1009,10 @@ struct S_CustomStruct final : ISerializer {
     return ir_struct;
   }
 
-  std::vector<var_idx_t> lazy_match(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc, const LazyMatchOptions& options) const {
-    const LazyMatchOptions::MatchBlock* when_block = nullptr;   // Point => ...
-    const LazyMatchOptions::MatchBlock* else_block = nullptr;   // else  => ...
+  std::vector<var_idx_t> lazy_match(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc,
+                                    const LazyMatchOptions& options) const {
+    const LazyMatchOptions::MatchBlock* when_block = nullptr;  // Point => ...
+    const LazyMatchOptions::MatchBlock* else_block = nullptr;  // else  => ...
     for (const LazyMatchOptions::MatchBlock& match_block : options.match_blocks) {
       if (match_block.arm_variant) {
         tolk_assert(match_block.arm_variant->equal_to(TypeDataStruct::create(struct_ref)));
@@ -1005,9 +1026,11 @@ struct S_CustomStruct final : ISerializer {
     std::vector ir_prefix_eq = code.create_tmp_var(TypeDataInt::create(), loc, "(prefix-eq)");
 
     StructData::PackOpcode opcode = struct_ref->opcode;
-    if (opcode.exists()) {    // it's `match` over a struct (makes sense for a struct with prefix and `else` branch)
-      std::vector args = { ctx->ir_slice0, code.create_int(loc, opcode.pack_prefix, "(pack-prefix)"), code.create_int(loc, opcode.prefix_len, "(prefix-len)") };
-      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args), lookup_function("slice.tryStripPrefix"));
+    if (opcode.exists()) {  // it's `match` over a struct (makes sense for a struct with prefix and `else` branch)
+      std::vector args = {ctx->ir_slice0, code.create_int(loc, opcode.pack_prefix, "(pack-prefix)"),
+                          code.create_int(loc, opcode.prefix_len, "(prefix-len)")};
+      code.emplace_back(loc, Op::_Call, std::vector{ctx->ir_slice0, ir_prefix_eq[0]}, std::move(args),
+                        lookup_function("slice.tryStripPrefix"));
     } else {
       code.emplace_back(loc, Op::_Let, ir_prefix_eq, std::vector{code.create_int(loc, -1, "(true)")});
     }
@@ -1059,22 +1082,25 @@ struct S_CustomStruct final : ISerializer {
 struct S_CustomReceiverForPackUnpack final : ISerializer {
   TypePtr receiver_type;
 
-  explicit S_CustomReceiverForPackUnpack(TypePtr receiver_type)
-    : receiver_type(receiver_type) {}
+  explicit S_CustomReceiverForPackUnpack(TypePtr receiver_type) : receiver_type(receiver_type) {
+  }
 
   void pack(const PackContext* ctx, CodeBlob& code, SrcLocation loc, std::vector<var_idx_t>&& rvect) override {
     FunctionPtr f_pack = get_custom_pack_unpack_function(receiver_type, true);
     tolk_assert(f_pack && f_pack->does_accept_self() && f_pack->inferred_return_type->get_width_on_stack() == 0);
-    std::vector vars_per_arg = { std::move(rvect), ctx->ir_builder };
-    std::vector ir_mutated_builder = gen_inline_fun_call_in_place(code, TypeDataBuilder::create(), loc, f_pack, nullptr, false, vars_per_arg);
+    std::vector vars_per_arg = {std::move(rvect), ctx->ir_builder};
+    std::vector ir_mutated_builder =
+        gen_inline_fun_call_in_place(code, TypeDataBuilder::create(), loc, f_pack, nullptr, false, vars_per_arg);
     code.emplace_back(loc, Op::_Let, ctx->ir_builder, std::move(ir_mutated_builder));
   }
 
   std::vector<var_idx_t> unpack(const UnpackContext* ctx, CodeBlob& code, SrcLocation loc) override {
     FunctionPtr f_unpack = get_custom_pack_unpack_function(receiver_type, false);
-    tolk_assert(f_unpack && f_unpack->inferred_return_type->get_width_on_stack() == receiver_type->get_width_on_stack());
+    tolk_assert(f_unpack &&
+                f_unpack->inferred_return_type->get_width_on_stack() == receiver_type->get_width_on_stack());
     TypePtr ret_type = TypeDataTensor::create({TypeDataSlice::create(), receiver_type});
-    std::vector ir_slice_and_res = gen_inline_fun_call_in_place(code, ret_type, loc, f_unpack, nullptr, false, {ctx->ir_slice});
+    std::vector ir_slice_and_res =
+        gen_inline_fun_call_in_place(code, ret_type, loc, f_unpack, nullptr, false, {ctx->ir_slice});
     code.emplace_back(loc, Op::_Let, ctx->ir_slice, std::vector{ir_slice_and_res.front()});
     return std::vector(ir_slice_and_res.begin() + 1, ir_slice_and_res.end());
   }
@@ -1089,7 +1115,6 @@ struct S_CustomReceiverForPackUnpack final : ISerializer {
   }
 };
 
-
 // --------------------------------------------
 //    automatically generate opcodes
 //
@@ -1099,7 +1124,6 @@ struct S_CustomReceiverForPackUnpack final : ISerializer {
 // but if some prefixes are specified, some not — it's an error
 //
 
-
 std::vector<PackOpcode> auto_generate_opcodes_for_union(TypePtr union_type, std::string& because_msg) {
   const TypeDataUnion* t_union = union_type->try_as<TypeDataUnion>();
   std::vector<PackOpcode> result;
@@ -1107,7 +1131,7 @@ std::vector<PackOpcode> auto_generate_opcodes_for_union(TypePtr union_type, std:
 
   int n_have_opcode = 0;
   bool has_null = false;
-  StructPtr last_struct_with_opcode = nullptr;    // for error message
+  StructPtr last_struct_with_opcode = nullptr;  // for error message
   StructPtr last_struct_no_opcode = nullptr;
   for (TypePtr variant : t_union->variants) {
     if (const TypeDataStruct* variant_struct = variant->unwrap_alias()->try_as<TypeDataStruct>()) {
@@ -1137,9 +1161,13 @@ std::vector<PackOpcode> auto_generate_opcodes_for_union(TypePtr union_type, std:
   // example: `int32 | int64 | A` if A has opcode;
   if (n_have_opcode) {
     if (last_struct_with_opcode && last_struct_no_opcode) {
-      because_msg = "because struct `" + last_struct_with_opcode->as_human_readable() + "` has opcode, but `" + last_struct_no_opcode->as_human_readable() + "` does not\nhint: manually specify opcodes to all structures";
+      because_msg = "because struct `" + last_struct_with_opcode->as_human_readable() + "` has opcode, but `" +
+                    last_struct_no_opcode->as_human_readable() +
+                    "` does not\nhint: manually specify opcodes to all structures";
     } else {
-      because_msg = "because of mixing primitives and struct `" + last_struct_with_opcode->as_human_readable() + "` with serialization prefix\nhint: extract primitives to single-field structs and provide prefixes";
+      because_msg =
+          "because of mixing primitives and struct `" + last_struct_with_opcode->as_human_readable() +
+          "` with serialization prefix\nhint: extract primitives to single-field structs and provide prefixes";
     }
     return result;
   }
@@ -1148,14 +1176,14 @@ std::vector<PackOpcode> auto_generate_opcodes_for_union(TypePtr union_type, std:
   // examples: `int32 | int64 | int128` / `int32 | A | null` / `A | B` / `A | B | C`;
   // if `null` exists, it's 0, all others are 1+tree: A|B|C|D|null => 0 | 100+A | 101+B | 110+C | 111+D;
   // if no `null`, just distribute sequentially: A|B|C => 00+A | 01+B | 10+C
-  int n_without_null = t_union->size() - has_null; 
+  int n_without_null = t_union->size() - has_null;
   int prefix_len = static_cast<int>(std::ceil(std::log2(n_without_null)));
   int cur_prefix = 0;
   for (TypePtr variant : t_union->variants) {
     if (variant == TypeDataNullLiteral::create()) {
       result.emplace_back(0, 1);
     } else if (has_null) {
-      result.emplace_back((1<<prefix_len) + (cur_prefix++), prefix_len + 1);
+      result.emplace_back((1 << prefix_len) + (cur_prefix++), prefix_len + 1);
     } else {
       result.emplace_back(cur_prefix++, prefix_len);
     }
@@ -1163,14 +1191,12 @@ std::vector<PackOpcode> auto_generate_opcodes_for_union(TypePtr union_type, std:
   return result;
 }
 
-
 // --------------------------------------------
 //    detect serializer by TypePtr
 //
 // note that at earlier compilation steps there already passed a check that any_type is serializable;
 // see `check_struct_can_be_packed_or_unpacked()`, its structure reminds this function
 //
-
 
 static std::unique_ptr<ISerializer> get_serializer_for_type(TypePtr any_type) {
   if (const auto* t_intN = any_type->try_as<TypeDataIntN>()) {
@@ -1257,8 +1283,8 @@ static std::unique_ptr<ISerializer> get_serializer_for_type(TypePtr any_type) {
   throw Fatal("type `" + any_type->as_human_readable() + "` can not be serialized");
 }
 
-
-void PackContext::generate_pack_any(TypePtr any_type, std::vector<var_idx_t>&& rvect, PrefixWriteMode prefix_mode) const {
+void PackContext::generate_pack_any(TypePtr any_type, std::vector<var_idx_t>&& rvect,
+                                    PrefixWriteMode prefix_mode) const {
   PrefixWriteMode backup = this->prefix_mode;
   this->prefix_mode = prefix_mode;
   get_serializer_for_type(any_type)->pack(this, code, loc, std::move(rvect));
@@ -1302,4 +1328,4 @@ PackSize EstimateContext::estimate_any(TypePtr any_type, PrefixEstimateMode pref
   return result;
 }
 
-} // namespace tolk
+}  // namespace tolk

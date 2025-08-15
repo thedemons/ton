@@ -86,9 +86,9 @@ td::Status ShardBlockVerifierConfig::unpack(const ton_api::engine_validator_shar
       shard.trusted_nodes.push_back(node_id);
     }
     if (shard_obj->required_confirms_ < 0 || shard_obj->required_confirms_ > (int)shard.trusted_nodes.size()) {
-      return td::Status::Error(PSTRING()
-                               << "invalid required_confirms " << shard_obj->required_confirms_ << " for shard "
-                               << shard.shard_id.to_str() << " (nodes: " << shard.trusted_nodes.size() << ")");
+      return td::Status::Error(PSTRING() << "invalid required_confirms " << shard_obj->required_confirms_
+                                         << " for shard " << shard.shard_id.to_str()
+                                         << " (nodes: " << shard.trusted_nodes.size() << ")");
     }
     shard.required_confirms = shard_obj->required_confirms_;
     shards.push_back(std::move(shard));

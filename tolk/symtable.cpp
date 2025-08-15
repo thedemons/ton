@@ -30,7 +30,9 @@ void Symbol::check_import_exists_when_used_from(FunctionPtr cur_f, SrcLocation u
     }
   }
   if (!has_import) {
-    throw ParseError(cur_f, used_loc, "Using a non-imported symbol `" + name + "`\nhint: forgot to import \"" + declared_in->extract_short_name() + "\"?");
+    throw ParseError(cur_f, used_loc,
+                     "Using a non-imported symbol `" + name + "`\nhint: forgot to import \"" +
+                         declared_in->extract_short_name() + "\"?");
   }
 }
 
@@ -94,7 +96,7 @@ bool FunctionData::does_need_codegen() const {
 
 void FunctionData::assign_resolved_receiver_type(TypePtr receiver_type, std::string&& name_prefix) {
   this->receiver_type = receiver_type;
-  if (!this->substitutedTs) {   // after receiver has been resolve, update name to "receiver.method"
+  if (!this->substitutedTs) {  // after receiver has been resolve, update name to "receiver.method"
     name_prefix.erase(std::remove(name_prefix.begin(), name_prefix.end(), ' '), name_prefix.end());
     this->name = name_prefix + "." + this->method_name;
   }
@@ -230,8 +232,8 @@ std::string StructData::PackOpcode::format_as_slice() const {
   return result;
 }
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_redefinition_of_symbol(SrcLocation loc, const Symbol* previous) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_redefinition_of_symbol(SrcLocation loc,
+                                                                                        const Symbol* previous) {
   SrcLocation prev_loc = previous->loc;
   if (prev_loc.is_stdlib()) {
     throw ParseError(loc, "redefinition of a symbol from stdlib");

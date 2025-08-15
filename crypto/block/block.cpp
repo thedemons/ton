@@ -2560,5 +2560,4 @@ bool MsgMetadata::operator!=(const MsgMetadata& other) const {
   return !(*this == other);
 }
 
-
 }  // namespace block

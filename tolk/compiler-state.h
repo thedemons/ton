@@ -34,12 +34,15 @@ class ExperimentalOption {
   const char* deprecated_from_v = nullptr;  // when an option becomes deprecated (after the next compiler release),
   const char* deprecated_reason = nullptr;  // but the user still passes it, we'll warn to stderr
 
-public:
-  explicit ExperimentalOption(std::string_view name) : name(name) {}
+ public:
+  explicit ExperimentalOption(std::string_view name) : name(name) {
+  }
 
   void mark_deprecated(const char* deprecated_from_v, const char* deprecated_reason);
 
-  explicit operator bool() const { return enabled; }
+  explicit operator bool() const {
+    return enabled;
+  }
 };
 
 // CompilerSettings contains settings that can be passed via cmd line or (partially) wasm envelope.
@@ -56,7 +59,8 @@ struct CompilerSettings {
 
   std::string output_filename;
   std::string boc_output_filename;
-  std::string stdlib_folder;    // path to tolk-stdlib/; note: from tolk-js it's empty! tolk-js reads files via js callback
+  std::string
+      stdlib_folder;  // path to tolk-stdlib/; note: from tolk-js it's empty! tolk-js reads files via js callback
 
   FsReadCallback read_callback;
 
@@ -76,12 +80,13 @@ class PersistentHeapAllocator {
     std::unique_ptr<ChunkInHeap> next;
 
     ChunkInHeap(const char* allocated, std::unique_ptr<ChunkInHeap>&& next)
-      : allocated(allocated), next(std::move(next)) {}
+        : allocated(allocated), next(std::move(next)) {
+    }
   };
 
   std::unique_ptr<ChunkInHeap> head = nullptr;
 
-public:
+ public:
   std::string_view copy_string_to_persistent_memory(std::string_view str_in_tmp_memory);
   void clear();
 };
@@ -96,15 +101,19 @@ struct CompilerState {
   GlobalSymbolTable symtable;
   PersistentHeapAllocator persistent_mem;
 
-  std::vector<FunctionPtr> all_functions;       // all user-defined (not built-in) global-scope functions, with generic instantiations
-  std::vector<FunctionPtr> all_methods;         // all user-defined and built-in extension methods for arbitrary types (receivers)
+  std::vector<FunctionPtr>
+      all_functions;  // all user-defined (not built-in) global-scope functions, with generic instantiations
+  std::vector<FunctionPtr>
+      all_methods;  // all user-defined and built-in extension methods for arbitrary types (receivers)
   std::vector<FunctionPtr> all_contract_getters;
   std::vector<GlobalVarPtr> all_global_vars;
   std::vector<GlobalConstPtr> all_constants;
   std::vector<StructPtr> all_structs;
   AllRegisteredSrcFiles all_src_files;
 
-  bool is_verbosity(int gt_eq) const { return settings.verbosity >= gt_eq; }
+  bool is_verbosity(int gt_eq) const {
+    return settings.verbosity >= gt_eq;
+  }
 };
 
 extern CompilerState G;

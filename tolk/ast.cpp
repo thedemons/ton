@@ -36,7 +36,7 @@ void ASTNodeBase::debug_print() const {
 
 #endif  // TOLK_DEBUG
 
-UnexpectedASTNodeKind::UnexpectedASTNodeKind(AnyV v_unexpected, const char* place_where): v_unexpected(v_unexpected) {
+UnexpectedASTNodeKind::UnexpectedASTNodeKind(AnyV v_unexpected, const char* place_where) : v_unexpected(v_unexpected) {
   message = "Unexpected ASTNodeKind ";
 #ifdef TOLK_DEBUG
   message += ASTStringifier::ast_node_kind_to_string(v_unexpected->kind);
@@ -134,7 +134,7 @@ void ASTNodeExpressionBase::assign_lvalue_true() {
 }
 
 void ASTNodeExpressionBase::assign_always_true_or_false(int flow_true_false_state) {
-  this->is_always_true = flow_true_false_state == 1;      // see smart-casts-cfg.h
+  this->is_always_true = flow_true_false_state == 1;  // see smart-casts-cfg.h
   this->is_always_false = flow_true_false_state == 2;
 }
 
@@ -225,4 +225,4 @@ void Vertex<ast_import_directive>::assign_src_file(const SrcFile* file) {
   this->file = file;
 }
 
-} // namespace tolk
+}  // namespace tolk

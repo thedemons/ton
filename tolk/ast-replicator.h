@@ -97,10 +97,12 @@ class ASTReplicator final {
     return createV<ast_bracket_tuple>(v->loc, clone(v->get_items()));
   }
   static V<ast_reference> clone(V<ast_reference> v) {
-    return createV<ast_reference>(v->loc, clone(v->get_identifier()), v->has_instantiationTs() ? clone(v->get_instantiationTs()) : nullptr);
+    return createV<ast_reference>(v->loc, clone(v->get_identifier()),
+                                  v->has_instantiationTs() ? clone(v->get_instantiationTs()) : nullptr);
   }
   static V<ast_local_var_lhs> clone(V<ast_local_var_lhs> v) {
-    return createV<ast_local_var_lhs>(v->loc, clone(v->get_identifier()), clone(v->type_node), v->is_immutable, v->is_lateinit, v->marked_as_redef);
+    return createV<ast_local_var_lhs>(v->loc, clone(v->get_identifier()), clone(v->type_node), v->is_immutable,
+                                      v->is_lateinit, v->marked_as_redef);
   }
   static V<ast_local_vars_declaration> clone(V<ast_local_vars_declaration> v) {
     return createV<ast_local_vars_declaration>(v->loc, clone(v->get_expr()));
@@ -124,7 +126,8 @@ class ASTReplicator final {
     return createV<ast_argument_list>(v->loc, clone(v->get_arguments()));
   }
   static V<ast_dot_access> clone(V<ast_dot_access> v) {
-    return createV<ast_dot_access>(v->loc, clone(v->get_obj()), clone(v->get_identifier()), v->has_instantiationTs() ? clone(v->get_instantiationTs()) : nullptr);
+    return createV<ast_dot_access>(v->loc, clone(v->get_obj()), clone(v->get_identifier()),
+                                   v->has_instantiationTs() ? clone(v->get_instantiationTs()) : nullptr);
   }
   static V<ast_function_call> clone(V<ast_function_call> v) {
     return createV<ast_function_call>(v->loc, clone(v->get_callee()), clone(v->get_arg_list()));
@@ -145,7 +148,8 @@ class ASTReplicator final {
     return createV<ast_binary_operator>(v->loc, v->operator_name, v->tok, clone(v->get_lhs()), clone(v->get_rhs()));
   }
   static V<ast_ternary_operator> clone(V<ast_ternary_operator> v) {
-    return createV<ast_ternary_operator>(v->loc, clone(v->get_cond()), clone(v->get_when_true()), clone(v->get_when_false()));
+    return createV<ast_ternary_operator>(v->loc, clone(v->get_cond()), clone(v->get_when_true()),
+                                         clone(v->get_when_false()));
   }
   static V<ast_cast_as_operator> clone(V<ast_cast_as_operator> v) {
     return createV<ast_cast_as_operator>(v->loc, clone(v->get_expr()), clone(v->type_node));
@@ -163,7 +167,8 @@ class ASTReplicator final {
     return createV<ast_match_expression>(v->loc, clone(v->get_all_children()));
   }
   static V<ast_match_arm> clone(V<ast_match_arm> v) {
-    return createV<ast_match_arm>(v->loc, v->pattern_kind, clone(v->pattern_type_node), clone(v->get_pattern_expr()), clone(v->get_body()));
+    return createV<ast_match_arm>(v->loc, v->pattern_kind, clone(v->pattern_type_node), clone(v->get_pattern_expr()),
+                                  clone(v->get_body()));
   }
   static V<ast_object_field> clone(V<ast_object_field> v) {
     return createV<ast_object_field>(v->loc, clone(v->get_field_identifier()), clone(v->get_init_val()));
@@ -187,7 +192,8 @@ class ASTReplicator final {
     return createV<ast_return_statement>(v->loc, clone(v->get_return_value()));
   }
   static V<ast_if_statement> clone(V<ast_if_statement> v) {
-    return createV<ast_if_statement>(v->loc, v->is_ifnot, clone(v->get_cond()), clone(v->get_if_body()), clone(v->get_else_body()));
+    return createV<ast_if_statement>(v->loc, v->is_ifnot, clone(v->get_cond()), clone(v->get_if_body()),
+                                     clone(v->get_else_body()));
   }
   static V<ast_repeat_statement> clone(V<ast_repeat_statement> v) {
     return createV<ast_repeat_statement>(v->loc, clone(v->get_cond()), clone(v->get_body()));
@@ -205,7 +211,8 @@ class ASTReplicator final {
     return createV<ast_assert_statement>(v->loc, clone(v->get_cond()), clone(v->get_thrown_code()));
   }
   static V<ast_try_catch_statement> clone(V<ast_try_catch_statement> v) {
-    return createV<ast_try_catch_statement>(v->loc, clone(v->get_try_body()), clone(v->get_catch_expr()), clone(v->get_catch_body()));
+    return createV<ast_try_catch_statement>(v->loc, clone(v->get_try_body()), clone(v->get_catch_expr()),
+                                            clone(v->get_catch_body()));
   }
   static V<ast_asm_body> clone(V<ast_asm_body> v) {
     return createV<ast_asm_body>(v->loc, v->arg_order, v->ret_order, clone(v->get_asm_commands()));
@@ -229,42 +236,63 @@ class ASTReplicator final {
     return createV<ast_instantiationT_list>(v->loc, clone(v->get_items()));
   }
   static V<ast_parameter> clone(V<ast_parameter> v) {
-    return createV<ast_parameter>(v->loc, v->param_name, clone(v->type_node), v->default_value ? clone(v->default_value) : nullptr,  v->declared_as_mutate);
+    return createV<ast_parameter>(v->loc, v->param_name, clone(v->type_node),
+                                  v->default_value ? clone(v->default_value) : nullptr, v->declared_as_mutate);
   }
   static V<ast_parameter_list> clone(V<ast_parameter_list> v) {
     return createV<ast_parameter_list>(v->loc, clone(v->get_params()));
   }
   static V<ast_struct_field> clone(V<ast_struct_field> v) {
-    return createV<ast_struct_field>(v->loc, clone(v->get_identifier()), v->default_value ? clone(v->default_value) : nullptr, clone(v->type_node));
+    return createV<ast_struct_field>(v->loc, clone(v->get_identifier()),
+                                     v->default_value ? clone(v->default_value) : nullptr, clone(v->type_node));
   }
   static V<ast_struct_body> clone(V<ast_struct_body> v) {
     return createV<ast_struct_body>(v->loc, clone(v->get_all_fields()));
   }
 
-
   static AnyV clone(AnyV v) {
     switch (v->kind) {
-      case ast_empty_statement:                 return clone(v->as<ast_empty_statement>());
-      case ast_block_statement:                 return clone(v->as<ast_block_statement>());
-      case ast_return_statement:                return clone(v->as<ast_return_statement>());
-      case ast_if_statement:                    return clone(v->as<ast_if_statement>());
-      case ast_repeat_statement:                return clone(v->as<ast_repeat_statement>());
-      case ast_while_statement:                 return clone(v->as<ast_while_statement>());
-      case ast_do_while_statement:              return clone(v->as<ast_do_while_statement>());
-      case ast_throw_statement:                 return clone(v->as<ast_throw_statement>());
-      case ast_assert_statement:                return clone(v->as<ast_assert_statement>());
-      case ast_try_catch_statement:             return clone(v->as<ast_try_catch_statement>());
-      case ast_asm_body:                        return clone(v->as<ast_asm_body>());
+      case ast_empty_statement:
+        return clone(v->as<ast_empty_statement>());
+      case ast_block_statement:
+        return clone(v->as<ast_block_statement>());
+      case ast_return_statement:
+        return clone(v->as<ast_return_statement>());
+      case ast_if_statement:
+        return clone(v->as<ast_if_statement>());
+      case ast_repeat_statement:
+        return clone(v->as<ast_repeat_statement>());
+      case ast_while_statement:
+        return clone(v->as<ast_while_statement>());
+      case ast_do_while_statement:
+        return clone(v->as<ast_do_while_statement>());
+      case ast_throw_statement:
+        return clone(v->as<ast_throw_statement>());
+      case ast_assert_statement:
+        return clone(v->as<ast_assert_statement>());
+      case ast_try_catch_statement:
+        return clone(v->as<ast_try_catch_statement>());
+      case ast_asm_body:
+        return clone(v->as<ast_asm_body>());
       // other AST nodes that can be children of ast nodes of function/struct body
-      case ast_identifier:                      return clone(v->as<ast_identifier>());
-      case ast_genericsT_item:                  return clone(v->as<ast_genericsT_item>());
-      case ast_genericsT_list:                  return clone(v->as<ast_genericsT_list>());
-      case ast_instantiationT_item:             return clone(v->as<ast_instantiationT_item>());
-      case ast_instantiationT_list:             return clone(v->as<ast_instantiationT_list>());
-      case ast_parameter:                       return clone(v->as<ast_parameter>());
-      case ast_parameter_list:                  return clone(v->as<ast_parameter_list>());
-      case ast_struct_field:                    return clone(v->as<ast_struct_field>());
-      case ast_struct_body:                     return clone(v->as<ast_struct_body>());
+      case ast_identifier:
+        return clone(v->as<ast_identifier>());
+      case ast_genericsT_item:
+        return clone(v->as<ast_genericsT_item>());
+      case ast_genericsT_list:
+        return clone(v->as<ast_genericsT_list>());
+      case ast_instantiationT_item:
+        return clone(v->as<ast_instantiationT_item>());
+      case ast_instantiationT_list:
+        return clone(v->as<ast_instantiationT_list>());
+      case ast_parameter:
+        return clone(v->as<ast_parameter>());
+      case ast_parameter_list:
+        return clone(v->as<ast_parameter_list>());
+      case ast_struct_field:
+        return clone(v->as<ast_struct_field>());
+      case ast_struct_body:
+        return clone(v->as<ast_struct_body>());
 
       default: {
         // be very careful, don't forget to handle all statements/other (not expressions) above!
@@ -276,39 +304,72 @@ class ASTReplicator final {
 
   static AnyExprV clone(AnyExprV v) {
     switch (v->kind) {
-      case ast_empty_expression:                return clone(v->as<ast_empty_expression>());
-      case ast_parenthesized_expression:        return clone(v->as<ast_parenthesized_expression>());
-      case ast_braced_expression:               return clone(v->as<ast_braced_expression>());
-      case ast_braced_yield_result:             return clone(v->as<ast_braced_yield_result>());
-      case ast_artificial_aux_vertex:           return clone(v->as<ast_artificial_aux_vertex>());
-      case ast_tensor:                          return clone(v->as<ast_tensor>());
-      case ast_bracket_tuple:                   return clone(v->as<ast_bracket_tuple>());
-      case ast_reference:                       return clone(v->as<ast_reference>());
-      case ast_local_var_lhs:                   return clone(v->as<ast_local_var_lhs>());
-      case ast_local_vars_declaration:          return clone(v->as<ast_local_vars_declaration>());
-      case ast_int_const:                       return clone(v->as<ast_int_const>());
-      case ast_string_const:                    return clone(v->as<ast_string_const>());
-      case ast_bool_const:                      return clone(v->as<ast_bool_const>());
-      case ast_null_keyword:                    return clone(v->as<ast_null_keyword>());
-      case ast_argument:                        return clone(v->as<ast_argument>());
-      case ast_argument_list:                   return clone(v->as<ast_argument_list>());
-      case ast_dot_access:                      return clone(v->as<ast_dot_access>());
-      case ast_function_call:                   return clone(v->as<ast_function_call>());
-      case ast_underscore:                      return clone(v->as<ast_underscore>());
-      case ast_assign:                          return clone(v->as<ast_assign>());
-      case ast_set_assign:                      return clone(v->as<ast_set_assign>());
-      case ast_unary_operator:                  return clone(v->as<ast_unary_operator>());
-      case ast_binary_operator:                 return clone(v->as<ast_binary_operator>());
-      case ast_ternary_operator:                return clone(v->as<ast_ternary_operator>());
-      case ast_cast_as_operator:                return clone(v->as<ast_cast_as_operator>());
-      case ast_is_type_operator:                return clone(v->as<ast_is_type_operator>());
-      case ast_not_null_operator:               return clone(v->as<ast_not_null_operator>());
-      case ast_lazy_operator:                   return clone(v->as<ast_lazy_operator>());
-      case ast_match_expression:                return clone(v->as<ast_match_expression>());
-      case ast_match_arm:                       return clone(v->as<ast_match_arm>());
-      case ast_object_field:                    return clone(v->as<ast_object_field>());
-      case ast_object_body:                     return clone(v->as<ast_object_body>());
-      case ast_object_literal:                  return clone(v->as<ast_object_literal>());
+      case ast_empty_expression:
+        return clone(v->as<ast_empty_expression>());
+      case ast_parenthesized_expression:
+        return clone(v->as<ast_parenthesized_expression>());
+      case ast_braced_expression:
+        return clone(v->as<ast_braced_expression>());
+      case ast_braced_yield_result:
+        return clone(v->as<ast_braced_yield_result>());
+      case ast_artificial_aux_vertex:
+        return clone(v->as<ast_artificial_aux_vertex>());
+      case ast_tensor:
+        return clone(v->as<ast_tensor>());
+      case ast_bracket_tuple:
+        return clone(v->as<ast_bracket_tuple>());
+      case ast_reference:
+        return clone(v->as<ast_reference>());
+      case ast_local_var_lhs:
+        return clone(v->as<ast_local_var_lhs>());
+      case ast_local_vars_declaration:
+        return clone(v->as<ast_local_vars_declaration>());
+      case ast_int_const:
+        return clone(v->as<ast_int_const>());
+      case ast_string_const:
+        return clone(v->as<ast_string_const>());
+      case ast_bool_const:
+        return clone(v->as<ast_bool_const>());
+      case ast_null_keyword:
+        return clone(v->as<ast_null_keyword>());
+      case ast_argument:
+        return clone(v->as<ast_argument>());
+      case ast_argument_list:
+        return clone(v->as<ast_argument_list>());
+      case ast_dot_access:
+        return clone(v->as<ast_dot_access>());
+      case ast_function_call:
+        return clone(v->as<ast_function_call>());
+      case ast_underscore:
+        return clone(v->as<ast_underscore>());
+      case ast_assign:
+        return clone(v->as<ast_assign>());
+      case ast_set_assign:
+        return clone(v->as<ast_set_assign>());
+      case ast_unary_operator:
+        return clone(v->as<ast_unary_operator>());
+      case ast_binary_operator:
+        return clone(v->as<ast_binary_operator>());
+      case ast_ternary_operator:
+        return clone(v->as<ast_ternary_operator>());
+      case ast_cast_as_operator:
+        return clone(v->as<ast_cast_as_operator>());
+      case ast_is_type_operator:
+        return clone(v->as<ast_is_type_operator>());
+      case ast_not_null_operator:
+        return clone(v->as<ast_not_null_operator>());
+      case ast_lazy_operator:
+        return clone(v->as<ast_lazy_operator>());
+      case ast_match_expression:
+        return clone(v->as<ast_match_expression>());
+      case ast_match_arm:
+        return clone(v->as<ast_match_arm>());
+      case ast_object_field:
+        return clone(v->as<ast_object_field>());
+      case ast_object_body:
+        return clone(v->as<ast_object_body>());
+      case ast_object_literal:
+        return clone(v->as<ast_object_literal>());
       default:
         throw UnexpectedASTNodeKind(v, "ASTReplicatorFunction::clone(AnyExprV)");
     }
@@ -319,56 +380,51 @@ class ASTReplicator final {
       return nullptr;
     }
     switch (v->kind) {
-      case ast_type_leaf_text:                  return clone(v->as<ast_type_leaf_text>());
-      case ast_type_question_nullable:          return clone(v->as<ast_type_question_nullable>());
-      case ast_type_parenthesis_tensor:         return clone(v->as<ast_type_parenthesis_tensor>());
-      case ast_type_bracket_tuple:              return clone(v->as<ast_type_bracket_tuple>());
-      case ast_type_arrow_callable:             return clone(v->as<ast_type_arrow_callable>());
-      case ast_type_vertical_bar_union:         return clone(v->as<ast_type_vertical_bar_union>());
-      case ast_type_triangle_args:              return clone(v->as<ast_type_triangle_args>());
+      case ast_type_leaf_text:
+        return clone(v->as<ast_type_leaf_text>());
+      case ast_type_question_nullable:
+        return clone(v->as<ast_type_question_nullable>());
+      case ast_type_parenthesis_tensor:
+        return clone(v->as<ast_type_parenthesis_tensor>());
+      case ast_type_bracket_tuple:
+        return clone(v->as<ast_type_bracket_tuple>());
+      case ast_type_arrow_callable:
+        return clone(v->as<ast_type_arrow_callable>());
+      case ast_type_vertical_bar_union:
+        return clone(v->as<ast_type_vertical_bar_union>());
+      case ast_type_triangle_args:
+        return clone(v->as<ast_type_triangle_args>());
       default:
         throw UnexpectedASTNodeKind(v, "ASTReplicator::clone(AnyTypeV)");
     }
   }
 
-public:
+ public:
   // the cloned function becomes a deep copy, all AST nodes are copied, no previous pointers left
   static V<ast_function_declaration> clone_function_ast(V<ast_function_declaration> v_orig) {
-    return createV<ast_function_declaration>(
-      v_orig->loc,
-      clone(v_orig->get_identifier()),
-      clone(v_orig->get_param_list()),
-      clone(v_orig->get_body()),
-      clone(v_orig->receiver_type_node),
-      clone(v_orig->return_type_node),
-      v_orig->genericsT_list ? clone(v_orig->genericsT_list) : nullptr,
-      v_orig->tvm_method_id,
-      v_orig->flags,
-      v_orig->inline_mode
-    );
+    return createV<ast_function_declaration>(v_orig->loc, clone(v_orig->get_identifier()),
+                                             clone(v_orig->get_param_list()), clone(v_orig->get_body()),
+                                             clone(v_orig->receiver_type_node), clone(v_orig->return_type_node),
+                                             v_orig->genericsT_list ? clone(v_orig->genericsT_list) : nullptr,
+                                             v_orig->tvm_method_id, v_orig->flags, v_orig->inline_mode);
   }
 
   // the cloned struct becomes a deep copy, all AST nodes are copied, no previous pointers left
-  static V<ast_struct_declaration> clone_struct_ast(V<ast_struct_declaration> v_orig, V<ast_identifier> new_name_ident) {
-    return createV<ast_struct_declaration>(
-      v_orig->loc,
-      new_name_ident,
-      clone(v_orig->genericsT_list),
-      v_orig->overflow1023_policy,
-      v_orig->has_opcode() ? static_cast<AnyExprV>(clone(v_orig->get_opcode())) : createV<ast_empty_expression>(v_orig->loc),
-      clone(v_orig->get_struct_body())
-    );
+  static V<ast_struct_declaration> clone_struct_ast(V<ast_struct_declaration> v_orig,
+                                                    V<ast_identifier> new_name_ident) {
+    return createV<ast_struct_declaration>(v_orig->loc, new_name_ident, clone(v_orig->genericsT_list),
+                                           v_orig->overflow1023_policy,
+                                           v_orig->has_opcode() ? static_cast<AnyExprV>(clone(v_orig->get_opcode()))
+                                                                : createV<ast_empty_expression>(v_orig->loc),
+                                           clone(v_orig->get_struct_body()));
   }
 
   // the cloned type alias becomes a deep copy, all AST nodes are copied, no previous pointers left
-  static V<ast_type_alias_declaration> clone_type_alias_ast(V<ast_type_alias_declaration> v_orig, V<ast_identifier> new_name_ident) {
-    return createV<ast_type_alias_declaration>(
-      v_orig->loc,
-      new_name_ident,
-      clone(v_orig->genericsT_list),
-      clone(v_orig->underlying_type_node)
-    );
+  static V<ast_type_alias_declaration> clone_type_alias_ast(V<ast_type_alias_declaration> v_orig,
+                                                            V<ast_identifier> new_name_ident) {
+    return createV<ast_type_alias_declaration>(v_orig->loc, new_name_ident, clone(v_orig->genericsT_list),
+                                               clone(v_orig->underlying_type_node));
   }
 };
 
-} // namespace tolk
+}  // namespace tolk

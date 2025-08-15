@@ -132,7 +132,7 @@ class Resolver : public td::actor::Actor {
     if (!conf.dht_) {
       return td::Status::Error(ton::ErrorCode::error, "does not contain [dht] section");
     }
-    ton::ton_api::dht_nodes* static_nodes = nullptr;
+    ton::ton_api::dht_nodes *static_nodes = nullptr;
     ton::ton_api::downcast_call(*conf.dht_, [&](auto &f) { static_nodes = f.static_nodes_.get(); });
     auto &nodes = static_nodes->nodes_;
     if (server_idx_ >= 0) {

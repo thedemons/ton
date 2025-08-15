@@ -323,7 +323,7 @@ bool Op::compute_used_vars(const CodeBlob& code, bool edit) {
         return std_compute_used_vars(true);
       }
       if (cl == _Call && does_function_always_throw(f_sym)) {
-        VarDescrList new_var_info;    // empty, not next->var_info
+        VarDescrList new_var_info;  // empty, not next->var_info
         if (args.size() == right.size()) {
           for (const VarDescr& arg : args) {
             new_var_info.add_var(arg.idx, arg.is_unused());
@@ -853,7 +853,6 @@ void Op::set_disabled(bool flag) {
   }
 }
 
-
 bool Op::set_noreturn(bool flag) {
   if (flag) {
     flags |= _NoReturn;
@@ -905,7 +904,7 @@ bool Op::mark_noreturn() {
       if (block0->mark_noreturn() && !block1->is_empty()) {
         VarDescrList block1_var_info = block1->var_info;  // important to keep it
         Op* last_in_block1 = block1.get();
-        while (last_in_block1->next->cl != Op::_Nop) {    // find the tail of a forward list of Ops
+        while (last_in_block1->next->cl != Op::_Nop) {  // find the tail of a forward list of Ops
           last_in_block1 = last_in_block1->next.get();
         }
         last_in_block1->next = std::move(next);
@@ -920,7 +919,9 @@ bool Op::mark_noreturn() {
     }
     case _TryCatch:
       // note, that & | (not && ||) here and below is mandatory to invoke both left and right calls
-      return set_noreturn((static_cast<int>(block0->mark_noreturn()) & static_cast<int>(block1 && block1->mark_noreturn())) | static_cast<int>(next->mark_noreturn()));
+      return set_noreturn(
+          (static_cast<int>(block0->mark_noreturn()) & static_cast<int>(block1 && block1->mark_noreturn())) |
+          static_cast<int>(next->mark_noreturn()));
     case _Again:
       block0->mark_noreturn();
       return set_noreturn();

@@ -43,7 +43,7 @@ std::unique_ptr<MemoryKeyValue::Bucket, MemoryKeyValue::Unlock> MemoryKeyValue::
 }
 
 Result<std::vector<MemoryKeyValue::GetStatus>> MemoryKeyValue::get_multi(td::Span<Slice> keys,
-                                                                        std::vector<std::string> *values) {
+                                                                         std::vector<std::string> *values) {
   values->resize(keys.size());
   std::vector<GetStatus> res;
   res.reserve(keys.size());

@@ -480,7 +480,6 @@ void ValidatorSessionRoundAttemptState::dump(ValidatorSessionDescription& desc, 
   sb << "<<<<\n";
 }
 
-
 }  // namespace validatorsession
 
 }  // namespace ton

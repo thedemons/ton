@@ -133,9 +133,9 @@ std::string ActorStats::prepare_stats() {
          << stat_forever.max_execute_messages.value_10m << " " << stat_forever.max_execute_messages.value_forever
          << "\n";
 
-    sb() << "max_execute_seconds:\t" << stat_forever.max_execute_seconds.value_10s << "s"
-         << " " << stat_forever.max_execute_seconds.value_10m << "s"
-         << " " << stat_forever.max_execute_seconds.value_forever << "s\n";
+    sb() << "max_execute_seconds:\t" << stat_forever.max_execute_seconds.value_10s << "s" << " "
+         << stat_forever.max_execute_seconds.value_10m << "s" << " " << stat_forever.max_execute_seconds.value_forever
+         << "s\n";
     sb() << "max_message_seconds:\t" << stat_forever.max_message_seconds.value_10s << " "
          << stat_forever.max_message_seconds.value_10m << " " << stat_forever.max_message_seconds.value_forever << "\n";
     sb() << "created_per_second:\t" << stat_10s.created << " " << stat_10m.created << " " << stat_forever.created
@@ -147,8 +147,7 @@ std::string ActorStats::prepare_stats() {
             : double(td::Clocks::rdtsc()) * estimated_inv_ticks_per_second - stat_forever.executing_start;
     sb() << "max_delay:\t" << stat_forever.max_delay_seconds.value_10s << "s "
          << stat_forever.max_delay_seconds.value_10m << "s " << stat_forever.max_delay_seconds.value_forever << "s\n";
-    sb() << ""
-         << "alive: " << stat_forever.alive << " executing: " << stat_forever.executing
+    sb() << "" << "alive: " << stat_forever.alive << " executing: " << stat_forever.executing
          << " max_executing_for: " << executing_for << "s\n";
   };
 

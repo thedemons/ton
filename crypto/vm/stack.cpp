@@ -83,7 +83,7 @@ std::string StackEntry::to_lisp_string() const {
   return std::move(os).str();
 }
 
-static std::string cell_to_hex(const td::Ref<vm::Cell> &cell) {
+static std::string cell_to_hex(const td::Ref<vm::Cell>& cell) {
   auto boc = vm::std_boc_serialize(cell);
   if (boc.is_ok()) {
     return td::buffer_to_hex(boc.move_as_ok().as_slice());

@@ -25,13 +25,13 @@
 
 namespace tolk {
 
-GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD
-static void fire_error_const_string_required(SrcLocation loc, std::string_view f_name, std::string_view example_arg) {
+GNU_ATTRIBUTE_NORETURN GNU_ATTRIBUTE_COLD static void fire_error_const_string_required(SrcLocation loc,
+                                                                                       std::string_view f_name,
+                                                                                       std::string_view example_arg) {
   std::string name = static_cast<std::string>(f_name);
   std::string example = static_cast<std::string>(example_arg);
-  throw ParseError(loc, "function `" +  name + "` requires a constant string, like `" + name + "(\"" + example + "\")`");
+  throw ParseError(loc, "function `" + name + "` requires a constant string, like `" + name + "(\"" + example + "\")`");
 }
-
 
 // parse address like "EQCRDM9h4k3UJdOePPuyX40mCgA4vxge5Dc5vjBR8djbEKC5"
 // based on unpack_std_smc_addr() from block.cpp
@@ -69,7 +69,7 @@ static bool parse_raw_address(std::string_view acc_string, int& workchain, ton::
     return false;
   }
 
-  for (int i = 0; i < 64; ++i) {    // loop through each hex digit
+  for (int i = 0; i < 64; ++i) {  // loop through each hex digit
     char c = acc_string[pos + i];
     int x;
     if (c >= '0' && c <= '9') {
@@ -150,7 +150,7 @@ static td::RefInt256 parse_nanotons_as_floating_string(SrcLocation loc, std::str
     }
   }
 
-  while (fractional_digits < 9) {     // after "0.05" fractional_digits is 2, scale up to 9
+  while (fractional_digits < 9) {  // after "0.05" fractional_digits is 2, scale up to 9
     fractional_part *= 10;
     fractional_digits++;
   }
@@ -162,7 +162,8 @@ static td::RefInt256 parse_nanotons_as_floating_string(SrcLocation loc, std::str
 // given `ton("0.05")` evaluate it to 50000000
 // given `stringCrc32("some_str")` evaluate it
 // etc.
-static CompileTimeFunctionResult parse_vertex_call_to_compile_time_function(V<ast_function_call> v, std::string_view f_name) {
+static CompileTimeFunctionResult parse_vertex_call_to_compile_time_function(V<ast_function_call> v,
+                                                                            std::string_view f_name) {
   // most functions accept 1 argument, but static compile-time methods like `MyStruct.getDeclaredPackPrefix()` have 0 args
   if (v->get_num_args() == 0) {
     TypePtr receiver = v->fun_maybe->receiver_type;
@@ -173,11 +174,12 @@ static CompileTimeFunctionResult parse_vertex_call_to_compile_time_function(V<as
       if (!t_struct || !t_struct->struct_ref->opcode.exists()) {
         throw ParseError(v->loc, "type `" + receiver->as_human_readable() + "` does not have a serialization prefix");
       }
-      return td::make_refint(f_name.ends_with('x') ? t_struct->struct_ref->opcode.pack_prefix : t_struct->struct_ref->opcode.prefix_len);
+      return td::make_refint(f_name.ends_with('x') ? t_struct->struct_ref->opcode.pack_prefix
+                                                   : t_struct->struct_ref->opcode.prefix_len);
     }
   }
 
-  tolk_assert(v->get_num_args() == 1);    // checked by type inferring
+  tolk_assert(v->get_num_args() == 1);  // checked by type inferring
   AnyExprV v_arg = v->get_arg(0)->get_expr();
 
   std::string_view str;
@@ -196,33 +198,34 @@ static CompileTimeFunctionResult parse_vertex_call_to_compile_time_function(V<as
     return parse_nanotons_as_floating_string(v_arg->loc, str);
   }
 
-  if (f_name == "address")     {          // previously, postfix "..."a, but it returned `slice` (now returns `address`)
-    unsigned char data[3 + 8 + 256];      // addr_std$10 anycast:(Maybe Anycast) workchain_id:int8 address:bits256 = MsgAddressInt;
+  if (f_name == "address") {  // previously, postfix "..."a, but it returned `slice` (now returns `address`)
+    unsigned char
+        data[3 + 8 + 256];  // addr_std$10 anycast:(Maybe Anycast) workchain_id:int8 address:bits256 = MsgAddressInt;
     parse_any_std_address(str, v_arg->loc, &data);
     return td::BitSlice{data, sizeof(data)}.to_hex();
   }
 
-  if (f_name == "stringCrc32") {          // previously, postfix "..."c
+  if (f_name == "stringCrc32") {  // previously, postfix "..."c
     return td::make_refint(td::crc32(td::Slice{str.data(), str.size()}));
   }
 
-  if (f_name == "stringCrc16") {          // previously, there was no postfix in FunC, no way to calc at compile-time
+  if (f_name == "stringCrc16") {  // previously, there was no postfix in FunC, no way to calc at compile-time
     return td::make_refint(td::crc16(td::Slice{str.data(), str.size()}));
   }
 
-  if (f_name == "stringSha256") {         // previously, postfix "..."H
+  if (f_name == "stringSha256") {  // previously, postfix "..."H
     unsigned char hash[32];
     digest::hash_str<digest::SHA256>(hash, str.data(), str.size());
     return td::bits_to_refint(hash, 256, false);
   }
 
-  if (f_name == "stringSha256_32") {      // previously, postfix "..."h
+  if (f_name == "stringSha256_32") {  // previously, postfix "..."h
     unsigned char hash[32];
     digest::hash_str<digest::SHA256>(hash, str.data(), str.size());
     return td::bits_to_refint(hash, 32, false);
   }
 
-  if (f_name == "stringHexToSlice") {     // previously, postfix "..."s
+  if (f_name == "stringHexToSlice") {  // previously, postfix "..."s
     unsigned char buff[128];
     long bits = td::bitstring::parse_bitstring_hex_literal(buff, sizeof(buff), str.data(), str.data() + str.size());
     if (bits < 0) {
@@ -231,7 +234,7 @@ static CompileTimeFunctionResult parse_vertex_call_to_compile_time_function(V<as
     return static_cast<std::string>(str);
   }
 
-  if (f_name == "stringToBase256") {      // previously, postfix "..."u
+  if (f_name == "stringToBase256") {  // previously, postfix "..."u
     td::RefInt256 intval = td::hex_string_to_int256(td::hex_encode(td::Slice(str.data(), str.size())));
     if (str.empty()) {
       v_arg->error("empty integer ascii-constant");
@@ -244,7 +247,6 @@ static CompileTimeFunctionResult parse_vertex_call_to_compile_time_function(V<as
 
   tolk_assert(false);
 }
-
 
 struct ConstantExpressionChecker {
   static void handle_unary_operator(V<ast_unary_operator> v) {
@@ -288,7 +290,8 @@ struct ConstantExpressionChecker {
   }
 
   static void visit(AnyExprV v) {
-    if (v->try_as<ast_int_const>() || v->try_as<ast_bool_const>() || v->try_as<ast_string_const>() || v->try_as<ast_null_keyword>()) {
+    if (v->try_as<ast_int_const>() || v->try_as<ast_bool_const>() || v->try_as<ast_string_const>() ||
+        v->try_as<ast_null_keyword>()) {
       return;
     }
     if (auto v_unop = v->try_as<ast_unary_operator>()) {
@@ -315,7 +318,8 @@ struct ConstantExpressionChecker {
     if (auto v_cast_to = v->try_as<ast_cast_as_operator>()) {
       return visit(v_cast_to->get_expr());
     }
-    if (auto v_dot = v->try_as<ast_dot_access>(); v_dot && (v_dot->is_target_indexed_access() || v_dot->is_target_fun_ref())) {
+    if (auto v_dot = v->try_as<ast_dot_access>();
+        v_dot && (v_dot->is_target_indexed_access() || v_dot->is_target_fun_ref())) {
       return visit(v_dot->get_obj());
     }
     v->error("not a constant expression");
@@ -346,5 +350,4 @@ CompileTimeFunctionResult eval_call_to_compile_time_function(AnyExprV v_call) {
   return parse_vertex_call_to_compile_time_function(v, v->fun_maybe->name);
 }
 
-
-} // namespace tolk
+}  // namespace tolk

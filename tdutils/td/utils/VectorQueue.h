@@ -33,7 +33,7 @@ class VectorQueue {
     vector_.emplace_back(std::forward<S>(s));
   }
   template <class... Args>
-  void emplace(Args &&... args) {
+  void emplace(Args &&...args) {
     vector_.emplace_back(std::forward<Args>(args)...);
   }
   T pop() {

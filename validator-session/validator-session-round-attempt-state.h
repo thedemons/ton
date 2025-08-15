@@ -30,7 +30,6 @@
 
 #include <limits>
 
-
 namespace ton {
 
 namespace validatorsession {
@@ -613,7 +612,6 @@ class ValidatorSessionRoundAttemptState : public ValidatorSessionDescription::Ro
 
 using AttemptVector =
     CntSortedVector<const ValidatorSessionRoundAttemptState*, ValidatorSessionRoundAttemptState::Compare>;
-
 
 }  // namespace validatorsession
 

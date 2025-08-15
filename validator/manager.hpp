@@ -276,14 +276,14 @@ class ValidatorManagerImpl : public ValidatorManager {
     std::map<MessageId<ExtMessage>, std::unique_ptr<MessageExt<ExtMessage>>> ext_messages_;
     std::map<std::pair<ton::WorkchainId, ton::StdSmcAddress>, std::map<ExtMessage::Hash, MessageId<ExtMessage>>>
         ext_addr_messages_;
-    void erase(const MessageId<ExtMessage>& id) {
+    void erase(const MessageId<ExtMessage> &id) {
       auto it = ext_messages_.find(id);
       CHECK(it != ext_messages_.end());
       ext_addr_messages_[it->second->address()].erase(id.hash);
       ext_messages_.erase(it);
     }
   };
-  std::map<int, ExtMessages> ext_msgs_;  // priority -> messages
+  std::map<int, ExtMessages> ext_msgs_;                                                    // priority -> messages
   std::map<ExtMessage::Hash, std::pair<int, MessageId<ExtMessage>>> ext_messages_hashes_;  // hash -> priority
   td::Timestamp cleanup_mempool_at_;
   // IHR ?
@@ -451,7 +451,8 @@ class ValidatorManagerImpl : public ValidatorManager {
                               td::Promise<td::Ref<vm::DataCell>> promise) override;
   void set_block_state_from_data(BlockHandle handle, td::Ref<BlockData> block,
                                  td::Promise<td::Ref<ShardState>> promise) override;
-  void set_block_state_from_data_preliminary(std::vector<td::Ref<BlockData>> blocks, td::Promise<td::Unit> promise) override;
+  void set_block_state_from_data_preliminary(std::vector<td::Ref<BlockData>> blocks,
+                                             td::Promise<td::Unit> promise) override;
   void get_cell_db_reader(td::Promise<std::shared_ptr<vm::CellDbReader>> promise) override;
   void store_persistent_state_file(BlockIdExt block_id, BlockIdExt masterchain_block_id, PersistentStateType type,
                                    td::BufferSlice state, td::Promise<td::Unit> promise) override;
@@ -685,11 +686,11 @@ class ValidatorManagerImpl : public ValidatorManager {
   void get_block_data_for_litequery(BlockIdExt block_id, td::Promise<td::Ref<BlockData>> promise) override;
   void get_block_state_for_litequery(BlockIdExt block_id, td::Promise<td::Ref<ShardState>> promise) override;
   void get_block_by_lt_for_litequery(AccountIdPrefixFull account, LogicalTime lt,
-                                             td::Promise<ConstBlockHandle> promise) override;
+                                     td::Promise<ConstBlockHandle> promise) override;
   void get_block_by_unix_time_for_litequery(AccountIdPrefixFull account, UnixTime ts,
-                                                    td::Promise<ConstBlockHandle> promise) override;
+                                            td::Promise<ConstBlockHandle> promise) override;
   void get_block_by_seqno_for_litequery(AccountIdPrefixFull account, BlockSeqno seqno,
-                                                td::Promise<ConstBlockHandle> promise) override;
+                                        td::Promise<ConstBlockHandle> promise) override;
   void process_block_handle_for_litequery_error(BlockIdExt block_id, td::Result<BlockHandle> r_handle,
                                                 td::Promise<ConstBlockHandle> promise);
   void process_lookup_block_for_litequery_error(AccountIdPrefixFull account, int type, td::uint64 value,
@@ -706,7 +707,7 @@ class ValidatorManagerImpl : public ValidatorManager {
     ++(success ? total_ls_queries_ok_ : total_ls_queries_error_)[lite_query_id];
   }
 
-  void get_storage_stat_cache(td::Promise<std::function<td::Ref<vm::Cell>(const td::Bits256&)>> promise) override {
+  void get_storage_stat_cache(td::Promise<std::function<td::Ref<vm::Cell>(const td::Bits256 &)>> promise) override {
     td::actor::send_closure(storage_stat_cache_, &StorageStatCache::get_cache, std::move(promise));
   }
   void update_storage_stat_cache(std::vector<std::pair<td::Ref<vm::Cell>, td::uint32>> data) override {
@@ -845,7 +846,7 @@ class ValidatorManagerImpl : public ValidatorManager {
 
   td::actor::ActorOwn<StorageStatCache> storage_stat_cache_;
 
-  template<typename T>
+  template <typename T>
   void write_session_stats(const T &obj);
 
   td::actor::ActorOwn<ShardBlockVerifier> shard_block_verifier_;

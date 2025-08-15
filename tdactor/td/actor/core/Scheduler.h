@@ -265,7 +265,6 @@ class Scheduler {
     }
 
    private:
-
     ActorInfoCreator *creator_;
     SchedulerId scheduler_id_;
     CpuWorkerId cpu_worker_id_;

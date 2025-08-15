@@ -27,11 +27,14 @@ namespace tolk {
  *   For comments about laziness, see pipe-lazy-load-insertions.cpp.
  */
 
-LazyVariableLoadedState::LazyVariableLoadedState(TypePtr declared_type, std::vector<var_idx_t>&& ir_slice, std::vector<var_idx_t>&& ir_options)
-  : declared_type(declared_type)
-  , ir_slice(std::move(ir_slice))
-  , ir_options(std::move(ir_options))
-  , loaded_state(declared_type->unwrap_alias()->try_as<TypeDataStruct>() ? declared_type->unwrap_alias()->try_as<TypeDataStruct>()->struct_ref : nullptr) {
+LazyVariableLoadedState::LazyVariableLoadedState(TypePtr declared_type, std::vector<var_idx_t>&& ir_slice,
+                                                 std::vector<var_idx_t>&& ir_options)
+    : declared_type(declared_type)
+    , ir_slice(std::move(ir_slice))
+    , ir_options(std::move(ir_options))
+    , loaded_state(declared_type->unwrap_alias()->try_as<TypeDataStruct>()
+                       ? declared_type->unwrap_alias()->try_as<TypeDataStruct>()->struct_ref
+                       : nullptr) {
   // fill loaded_variants: variants of a lazy union or the last field of a struct if it's a union
   const TypeDataUnion* t_union = declared_type->unwrap_alias()->try_as<TypeDataUnion>();
   if (is_struct() && loaded_state.original_struct->get_num_fields()) {
@@ -70,7 +73,7 @@ void LazyVariableLoadedState::assert_field_loaded(StructPtr original_struct, Str
 
 void LazyStructLoadedState::on_started_loading(StructPtr hidden_struct) {
   this->hidden_struct = hidden_struct;
-  this->ith_field_was_loaded.resize(hidden_struct->get_num_fields());   // initially false
+  this->ith_field_was_loaded.resize(hidden_struct->get_num_fields());  // initially false
 }
 
 void LazyStructLoadedState::on_original_field_loaded(StructFieldPtr hidden_field) {
@@ -98,4 +101,4 @@ std::vector<var_idx_t> LazyStructLoadedState::get_ir_loaded_aside_field(StructFi
   tolk_assert(false);
 }
 
-} // namespace tolk
+}  // namespace tolk

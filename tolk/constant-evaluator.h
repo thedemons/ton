@@ -28,4 +28,4 @@ void check_expression_is_constant(AnyExprV v_expr);
 std::string eval_string_const_standalone(AnyExprV v_string);
 CompileTimeFunctionResult eval_call_to_compile_time_function(AnyExprV v_call);
 
-} // namespace tolk
+}  // namespace tolk

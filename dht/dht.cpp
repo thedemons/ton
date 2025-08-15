@@ -470,8 +470,9 @@ void DhtMemberImpl::get_value_in(DhtKeyId key, td::Promise<DhtValue> result) {
                                        network_id = network_id_, id = id_,
                                        client_only = client_only_](td::Result<DhtNode> R) mutable {
     R.ensure();
-    td::actor::create_actor<DhtQueryFindValueSingle>("FindValueQuery", key, print_id, id, std::move(list), k, a, network_id,
-                                               R.move_as_ok(), client_only, SelfId, adnl, std::move(promise))
+    td::actor::create_actor<DhtQueryFindValueSingle>("FindValueQuery", key, print_id, id, std::move(list), k, a,
+                                                     network_id, R.move_as_ok(), client_only, SelfId, adnl,
+                                                     std::move(promise))
         .release();
   });
 

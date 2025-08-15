@@ -62,7 +62,7 @@ struct StorageStatCacheStats {
 
   tl_object_ptr<ton_api::validatorStats_storageStatCacheStats> tl() const {
     return create_tl_object<ton_api::validatorStats_storageStatCacheStats>(small_cnt, small_cells, hit_cnt, hit_cells,
-                                                                      miss_cnt, miss_cells);
+                                                                           miss_cnt, miss_cells);
   }
 };
 
@@ -385,7 +385,7 @@ class ValidatorManager : public ValidatorManagerInterface {
     promise.set_result(td::Unit());
   }
 
-  virtual void iterate_temp_block_handles(std::function<void(const BlockHandleInterface &)> f) {
+  virtual void iterate_temp_block_handles(std::function<void(const BlockHandleInterface&)> f) {
   }
 
   static bool is_persistent_state(UnixTime ts, UnixTime prev_ts) {

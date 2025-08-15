@@ -31,7 +31,6 @@
 
 namespace tolk {
 
-
 // --------------------------------------------
 //    checking serialization availability
 //
@@ -40,14 +39,14 @@ namespace tolk {
 // if not, a detailed explanation is shown
 //
 
-
 struct CantSerializeBecause {
   std::string because_msg;
 
-  explicit CantSerializeBecause(std::string because_msg)
-    : because_msg(std::move(because_msg)) {}
+  explicit CantSerializeBecause(std::string because_msg) : because_msg(std::move(because_msg)) {
+  }
   explicit CantSerializeBecause(const std::string& because_msg, const CantSerializeBecause& why)
-    : because_msg(because_msg + "\n" + why.because_msg) {}
+      : because_msg(because_msg + "\n" + why.because_msg) {
+  }
 };
 
 class PackUnpackAvailabilityChecker {
@@ -73,7 +72,7 @@ class PackUnpackAvailabilityChecker {
     return f_unpack->inferred_return_type->equal_to(receiver_type);
   }
 
-public:
+ public:
   std::optional<CantSerializeBecause> detect_why_cant_serialize(TypePtr any_type, bool is_pack) {
     if (any_type->try_as<TypeDataIntN>()) {
       return {};
@@ -102,17 +101,20 @@ public:
       if (std::find(already_checked.begin(), already_checked.end(), struct_ref) != already_checked.end()) {
         return {};
       }
-      already_checked.push_back(struct_ref);    // prevent recursion and visiting one struct multiple times
+      already_checked.push_back(struct_ref);  // prevent recursion and visiting one struct multiple times
 
       for (StructFieldPtr field_ref : struct_ref->fields) {
         if (auto why = detect_why_cant_serialize(field_ref->declared_type, is_pack)) {
-          return CantSerializeBecause("because field `" + struct_ref->name + "." + field_ref->name + "` of type `" + field_ref->declared_type->as_human_readable() + "` can't be serialized", why.value());
+          return CantSerializeBecause("because field `" + struct_ref->name + "." + field_ref->name + "` of type `" +
+                                          field_ref->declared_type->as_human_readable() + "` can't be serialized",
+                                      why.value());
         }
       }
       if (is_type_cellT(t_struct)) {
         TypePtr cellT = struct_ref->substitutedTs->typeT_at(0);
         if (auto why = detect_why_cant_serialize(cellT, is_pack)) {
-          return CantSerializeBecause("because type `" + cellT->as_human_readable() + "` can't be serialized", why.value());
+          return CantSerializeBecause("because type `" + cellT->as_human_readable() + "` can't be serialized",
+                                      why.value());
         }
       }
       return {};
@@ -131,14 +133,17 @@ public:
           continue;
         }
         if (auto why = detect_why_cant_serialize(variant, is_pack)) {
-          return CantSerializeBecause("because variant #" + std::to_string(i + 1) + " of type `" + variant->as_human_readable() + "` can't be serialized", why.value());
+          return CantSerializeBecause("because variant #" + std::to_string(i + 1) + " of type `" +
+                                          variant->as_human_readable() + "` can't be serialized",
+                                      why.value());
         }
       }
       if (!t_union->or_null) {
         std::string because_msg;
         auto_generate_opcodes_for_union(t_union, because_msg);
         if (!because_msg.empty()) {
-          return CantSerializeBecause("because could not automatically generate serialization prefixes for a union\n" + because_msg);
+          return CantSerializeBecause("because could not automatically generate serialization prefixes for a union\n" +
+                                      because_msg);
         }
       }
       return {};
@@ -147,38 +152,55 @@ public:
     if (const auto* t_tensor = any_type->try_as<TypeDataTensor>()) {
       for (int i = 0; i < t_tensor->size(); ++i) {
         if (auto why = detect_why_cant_serialize(t_tensor->items[i], is_pack)) {
-          return CantSerializeBecause("because element `tensor." + std::to_string(i) + "` of type `" + t_tensor->items[i]->as_human_readable() + "` can't be serialized", why.value());
+          return CantSerializeBecause("because element `tensor." + std::to_string(i) + "` of type `" +
+                                          t_tensor->items[i]->as_human_readable() + "` can't be serialized",
+                                      why.value());
         }
       }
       return {};
     }
 
     if (const auto* t_alias = any_type->try_as<TypeDataAlias>()) {
-      if (t_alias->alias_ref->name == "RemainingBitsAndRefs") {   // it's built-in RemainingBitsAndRefs (slice)
+      if (t_alias->alias_ref->name == "RemainingBitsAndRefs") {  // it's built-in RemainingBitsAndRefs (slice)
         return {};
       }
       if (FunctionPtr f_pack = get_custom_pack_unpack_function(t_alias, true)) {
         std::string receiver_name = t_alias->alias_ref->as_human_readable();
         if (!check_declared_packToBuilder(t_alias, f_pack)) {
-          return CantSerializeBecause("because `" + receiver_name + ".packToBuilder()` is declared incorrectly\nhint: it must accept 2 parameters and return nothing:\n> fun " + receiver_name + ".packToBuilder(self, mutate b: builder)");
+          return CantSerializeBecause("because `" + receiver_name +
+                                      ".packToBuilder()` is declared incorrectly\nhint: it must accept 2 parameters "
+                                      "and return nothing:\n> fun " +
+                                      receiver_name + ".packToBuilder(self, mutate b: builder)");
         }
         if (!f_pack->is_inlined_in_place()) {
-          return CantSerializeBecause("because `" + receiver_name + ".packToBuilder()` can't be inlined; probably, it contains `return` in the middle");
+          return CantSerializeBecause(
+              "because `" + receiver_name +
+              ".packToBuilder()` can't be inlined; probably, it contains `return` in the middle");
         }
         if (FunctionPtr f_unpack = get_custom_pack_unpack_function(t_alias, false)) {
           if (!check_declared_unpackFromSlice(t_alias, f_unpack)) {
-            return CantSerializeBecause("because `" + receiver_name + ".unpackFromSlice()` is declared incorrectly\nhint: it must accept 1 parameter and return an object:\n> fun " + receiver_name + ".unpackFromSlice(mutate s: slice): " + receiver_name);
+            return CantSerializeBecause("because `" + receiver_name +
+                                        ".unpackFromSlice()` is declared incorrectly\nhint: it must accept 1 parameter "
+                                        "and return an object:\n> fun " +
+                                        receiver_name + ".unpackFromSlice(mutate s: slice): " + receiver_name);
           }
           if (!f_unpack->is_inlined_in_place()) {
-            return CantSerializeBecause("because `" + receiver_name + ".unpackFromSlice()` can't be inlined; probably, it contains `return` in the middle");
+            return CantSerializeBecause(
+                "because `" + receiver_name +
+                ".unpackFromSlice()` can't be inlined; probably, it contains `return` in the middle");
           }
         } else if (!is_pack) {
-          return CantSerializeBecause("because type `" + receiver_name + "` defines a custom pack function, but does not define unpack\nhint: declare unpacker like this:\n> fun " + receiver_name + ".unpackFromSlice(mutate s: slice): " + receiver_name);
+          return CantSerializeBecause("because type `" + receiver_name +
+                                      "` defines a custom pack function, but does not define unpack\nhint: declare "
+                                      "unpacker like this:\n> fun " +
+                                      receiver_name + ".unpackFromSlice(mutate s: slice): " + receiver_name);
         }
         return {};
       }
       if (auto why = detect_why_cant_serialize(t_alias->underlying_type, is_pack)) {
-        return CantSerializeBecause("because alias `" + t_alias->as_human_readable() + "` expands to `" + t_alias->underlying_type->as_human_readable() + "`", why.value());
+        return CantSerializeBecause("because alias `" + t_alias->as_human_readable() + "` expands to `" +
+                                        t_alias->underlying_type->as_human_readable() + "`",
+                                    why.value());
       }
       return {};
     }
@@ -188,26 +210,36 @@ public:
       if (is_pack) {
         return {};
       }
-      return CantSerializeBecause("because type `builder` can not be used for reading, only for writing\nhint: use `bitsN` or `RemainingBitsAndRefs` for reading\nhint: using generics, you can substitute `builder` for writing and something other for reading");
+      return CantSerializeBecause(
+          "because type `builder` can not be used for reading, only for writing\nhint: use `bitsN` or "
+          "`RemainingBitsAndRefs` for reading\nhint: using generics, you can substitute `builder` for writing and "
+          "something other for reading");
     }
     if (any_type == TypeDataSlice::create()) {
       if (is_pack) {
         return {};
       }
-      return CantSerializeBecause("because type `slice` can not be used for reading, it doesn't define binary width\nhint: replace `slice` with `address` if it's an address, actually\nhint: replace `slice` with `bits128` and similar if it represents fixed-width data without refs");
+      return CantSerializeBecause(
+          "because type `slice` can not be used for reading, it doesn't define binary width\nhint: replace `slice` "
+          "with `address` if it's an address, actually\nhint: replace `slice` with `bits128` and similar if it "
+          "represents fixed-width data without refs");
     }
 
     // serialization not available
     // for common types, make a detailed explanation with a hint how to fix
 
     if (any_type == TypeDataInt::create()) {
-      return CantSerializeBecause("because type `int` is not serializable, it doesn't define binary width\nhint: replace `int` with `int32` / `uint64` / `coins` / etc.");
+      return CantSerializeBecause(
+          "because type `int` is not serializable, it doesn't define binary width\nhint: replace `int` with `int32` / "
+          "`uint64` / `coins` / etc.");
     }
     if (any_type == TypeDataNullLiteral::create()) {
-      return CantSerializeBecause("because type `null` is not serializable\nhint: `int32?` and other nullable types will work");
+      return CantSerializeBecause(
+          "because type `null` is not serializable\nhint: `int32?` and other nullable types will work");
     }
     if (any_type == TypeDataTuple::create() || any_type->try_as<TypeDataBrackets>()) {
-      return CantSerializeBecause("because tuples are not serializable\nhint: use tensors instead of tuples, they will work");
+      return CantSerializeBecause(
+          "because tuples are not serializable\nhint: use tensors instead of tuples, they will work");
     }
 
     return CantSerializeBecause("because type `" + any_type->as_human_readable() + "` is not serializable");
@@ -231,19 +263,19 @@ static int calc_offset_on_stack(StructPtr struct_ref, int field_idx) {
   return stack_offset;
 }
 
-
 // --------------------------------------------
 //    high-level API for outer code
 //
 
-
-std::vector<var_idx_t> generate_pack_struct_to_cell(CodeBlob& code, SrcLocation loc, TypePtr any_type, std::vector<var_idx_t>&& ir_obj, const std::vector<var_idx_t>& ir_options) {
+std::vector<var_idx_t> generate_pack_struct_to_cell(CodeBlob& code, SrcLocation loc, TypePtr any_type,
+                                                    std::vector<var_idx_t>&& ir_obj,
+                                                    const std::vector<var_idx_t>& ir_options) {
   FunctionPtr f_beginCell = lookup_function("beginCell");
   FunctionPtr f_endCell = lookup_function("builder.endCell");
   std::vector rvect_builder = code.create_var(TypeDataBuilder::create(), loc, "b");
   code.emplace_back(loc, Op::_Call, rvect_builder, std::vector<var_idx_t>{}, f_beginCell);
 
-  tolk_assert(ir_options.size() == 1);      // struct PackOptions
+  tolk_assert(ir_options.size() == 1);  // struct PackOptions
   PackContext ctx(code, loc, rvect_builder, ir_options);
   ctx.generate_pack_any(any_type, std::move(ir_obj));
 
@@ -253,21 +285,26 @@ std::vector<var_idx_t> generate_pack_struct_to_cell(CodeBlob& code, SrcLocation 
   return rvect_cell;
 }
 
-std::vector<var_idx_t> generate_pack_struct_to_builder(CodeBlob& code, SrcLocation loc, TypePtr any_type, std::vector<var_idx_t>&& ir_builder, std::vector<var_idx_t>&& ir_obj, const std::vector<var_idx_t>& ir_options) {
-  PackContext ctx(code, loc, ir_builder, ir_options);   // mutate this builder
+std::vector<var_idx_t> generate_pack_struct_to_builder(CodeBlob& code, SrcLocation loc, TypePtr any_type,
+                                                       std::vector<var_idx_t>&& ir_builder,
+                                                       std::vector<var_idx_t>&& ir_obj,
+                                                       const std::vector<var_idx_t>& ir_options) {
+  PackContext ctx(code, loc, ir_builder, ir_options);  // mutate this builder
   ctx.generate_pack_any(any_type, std::move(ir_obj));
 
   return ir_builder;  // return mutated builder
 }
 
-std::vector<var_idx_t> generate_unpack_struct_from_slice(CodeBlob& code, SrcLocation loc, TypePtr any_type, std::vector<var_idx_t>&& ir_slice, bool mutate_slice, const std::vector<var_idx_t>& ir_options) {
+std::vector<var_idx_t> generate_unpack_struct_from_slice(CodeBlob& code, SrcLocation loc, TypePtr any_type,
+                                                         std::vector<var_idx_t>&& ir_slice, bool mutate_slice,
+                                                         const std::vector<var_idx_t>& ir_options) {
   if (!mutate_slice) {
     std::vector slice_copy = code.create_var(TypeDataSlice::create(), loc, "s");
     code.emplace_back(loc, Op::_Let, slice_copy, std::move(ir_slice));
     ir_slice = std::move(slice_copy);
   }
 
-  tolk_assert(ir_options.size() == 2);      // struct UnpackOptions
+  tolk_assert(ir_options.size() == 2);  // struct UnpackOptions
   UnpackContext ctx(code, loc, std::move(ir_slice), ir_options);
   std::vector rvect_struct = ctx.generate_unpack_any(any_type);
   tolk_assert(any_type->get_width_on_stack() == static_cast<int>(rvect_struct.size()));
@@ -279,12 +316,14 @@ std::vector<var_idx_t> generate_unpack_struct_from_slice(CodeBlob& code, SrcLoca
   return rvect_struct;
 }
 
-std::vector<var_idx_t> generate_unpack_struct_from_cell(CodeBlob& code, SrcLocation loc, TypePtr any_type, std::vector<var_idx_t>&& ir_cell, const std::vector<var_idx_t>& ir_options) {
+std::vector<var_idx_t> generate_unpack_struct_from_cell(CodeBlob& code, SrcLocation loc, TypePtr any_type,
+                                                        std::vector<var_idx_t>&& ir_cell,
+                                                        const std::vector<var_idx_t>& ir_options) {
   FunctionPtr f_beginParse = lookup_function("cell.beginParse");
   std::vector ir_slice = code.create_var(TypeDataSlice::create(), loc, "s");
   code.emplace_back(loc, Op::_Call, ir_slice, std::move(ir_cell), f_beginParse);
 
-  tolk_assert(ir_options.size() == 2);      // struct UnpackOptions
+  tolk_assert(ir_options.size() == 2);  // struct UnpackOptions
   UnpackContext ctx(code, loc, std::move(ir_slice), ir_options);
   std::vector rvect_struct = ctx.generate_unpack_any(any_type);
   tolk_assert(any_type->get_width_on_stack() == static_cast<int>(rvect_struct.size()));
@@ -296,14 +335,17 @@ std::vector<var_idx_t> generate_unpack_struct_from_cell(CodeBlob& code, SrcLocat
   return rvect_struct;
 }
 
-std::vector<var_idx_t> generate_skip_struct_in_slice(CodeBlob& code, SrcLocation loc, TypePtr any_type, std::vector<var_idx_t>&& ir_slice, const std::vector<var_idx_t>& ir_options) {
-  UnpackContext ctx(code, loc, ir_slice, ir_options);    // mutate this slice
+std::vector<var_idx_t> generate_skip_struct_in_slice(CodeBlob& code, SrcLocation loc, TypePtr any_type,
+                                                     std::vector<var_idx_t>&& ir_slice,
+                                                     const std::vector<var_idx_t>& ir_options) {
+  UnpackContext ctx(code, loc, ir_slice, ir_options);  // mutate this slice
   ctx.generate_skip_any(any_type);
 
   return ir_slice;  // return mutated slice
 }
 
-void generate_lazy_struct_from_slice(CodeBlob& code, SrcLocation loc, const LazyVariableLoadedState* lazy_variable, const LazyStructLoadInfo& load_info, const std::vector<var_idx_t>& ir_obj) {
+void generate_lazy_struct_from_slice(CodeBlob& code, SrcLocation loc, const LazyVariableLoadedState* lazy_variable,
+                                     const LazyStructLoadInfo& load_info, const std::vector<var_idx_t>& ir_obj) {
   StructPtr original_struct = load_info.original_struct;
   StructPtr hidden_struct = load_info.hidden_struct;
   tolk_assert(hidden_struct->fields.size() == load_info.ith_field_action.size());
@@ -330,7 +372,9 @@ void generate_lazy_struct_from_slice(CodeBlob& code, SrcLocation loc, const Lazy
           std::vector ir_field = ctx.generate_unpack_any(hidden_field->declared_type);
           int stack_offset = calc_offset_on_stack(original_struct, original_field->field_idx);
           int stack_width = hidden_field->declared_type->get_width_on_stack();
-          code.emplace_back(loc, Op::_Let, std::vector(ir_obj.begin() + stack_offset, ir_obj.begin() + stack_offset + stack_width), std::move(ir_field));
+          code.emplace_back(loc, Op::_Let,
+                            std::vector(ir_obj.begin() + stack_offset, ir_obj.begin() + stack_offset + stack_width),
+                            std::move(ir_field));
           loaded_state->mutate()->on_original_field_loaded(hidden_field);
         } else {
           tolk_assert(hidden_field->name == "(gap)");
@@ -361,7 +405,10 @@ void generate_lazy_struct_from_slice(CodeBlob& code, SrcLocation loc, const Lazy
   // options.assertEndAfterReading is ignored by `lazy`, because tail fields may be skipped, it's okay
 }
 
-std::vector<var_idx_t> generate_lazy_struct_to_cell(CodeBlob& code, SrcLocation loc, const LazyStructLoadedState* loaded_state, std::vector<var_idx_t>&& ir_obj, const std::vector<var_idx_t>& ir_options) {
+std::vector<var_idx_t> generate_lazy_struct_to_cell(CodeBlob& code, SrcLocation loc,
+                                                    const LazyStructLoadedState* loaded_state,
+                                                    std::vector<var_idx_t>&& ir_obj,
+                                                    const std::vector<var_idx_t>& ir_options) {
   StructPtr original_struct = loaded_state->original_struct;
   StructPtr hidden_struct = loaded_state->hidden_struct;
 
@@ -371,7 +418,8 @@ std::vector<var_idx_t> generate_lazy_struct_to_cell(CodeBlob& code, SrcLocation 
   PackContext ctx(code, loc, rvect_builder, ir_options);
 
   if (hidden_struct->opcode.exists()) {
-    ctx.storeUint(code.create_int(loc, hidden_struct->opcode.pack_prefix, "(struct-prefix)"), hidden_struct->opcode.prefix_len);
+    ctx.storeUint(code.create_int(loc, hidden_struct->opcode.pack_prefix, "(struct-prefix)"),
+                  hidden_struct->opcode.prefix_len);
   }
 
   for (int field_idx = 0; field_idx < hidden_struct->get_num_fields(); ++field_idx) {
@@ -402,7 +450,9 @@ std::vector<var_idx_t> generate_lazy_struct_to_cell(CodeBlob& code, SrcLocation 
   return rvect_cell;
 }
 
-std::vector<var_idx_t> generate_lazy_match_for_union(CodeBlob& code, SrcLocation loc, TypePtr union_type, const LazyVariableLoadedState* lazy_variable, const LazyMatchOptions& options) {
+std::vector<var_idx_t> generate_lazy_match_for_union(CodeBlob& code, SrcLocation loc, TypePtr union_type,
+                                                     const LazyVariableLoadedState* lazy_variable,
+                                                     const LazyMatchOptions& options) {
   tolk_assert(lazy_variable->ir_options.size() == 2);
   UnpackContext ctx(code, loc, lazy_variable->ir_slice, lazy_variable->ir_options);
   std::vector rvect_match = ctx.generate_lazy_match_any(union_type, options);
@@ -410,7 +460,9 @@ std::vector<var_idx_t> generate_lazy_match_for_union(CodeBlob& code, SrcLocation
   return rvect_match;
 }
 
-std::vector<var_idx_t> generate_lazy_object_finish_loading(CodeBlob& code, SrcLocation loc, const LazyVariableLoadedState* lazy_variable, std::vector<var_idx_t>&& ir_obj) {
+std::vector<var_idx_t> generate_lazy_object_finish_loading(CodeBlob& code, SrcLocation loc,
+                                                           const LazyVariableLoadedState* lazy_variable,
+                                                           std::vector<var_idx_t>&& ir_obj) {
   tolk_assert(lazy_variable->ir_slice.size() == 1);
 
   // the call to `lazy_var.forceLoadLazyObject()` does not do anything: at the moment of analyzing,
@@ -432,7 +484,9 @@ std::vector<var_idx_t> generate_estimate_size_call(CodeBlob& code, SrcLocation l
   EstimateContext ctx;
   PackSize pack_size = ctx.estimate_any(any_type);
 
-  std::vector ir_tensor = code.create_tmp_var(TypeDataTensor::create({TypeDataInt::create(), TypeDataInt::create(), TypeDataInt::create(), TypeDataInt::create()}), loc, "(result-tensor)");
+  std::vector ir_tensor = code.create_tmp_var(TypeDataTensor::create({TypeDataInt::create(), TypeDataInt::create(),
+                                                                      TypeDataInt::create(), TypeDataInt::create()}),
+                                              loc, "(result-tensor)");
   code.emplace_back(loc, Op::_IntConst, std::vector{ir_tensor[0]}, td::make_refint(pack_size.min_bits));
   code.emplace_back(loc, Op::_IntConst, std::vector{ir_tensor[1]}, td::make_refint(pack_size.max_bits));
   code.emplace_back(loc, Op::_IntConst, std::vector{ir_tensor[2]}, td::make_refint(pack_size.min_refs));
@@ -445,4 +499,4 @@ std::vector<var_idx_t> generate_estimate_size_call(CodeBlob& code, SrcLocation l
   return ir_tuple;
 }
 
-} // namespace tolk
+}  // namespace tolk

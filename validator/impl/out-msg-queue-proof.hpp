@@ -81,10 +81,9 @@ class OutMsgQueueImporter : public td::actor::Actor {
   void get_proof_local(std::shared_ptr<CacheEntry> entry, BlockIdExt block);
   void get_proof_import(std::shared_ptr<CacheEntry> entry, std::vector<BlockIdExt> blocks,
                         block::ImportedMsgQueueLimits limits);
-  enum class ProofSource {
-    SmallCache, Broadcast, Query, Local
-  };
-  void got_proof(std::shared_ptr<CacheEntry> entry, std::vector<td::Ref<OutMsgQueueProof>> proofs, ProofSource proof_source);
+  enum class ProofSource { SmallCache, Broadcast, Query, Local };
+  void got_proof(std::shared_ptr<CacheEntry> entry, std::vector<td::Ref<OutMsgQueueProof>> proofs,
+                 ProofSource proof_source);
   void finish_query(std::shared_ptr<CacheEntry> entry);
   bool check_timeout(std::shared_ptr<CacheEntry> entry);
 

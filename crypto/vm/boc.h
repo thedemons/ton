@@ -404,6 +404,6 @@ td::Result<td::BufferSlice> std_boc_serialize_multi(std::vector<Ref<Cell>> root,
 td::Status std_boc_serialize_to_file(Ref<Cell> root, td::FileFd& fd, int mode = 0,
                                      td::CancellationToken cancellation_token = {});
 td::Status boc_serialize_to_file_large(std::shared_ptr<CellDbReader> reader, Cell::Hash root_hash, td::FileFd& fd,
-                                           int mode = 0, td::CancellationToken cancellation_token = {});
+                                       int mode = 0, td::CancellationToken cancellation_token = {});
 
 }  // namespace vm

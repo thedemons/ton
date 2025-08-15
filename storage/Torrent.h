@@ -159,7 +159,7 @@ class Torrent {
 
   void load_from_files(std::string files_path);
 
-  td::Status copy_to(const std::string& new_root_dir);
+  td::Status copy_to(const std::string &new_root_dir);
 
  private:
   td::Bits256 hash_;

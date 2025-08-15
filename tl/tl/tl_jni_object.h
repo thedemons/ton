@@ -113,7 +113,7 @@ SecureString from_bytes_secure(JNIEnv *env, jbyteArray arr);
 jbyteArray to_bytes(JNIEnv *env, Slice b);
 jbyteArray to_bytes_secure(JNIEnv *env, Slice b);
 
-template<unsigned int n>
+template <unsigned int n>
 td::BitArray<n> from_bits(JNIEnv *env, jbyteArray arr) {
   td::BitArray<n> b;
   if (arr != nullptr) {
@@ -125,7 +125,7 @@ td::BitArray<n> from_bits(JNIEnv *env, jbyteArray arr) {
   return b;
 }
 
-template<unsigned int n>
+template <unsigned int n>
 jbyteArray to_bits(JNIEnv *env, td::BitArray<n> b) {
   assert(n % 8 == 0);
   jsize length = n / 8;
@@ -148,7 +148,7 @@ jobjectArray store_vector(JNIEnv *env, const std::vector<std::string> &v);
 
 jobjectArray store_vector(JNIEnv *env, const std::vector<SecureString> &v);
 
-template<unsigned int n>
+template <unsigned int n>
 jobjectArray store_vector(JNIEnv *env, const std::vector<td::BitArray<n>> &v) {
   jint length = static_cast<jint>(v.size());
   jobjectArray arr = env->NewObjectArray(length, ObjectClass, jobject());
@@ -276,7 +276,7 @@ struct FetchVector<SecureString> {
   }
 };
 
-template<unsigned int n>
+template <unsigned int n>
 struct FetchVector<td::BitArray<n>> {
   static std::vector<td::BitArray<n>> fetch(JNIEnv *env, jobjectArray arr) {
     std::vector<td::BitArray<n>> result;
