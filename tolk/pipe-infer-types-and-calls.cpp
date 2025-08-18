@@ -14,14 +14,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "src-file.h"
-#include "ast.h"
-#include "ast-visitor.h"
-#include "generics-helpers.h"
-#include "type-system.h"
-#include "smart-casts-cfg.h"
 #include <charconv>
+
+#include "ast-visitor.h"
+#include "ast.h"
+#include "generics-helpers.h"
+#include "smart-casts-cfg.h"
+#include "src-file.h"
+#include "tolk.h"
+#include "type-system.h"
 
 /*
  *   This is a complicated and crucial part of the pipeline. It simultaneously does the following:

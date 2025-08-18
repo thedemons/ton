@@ -16,15 +16,14 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "KeyValue.h"
-
-#include "td/utils/filesystem.h"
-#include "td/utils/port/path.h"
-#include "td/utils/PathView.h"
-
 #include <algorithm>
 #include <map>
 #include <utility>
+
+#include "KeyValue.h"
+#include "td/utils/PathView.h"
+#include "td/utils/filesystem.h"
+#include "td/utils/port/path.h"
 
 namespace tonlib {
 namespace detail {

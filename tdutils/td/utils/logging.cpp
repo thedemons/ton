@@ -16,19 +16,18 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/logging.h"
-
-#include "ThreadSafeCounter.h"
-#include "td/utils/port/Clocks.h"
-#include "td/utils/port/StdStreams.h"
-#include "td/utils/port/thread_local.h"
-#include "td/utils/Slice.h"
-#include "td/utils/Time.h"
-#include "td/utils/date.h"
-
 #include <atomic>
 #include <cstdlib>
 #include <mutex>
+
+#include "ThreadSafeCounter.h"
+#include "td/utils/Slice.h"
+#include "td/utils/Time.h"
+#include "td/utils/date.h"
+#include "td/utils/logging.h"
+#include "td/utils/port/Clocks.h"
+#include "td/utils/port/StdStreams.h"
+#include "td/utils/port/thread_local.h"
 
 #if TD_ANDROID
 #include <android/log.h>

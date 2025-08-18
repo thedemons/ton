@@ -18,11 +18,12 @@
 */
 #pragma once
 
-#include "validator/interfaces/db.h"
-#include "package.hpp"
-#include "fileref.hpp"
-#include "td/db/RocksDb.h"
 #include <map>
+
+#include "fileref.hpp"
+#include "package.hpp"
+#include "td/db/RocksDb.h"
+#include "validator/interfaces/db.h"
 
 namespace rocksdb {
 class Statistics;

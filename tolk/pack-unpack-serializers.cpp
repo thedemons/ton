@@ -15,9 +15,9 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "pack-unpack-serializers.h"
+#include "td/utils/crypto.h"
 #include "tolk.h"
 #include "type-system.h"
-#include "td/utils/crypto.h"
 
 /*
  *   This module implements serializing different types to/from cells.

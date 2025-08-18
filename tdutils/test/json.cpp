@@ -16,14 +16,13 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/tests.h"
+#include <utility>
 
 #include "td/utils/JsonBuilder.h"
-#include "td/utils/logging.h"
 #include "td/utils/Slice.h"
 #include "td/utils/StringBuilder.h"
-
-#include <utility>
+#include "td/utils/logging.h"
+#include "td/utils/tests.h"
 
 REGISTER_TESTS(json)
 

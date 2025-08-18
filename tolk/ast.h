@@ -17,10 +17,11 @@
 #pragma once
 
 #include <string>
+
 #include "fwd-declarations.h"
+#include "lexer.h"
 #include "platform-utils.h"
 #include "src-file.h"
-#include "lexer.h"
 #include "symtable.h"
 
 /*

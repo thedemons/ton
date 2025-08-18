@@ -18,35 +18,35 @@
 */
 #pragma once
 
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+
+#include "collator-node/collator-node.hpp"
 #include "common/refcnt.hpp"
-#include "interfaces/validator-manager.h"
+#include "impl/candidates-buffer.hpp"
 #include "interfaces/db.h"
+#include "interfaces/validator-manager.h"
+#include "manager-init.h"
+#include "queue-size-counter.hpp"
+#include "rldp/rldp.h"
+#include "rldp2/rldp.h"
+#include "shard-block-retainer.hpp"
+#include "shard-block-verifier.hpp"
+#include "shard-client.hpp"
+#include "state-serializer.hpp"
+#include "storage-stat-cache.hpp"
 #include "td/actor/ActorStats.h"
 #include "td/actor/PromiseFuture.h"
+#include "td/utils/LRUCache.h"
 #include "td/utils/SharedSlice.h"
 #include "td/utils/buffer.h"
 #include "td/utils/port/Poll.h"
 #include "td/utils/port/StdStreams.h"
-#include "validator-group.hpp"
-#include "shard-client.hpp"
-#include "manager-init.h"
-#include "state-serializer.hpp"
-#include "rldp/rldp.h"
-#include "rldp2/rldp.h"
 #include "token-manager.h"
-#include "queue-size-counter.hpp"
-#include "storage-stat-cache.hpp"
+#include "validator-group.hpp"
 #include "validator-telemetry.hpp"
-#include "impl/candidates-buffer.hpp"
-#include "collator-node/collator-node.hpp"
-#include "shard-block-verifier.hpp"
-#include "shard-block-retainer.hpp"
-#include "td/utils/LRUCache.h"
-
-#include <map>
-#include <set>
-#include <list>
-#include <queue>
 
 namespace ton {
 

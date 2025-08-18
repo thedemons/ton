@@ -16,7 +16,6 @@
 */
 
 #include "collator-node-session.hpp"
-
 #include "fabric.h"
 
 namespace ton::validator {

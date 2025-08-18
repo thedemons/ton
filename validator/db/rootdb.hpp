@@ -18,14 +18,13 @@
 */
 #pragma once
 
-#include "td/actor/actor.h"
-#include "td/db/KeyValueAsync.h"
-#include "ton/ton-types.h"
-
+#include "archive-manager.hpp"
 #include "celldb.hpp"
 #include "statedb.hpp"
 #include "staticfilesdb.hpp"
-#include "archive-manager.hpp"
+#include "td/actor/actor.h"
+#include "td/db/KeyValueAsync.h"
+#include "ton/ton-types.h"
 #include "validator.h"
 
 namespace ton {

@@ -15,7 +15,6 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "shard-block-verifier.hpp"
-
 #include "td/actor/MultiPromise.h"
 
 namespace ton::validator {

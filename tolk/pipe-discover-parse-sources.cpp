@@ -23,9 +23,9 @@
     exception statement from your version. If you delete this exception statement
     from all source files in the program, then also delete it here.
 */
-#include "tolk.h"
 #include "ast.h"
 #include "compiler-state.h"
+#include "tolk.h"
 
 /*
  *   This is the starting point of compilation pipeline.

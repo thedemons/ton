@@ -16,10 +16,11 @@
 */
 #pragma once
 
-#include "src-file.h"
-#include "fwd-declarations.h"
-#include "td/utils/Status.h"
 #include <vector>
+
+#include "fwd-declarations.h"
+#include "src-file.h"
+#include "td/utils/Status.h"
 
 namespace tolk {
 

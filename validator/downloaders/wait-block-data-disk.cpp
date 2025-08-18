@@ -16,10 +16,10 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "wait-block-data-disk.hpp"
-#include "fabric.h"
 #include "adnl/utils.hpp"
+#include "fabric.h"
 #include "ton/ton-io.hpp"
+#include "wait-block-data-disk.hpp"
 
 namespace ton {
 

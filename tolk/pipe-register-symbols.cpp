@@ -14,15 +14,16 @@
     You should have received a copy of the GNU General Public License
     along with TON Blockchain.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "platform-utils.h"
-#include "src-file.h"
+#include <unordered_set>
+
 #include "ast.h"
 #include "compiler-state.h"
 #include "generics-helpers.h"
 #include "pack-unpack-serializers.h"
+#include "platform-utils.h"
+#include "src-file.h"
 #include "td/utils/crypto.h"
-#include <unordered_set>
+#include "tolk.h"
 
 /*
  *   This pipe registers global symbols: functions, constants, global vars, etc.

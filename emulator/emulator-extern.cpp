@@ -1,15 +1,15 @@
+#include "crypto/vm/memo.h"
+#include "crypto/vm/stack.hpp"
 #include "emulator-extern.h"
-#include "td/utils/base64.h"
-#include "td/utils/Status.h"
+#include "git.h"
 #include "td/utils/JsonBuilder.h"
-#include "td/utils/logging.h"
+#include "td/utils/Status.h"
 #include "td/utils/Variant.h"
+#include "td/utils/base64.h"
+#include "td/utils/logging.h"
 #include "td/utils/overloaded.h"
 #include "transaction-emulator.h"
 #include "tvm-emulator.hpp"
-#include "crypto/vm/stack.hpp"
-#include "crypto/vm/memo.h"
-#include "git.h"
 
 td::Result<td::Ref<vm::Cell>> boc_b64_to_cell(const char *boc) {
   TRY_RESULT_PREFIX(boc_decoded, td::base64_decode(td::Slice(boc)), "Can't decode base64 boc: ");

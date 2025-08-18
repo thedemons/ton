@@ -14,11 +14,11 @@
     You should have received a copy of the GNU General Public License
     along with TON Blockchain.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "ast.h"
 #include "ast-visitor.h"
-#include "pack-unpack-api.h"
+#include "ast.h"
 #include "generics-helpers.h"
+#include "pack-unpack-api.h"
+#include "tolk.h"
 #include "type-system.h"
 
 namespace tolk {

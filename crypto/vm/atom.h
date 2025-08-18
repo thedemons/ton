@@ -18,8 +18,9 @@
 */
 #pragma once
 #include <atomic>
-#include "vm/stack.hpp"
+
 #include "td/utils/Slice.h"
+#include "vm/stack.hpp"
 
 namespace vm {
 using td::Ref;

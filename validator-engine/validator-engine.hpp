@@ -27,24 +27,22 @@
 */
 #pragma once
 
+#include "adnl/adnl-ext-client.h"
 #include "adnl/adnl-node-id.hpp"
 #include "adnl/adnl.h"
 #include "auto/tl/ton_api.h"
+#include "auto/tl/ton_api.hpp"
+#include "auto/tl/ton_api_json.h"
+#include "dht/dht.h"
 #include "overlays.h"
 #include "rldp/rldp.h"
 #include "rldp2/rldp.h"
-#include "dht/dht.h"
+#include "td/actor/MultiPromise.h"
 #include "td/actor/PromiseFuture.h"
+#include "validator/full-node-master.h"
+#include "validator/full-node.h"
 #include "validator/manager.h"
 #include "validator/validator.h"
-#include "validator/full-node.h"
-#include "validator/full-node-master.h"
-#include "adnl/adnl-ext-client.h"
-
-#include "td/actor/MultiPromise.h"
-
-#include "auto/tl/ton_api_json.h"
-#include "auto/tl/ton_api.hpp"
 
 enum ValidatorEnginePermissions : td::uint32 { vep_default = 1, vep_modify = 2, vep_unsafe = 4 };
 

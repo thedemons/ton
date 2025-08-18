@@ -16,60 +16,54 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "vm/boc.h"
-#include "vm/cells.h"
-#include "common/AtomicRef.h"
-#include "vm/cells/CellString.h"
-#include "vm/cells/MerkleProof.h"
-#include "vm/cells/MerkleUpdate.h"
-#include "vm/db/CellStorage.h"
-#include "vm/db/TonDb.h"
-#include "vm/db/StaticBagOfCellsDb.h"
+#include <barrier>
+#include <map>
+#include <numeric>
+#include <optional>
+#include <set>
+#include <thread>
+#include <variant>
 
-#include "td/utils/base64.h"
-#include "td/utils/benchmark.h"
-#include "td/utils/crypto.h"
+#include <latch>
+#include <openssl/sha.h>
+#include <rocksdb/compaction_filter.h>
+#include <rocksdb/db.h>
+#include <rocksdb/merge_operator.h>
+
+#include "common/AtomicRef.h"
+#include "openssl/digest.hpp"
+#include "storage/db.h"
+#include "td/actor/actor.h"
+#include "td/db/MemoryKeyValue.h"
+#include "td/db/RocksDb.h"
+#include "td/db/utils/BlobView.h"
+#include "td/db/utils/CyclicBuffer.h"
 #include "td/utils/Random.h"
 #include "td/utils/Slice.h"
 #include "td/utils/Span.h"
 #include "td/utils/Status.h"
 #include "td/utils/Timer.h"
+#include "td/utils/VectorQueue.h"
+#include "td/utils/base64.h"
+#include "td/utils/benchmark.h"
+#include "td/utils/crypto.h"
 #include "td/utils/filesystem.h"
-#include "td/utils/port/path.h"
 #include "td/utils/format.h"
 #include "td/utils/misc.h"
-#include "td/utils/tests.h"
-#include "td/utils/tl_parsers.h"
-#include "td/utils/tl_helpers.h"
-
-#include "td/db/utils/BlobView.h"
-#include "td/db/RocksDb.h"
-#include "td/db/MemoryKeyValue.h"
-#include "td/db/utils/CyclicBuffer.h"
-
-#include <set>
-#include <map>
-#include <thread>
-#include <barrier>
-
-#include <openssl/sha.h>
-
-#include "openssl/digest.hpp"
-#include "storage/db.h"
-#include "td/utils/VectorQueue.h"
-#include "vm/dict.h"
-
-#include <latch>
-#include <numeric>
-#include <optional>
-#include <variant>
-
-#include <rocksdb/compaction_filter.h>
-#include <rocksdb/merge_operator.h>
-#include <rocksdb/db.h>
-
-#include "td/actor/actor.h"
 #include "td/utils/overloaded.h"
+#include "td/utils/port/path.h"
+#include "td/utils/tests.h"
+#include "td/utils/tl_helpers.h"
+#include "td/utils/tl_parsers.h"
+#include "vm/boc.h"
+#include "vm/cells.h"
+#include "vm/cells/CellString.h"
+#include "vm/cells/MerkleProof.h"
+#include "vm/cells/MerkleUpdate.h"
+#include "vm/db/CellStorage.h"
+#include "vm/db/StaticBagOfCellsDb.h"
+#include "vm/db/TonDb.h"
+#include "vm/dict.h"
 
 class ActorExecutor : public vm::DynamicBagOfCellsDb::AsyncExecutor {
  public:

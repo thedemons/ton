@@ -18,9 +18,8 @@
 */
 #pragma once
 
-#include "SourceLookup.h"
 #include "Dictionary.h"
-
+#include "SourceLookup.h"
 #include "td/utils/Status.h"
 
 namespace fift {

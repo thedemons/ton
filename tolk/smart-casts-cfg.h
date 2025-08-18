@@ -16,11 +16,12 @@
 */
 #pragma once
 
-#include "fwd-declarations.h"
-#include "type-system.h"
 #include <cstdint>
 #include <map>
 #include <vector>
+
+#include "fwd-declarations.h"
+#include "type-system.h"
 
 namespace tolk {
 

@@ -25,13 +25,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "func.h"
-#include "parser/srcread.h"
-#include "parser/lexer.h"
-#include "parser/symtable.h"
-#include <getopt.h>
 #include <fstream>
+
+#include <getopt.h>
+
+#include "func.h"
 #include "git.h"
+#include "parser/lexer.h"
+#include "parser/srcread.h"
+#include "parser/symtable.h"
 
 void usage(const char* progname) {
   std::cerr

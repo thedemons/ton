@@ -18,18 +18,17 @@
 */
 #pragma once
 
+#include <map>
+
 #include "adnl/adnl-node-id.hpp"
 #include "adnl/adnl.h"
 #include "auto/tl/ton_api.h"
 #include "dht/dht.h"
-
 #include "td/actor/PromiseFuture.h"
 #include "td/actor/actor.h"
 #include "td/utils/Status.h"
 #include "td/utils/buffer.h"
 #include "td/utils/common.h"
-
-#include <map>
 
 namespace ton {
 

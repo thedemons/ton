@@ -21,10 +21,8 @@
 
 #include "Bitset.h"
 #include "PeerState.h"
-
-#include "td/utils/optional.h"
-
 #include "auto/tl/ton_api.h"
+#include "td/utils/optional.h"
 
 namespace ton {
 class PeerActor : public td::actor::Actor {

@@ -22,16 +22,16 @@
 
 #ifdef TD_THREAD_STL
 
-#include "td/utils/common.h"
-#include "td/utils/invoke.h"
-#include "td/utils/port/detail/ThreadIdGuard.h"
-#include "td/utils/port/thread_local.h"
-#include "td/utils/Slice.h"
-
 #include <thread>
 #include <tuple>
 #include <type_traits>
 #include <utility>
+
+#include "td/utils/Slice.h"
+#include "td/utils/common.h"
+#include "td/utils/invoke.h"
+#include "td/utils/port/detail/ThreadIdGuard.h"
+#include "td/utils/port/thread_local.h"
 
 namespace td {
 namespace detail {

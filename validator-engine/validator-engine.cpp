@@ -25,65 +25,60 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "validator-engine.hpp"
-
-#include "adnl/adnl-node-id.hpp"
-#include "auto/tl/ton_api.h"
-#include "errorcode.h"
-#include "keys/keys.hpp"
-#include "overlay-manager.h"
-#include "overlays.h"
-#include "td/actor/PromiseFuture.h"
-#include "td/actor/actor.h"
-#include "td/utils/Status.h"
-#include "td/utils/Time.h"
-#include "td/utils/buffer.h"
-#include "tl-utils/tl-utils.hpp"
-#include "tl/TlObject.h"
-#include "ton/ton-types.h"
-#include "ton/ton-tl.hpp"
-#include "ton/ton-io.hpp"
-
-#include "common/errorlog.h"
-
-#include "crypto/vm/vm.h"
-#include "crypto/fift/utils.h"
-
-#include "td/utils/filesystem.h"
-#include "td/actor/MultiPromise.h"
-#include "td/utils/overloaded.h"
-#include "td/utils/OptionParser.h"
-#include "td/utils/port/path.h"
-#include "td/utils/port/signals.h"
-#include "td/utils/port/user.h"
-#include "td/utils/port/rlimit.h"
-#include "td/utils/ThreadSafeCounter.h"
-#include "td/utils/TsFileLog.h"
-#include "td/utils/Random.h"
-
-#include "auto/tl/lite_api.h"
-#include "tl/tl_json.h"
-
-#include "memprof/memprof.h"
-
-#include "dht/dht.hpp"
 #include <memory>
 #include <vector>
+
+#include "adnl/adnl-node-id.hpp"
+#include "auto/tl/lite_api.h"
+#include "auto/tl/ton_api.h"
+#include "common/errorlog.h"
+#include "crypto/fift/utils.h"
+#include "crypto/vm/vm.h"
+#include "dht/dht.hpp"
+#include "errorcode.h"
+#include "keys/keys.hpp"
+#include "memprof/memprof.h"
+#include "overlay-manager.h"
+#include "overlays.h"
+#include "td/actor/MultiPromise.h"
+#include "td/actor/PromiseFuture.h"
+#include "td/actor/actor.h"
+#include "td/utils/OptionParser.h"
+#include "td/utils/Random.h"
+#include "td/utils/Status.h"
+#include "td/utils/ThreadSafeCounter.h"
+#include "td/utils/Time.h"
+#include "td/utils/TsFileLog.h"
+#include "td/utils/buffer.h"
+#include "td/utils/filesystem.h"
+#include "td/utils/overloaded.h"
+#include "td/utils/port/path.h"
+#include "td/utils/port/rlimit.h"
+#include "td/utils/port/signals.h"
+#include "td/utils/port/user.h"
+#include "tl-utils/tl-utils.hpp"
+#include "tl/TlObject.h"
+#include "tl/tl_json.h"
+#include "ton/ton-io.hpp"
+#include "ton/ton-tl.hpp"
+#include "ton/ton-types.h"
+#include "validator-engine.hpp"
 
 #if TD_DARWIN || TD_LINUX
 #include <unistd.h>
 #endif
 #include <algorithm>
-#include <iostream>
+#include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <limits>
 #include <set>
-#include <cstdio>
-#include "git.h"
+
 #include "block-auto.h"
 #include "block-parse.h"
-#include "common/delay.h"
 #include "block/precompiled-smc/PrecompiledSmartContract.h"
+#include "common/delay.h"
+#include "git.h"
 #include "interfaces/validator-manager.h"
 #include "tl-utils/lite-utils.hpp"
 

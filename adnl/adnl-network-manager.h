@@ -18,15 +18,13 @@
 */
 #pragma once
 
-#include "td/actor/actor.h"
-
-#include "td/actor/PromiseFuture.h"
-#include "td/utils/port/IPAddress.h"
+#include <bitset>
 
 #include "adnl-node-id.hpp"
 #include "adnl-proxy-types.h"
-
-#include <bitset>
+#include "td/actor/PromiseFuture.h"
+#include "td/actor/actor.h"
+#include "td/utils/port/IPAddress.h"
 
 namespace td {
 class UdpServer;

@@ -16,17 +16,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "check-proof.h"
-#include "block/block.h"
-#include "block/block-parse.h"
-#include "block/block-auto.h"
-#include "block/mc-config.h"
-
-#include "ton/ton-shard.h"
-
-#include "vm/cells/MerkleProof.h"
-#include "openssl/digest.hpp"
 #include "Ed25519.h"
+#include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "block/block.h"
+#include "block/mc-config.h"
+#include "check-proof.h"
+#include "openssl/digest.hpp"
+#include "ton/ton-shard.h"
+#include "vm/cells/MerkleProof.h"
 
 namespace block {
 using namespace std::literals::string_literals;

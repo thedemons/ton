@@ -15,9 +15,9 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "ast.h"
-#include "type-system.h"
 #include "platform-utils.h"
 #include "tolk-version.h"
+#include "type-system.h"
 
 /*
  *   Here we construct AST for a tolk file.

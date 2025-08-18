@@ -23,14 +23,15 @@
     exception statement from your version. If you delete this exception statement
     from all source files in the program, then also delete it here.
 */
-#include "tolk.h"
-#include "tolk-version.h"
+#include <sstream>
+
 #include "compiler-state.h"
+#include "fift/utils.h"
 #include "git.h"
 #include "td/utils/JsonBuilder.h"
-#include "fift/utils.h"
 #include "td/utils/Status.h"
-#include <sstream>
+#include "tolk-version.h"
+#include "tolk.h"
 
 using namespace tolk;
 

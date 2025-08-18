@@ -17,7 +17,6 @@
     Copyright 2019-2020 Telegram Systems LLP
 */
 #include "http-client.hpp"
-
 #include "td/utils/Random.h"
 
 namespace ton {

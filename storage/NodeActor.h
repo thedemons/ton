@@ -19,17 +19,16 @@
 
 #pragma once
 
+#include <map>
+
 #include "LoadSpeed.h"
 #include "PartsHelper.h"
 #include "PeerActor.h"
-#include "Torrent.h"
 #include "SpeedLimiter.h"
-
+#include "Torrent.h"
+#include "db.h"
 #include "td/utils/Random.h"
 #include "td/utils/Variant.h"
-
-#include <map>
-#include "db.h"
 
 namespace ton {
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+
 #include "emulator_export.h"
 
 #ifdef __cplusplus

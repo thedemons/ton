@@ -16,10 +16,10 @@
 */
 
 #include "StorageManager.h"
+#include "td/actor/MultiPromise.h"
+#include "td/db/RocksDb.h"
 #include "td/utils/filesystem.h"
 #include "td/utils/port/path.h"
-#include "td/db/RocksDb.h"
-#include "td/actor/MultiPromise.h"
 
 namespace ton {
 

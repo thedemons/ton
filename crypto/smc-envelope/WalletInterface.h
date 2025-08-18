@@ -18,17 +18,16 @@
 */
 #pragma once
 
-#include "td/utils/common.h"
-#include "Ed25519.h"
-#include "block/block.h"
-#include "block/block-parse.h"
-#include "vm/cells/CellString.h"
+#include <algorithm>
 
+#include "Ed25519.h"
+#include "GenericAccount.h"
 #include "SmartContract.h"
 #include "SmartContractCode.h"
-#include "GenericAccount.h"
-
-#include <algorithm>
+#include "block/block-parse.h"
+#include "block/block.h"
+#include "td/utils/common.h"
+#include "vm/cells/CellString.h"
 
 namespace ton {
 class WalletInterface : public SmartContract {

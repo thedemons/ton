@@ -18,11 +18,10 @@
 */
 #pragma once
 #include "td/db/KeyValue.h"
-#include "vm/db/DynamicBagOfCellsDb.h"
-#include "vm/cells.h"
-
 #include "td/utils/Slice.h"
 #include "td/utils/Status.h"
+#include "vm/cells.h"
+#include "vm/db/DynamicBagOfCellsDb.h"
 
 namespace vm {
 using KeyValue = td::KeyValue;

@@ -17,11 +17,10 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "common/refcnt.hpp"
-#include "vm/cells.h"
 #include "common/global-version.h"
-
+#include "common/refcnt.hpp"
 #include "td/utils/Context.h"
+#include "vm/cells.h"
 
 namespace vm {
 using td::Ref;

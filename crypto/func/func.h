@@ -17,19 +17,20 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include <vector>
-#include <string>
+#include <algorithm>
+#include <functional>
+#include <iostream>
 #include <set>
 #include <stack>
+#include <string>
 #include <utility>
-#include <algorithm>
-#include <iostream>
-#include <functional>
-#include "common/refcnt.hpp"
+#include <vector>
+
 #include "common/bigint.hpp"
+#include "common/refcnt.hpp"
 #include "common/refint.h"
-#include "parser/srcread.h"
 #include "parser/lexer.h"
+#include "parser/srcread.h"
 #include "parser/symtable.h"
 #include "td/utils/Status.h"
 

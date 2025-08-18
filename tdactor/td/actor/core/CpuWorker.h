@@ -19,7 +19,6 @@
 #pragma once
 
 #include "td/actor/core/SchedulerMessage.h"
-
 #include "td/utils/MpmcQueue.h"
 #include "td/utils/MpmcWaiter.h"
 #include "td/utils/Span.h"

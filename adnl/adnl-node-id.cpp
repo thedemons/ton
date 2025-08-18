@@ -18,7 +18,6 @@
 */
 
 #include "adnl-node-id.hpp"
-
 #include "common/util.h"
 
 namespace ton {

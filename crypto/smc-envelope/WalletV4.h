@@ -16,11 +16,11 @@
 */
 #pragma once
 
+#include "Ed25519.h"
+#include "block/block.h"
 #include "smc-envelope/SmartContract.h"
 #include "smc-envelope/WalletInterface.h"
 #include "vm/cells.h"
-#include "Ed25519.h"
-#include "block/block.h"
 #include "vm/cells/CellString.h"
 
 namespace ton {

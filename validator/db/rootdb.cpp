@@ -16,16 +16,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "rootdb.hpp"
-#include "validator/fabric.h"
 #include "archiver.hpp"
-
-#include "td/db/RocksDb.h"
-#include "ton/ton-tl.hpp"
-#include "td/utils/overloaded.h"
 #include "common/checksum.h"
-#include "validator/stats-merger.h"
+#include "rootdb.hpp"
 #include "td/actor/MultiPromise.h"
+#include "td/db/RocksDb.h"
+#include "td/utils/overloaded.h"
+#include "ton/ton-tl.hpp"
+#include "validator/fabric.h"
+#include "validator/stats-merger.h"
 
 namespace ton {
 

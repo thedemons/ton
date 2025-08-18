@@ -18,8 +18,8 @@
 */
 #pragma once
 
-#include "ton/ton-types.h"
 #include "config.h"
+#include "ton/ton-types.h"
 
 namespace ton {
 

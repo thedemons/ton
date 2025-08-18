@@ -1,5 +1,4 @@
 #include "ActorStats.h"
-
 #include "td/utils/ThreadSafeCounter.h"
 namespace td {
 namespace actor {

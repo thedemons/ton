@@ -16,11 +16,10 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/crypto.h"
-#include "td/utils/Random.h"
-
 #include "adnl-local-id.h"
 #include "keys/encryptor.h"
+#include "td/utils/Random.h"
+#include "td/utils/crypto.h"
 #include "utils.hpp"
 
 namespace ton {

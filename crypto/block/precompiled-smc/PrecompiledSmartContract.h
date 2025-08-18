@@ -15,18 +15,19 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
+#include <ostream>
+
+#include "block/block.h"
+#include "block/mc-config.h"
 #include "common/refcnt.hpp"
 #include "common/refint.h"
+#include "td/utils/bits.h"
+#include "tl/tlblib.hpp"
+#include "ton/ton-types.h"
+#include "vm/boc.h"
 #include "vm/cells.h"
 #include "vm/cellslice.h"
 #include "vm/dict.h"
-#include "vm/boc.h"
-#include <ostream>
-#include "tl/tlblib.hpp"
-#include "td/utils/bits.h"
-#include "ton/ton-types.h"
-#include "block/block.h"
-#include "block/mc-config.h"
 
 namespace block::precompiled {
 

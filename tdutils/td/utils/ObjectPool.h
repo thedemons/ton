@@ -18,12 +18,12 @@
 */
 #pragma once
 
-#include "td/utils/common.h"
-#include "td/utils/logging.h"
-
 #include <atomic>
 #include <memory>
 #include <utility>
+
+#include "td/utils/common.h"
+#include "td/utils/logging.h"
 
 namespace td {
 // It is draft object pool implementaion

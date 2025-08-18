@@ -17,10 +17,10 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include "shard-client.hpp"
-#include "ton/ton-io.hpp"
-#include "validator/fabric.h"
 #include "td/actor/MultiPromise.h"
+#include "ton/ton-io.hpp"
 #include "validator/downloaders/download-state.hpp"
+#include "validator/fabric.h"
 
 namespace ton {
 

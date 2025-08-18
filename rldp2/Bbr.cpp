@@ -18,10 +18,8 @@
 */
 
 #include "Bbr.h"
-
 #include "BdwStats.h"
 #include "RttStats.h"
-
 #include "td/utils/Random.h"
 
 namespace ton {

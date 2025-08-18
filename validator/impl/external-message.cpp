@@ -17,16 +17,16 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 
-#include "external-message.hpp"
-#include "collator-impl.h"
-#include "vm/boc.h"
-#include "block/block-parse.h"
 #include "block/block-auto.h"
 #include "block/block-db.h"
+#include "block/block-parse.h"
+#include "collator-impl.h"
+#include "crypto/openssl/rand.hpp"
+#include "external-message.hpp"
 #include "fabric.h"
 #include "td/actor/actor.h"
 #include "td/utils/Random.h"
-#include "crypto/openssl/rand.hpp"
+#include "vm/boc.h"
 
 namespace ton {
 

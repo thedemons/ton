@@ -16,11 +16,11 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "validate-broadcast.hpp"
-#include "fabric.h"
 #include "adnl/utils.hpp"
-#include "ton/ton-io.hpp"
 #include "apply-block.hpp"
+#include "fabric.h"
+#include "ton/ton-io.hpp"
+#include "validate-broadcast.hpp"
 
 namespace ton {
 

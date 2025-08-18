@@ -25,21 +25,26 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
+#include <memory>
+#include <vector>
+
 #include "adnl/adnl-node-id.hpp"
+#include "adnl/adnl-test-loopback-implementation.h"
 #include "adnl/adnl.h"
 #include "adnl/utils.hpp"
-#include "adnl/adnl-test-loopback-implementation.h"
 #include "auto/tl/ton_api.h"
 #include "checksum.h"
 #include "common/bitstring.h"
+#include "common/errorlog.h"
 #include "dht/dht.h"
 #include "keys/keys.hpp"
+#include "overlay-id.hpp"
 #include "overlay-manager.h"
 #include "overlay.h"
-#include "overlay-id.hpp"
 #include "overlay/overlays.h"
 #include "td/actor/actor.h"
 #include "td/utils/OptionParser.h"
+#include "td/utils/Random.h"
 #include "td/utils/Status.h"
 #include "td/utils/Time.h"
 #include "td/utils/UInt.h"
@@ -47,24 +52,19 @@
 #include "td/utils/crypto.h"
 #include "td/utils/filesystem.h"
 #include "td/utils/format.h"
-#include "td/utils/port/path.h"
-#include "td/utils/Random.h"
-#include "td/utils/port/signals.h"
-#include "td/utils/port/FileFd.h"
 #include "td/utils/overloaded.h"
-#include "common/errorlog.h"
+#include "td/utils/port/FileFd.h"
+#include "td/utils/port/path.h"
+#include "td/utils/port/signals.h"
 #include "tl-utils/common-utils.hpp"
 #include "tl/TlObject.h"
-#include <memory>
-#include <vector>
 
 #if TD_DARWIN || TD_LINUX
 #include <unistd.h>
 #endif
 #include <iostream>
-#include <sstream>
-
 #include <set>
+#include <sstream>
 
 struct Node {
   ton::PrivateKey pk;

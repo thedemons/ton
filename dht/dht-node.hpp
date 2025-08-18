@@ -18,11 +18,10 @@
 */
 #pragma once
 
-#include "adnl/adnl-node-id.hpp"
 #include "adnl/adnl-address-list.hpp"
-
-#include "dht-types.h"
+#include "adnl/adnl-node-id.hpp"
 #include "auto/tl/ton_api.hpp"
+#include "dht-types.h"
 #include "td/utils/overloaded.h"
 
 namespace ton {

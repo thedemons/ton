@@ -18,7 +18,6 @@
 */
 
 #include "TorrentHeader.hpp"
-
 #include "td/utils/tl_helpers.h"
 
 namespace ton {

@@ -18,7 +18,6 @@
 */
 
 #include "FecHelper.h"
-
 #include "td/utils/check.h"
 
 namespace ton {

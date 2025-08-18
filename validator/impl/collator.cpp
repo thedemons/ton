@@ -16,27 +16,28 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
+#include <algorithm>
+#include <cassert>
+#include <ctime>
+
+#include "adnl/utils.hpp"
+#include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "block/block.h"
+#include "block/mc-config.h"
 #include "candidate-serializer.h"
 #include "collator-impl.h"
-#include "vm/boc.h"
-#include "td/db/utils/BlobView.h"
-#include "vm/db/StaticBagOfCellsDb.h"
-#include "block/mc-config.h"
-#include "block/block.h"
-#include "block/block-parse.h"
-#include "block/block-auto.h"
-#include "vm/dict.h"
 #include "crypto/openssl/rand.hpp"
-#include "ton/ton-shard.h"
-#include "adnl/utils.hpp"
-#include <cassert>
-#include <algorithm>
 #include "fabric.h"
 #include "storage-stat-cache.hpp"
-#include "validator-set.hpp"
-#include "top-shard-descr.hpp"
-#include <ctime>
+#include "td/db/utils/BlobView.h"
 #include "td/utils/Random.h"
+#include "ton/ton-shard.h"
+#include "top-shard-descr.hpp"
+#include "validator-set.hpp"
+#include "vm/boc.h"
+#include "vm/db/StaticBagOfCellsDb.h"
+#include "vm/dict.h"
 
 namespace ton {
 

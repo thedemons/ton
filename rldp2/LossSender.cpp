@@ -18,7 +18,6 @@
 */
 
 #include "LossSender.h"
-
 #include "td/utils/logging.h"
 
 #if TON_HAVE_GSL

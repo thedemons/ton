@@ -18,17 +18,16 @@
 */
 #pragma once
 
-#include "td/utils/int_types.h"
-#include "td/utils/buffer.h"
+#include <limits>
+
 #include "adnl/utils.hpp"
 #include "common/io.hpp"
-
 #include "persistent-vector.h"
+#include "td/utils/buffer.h"
+#include "td/utils/int_types.h"
 #include "validator-session-description.h"
-#include "validator-session-types.h"
 #include "validator-session-round-attempt-state.h"
-
-#include <limits>
+#include "validator-session-types.h"
 
 namespace td {
 

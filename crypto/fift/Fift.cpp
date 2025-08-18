@@ -18,9 +18,8 @@
 */
 #include "Fift.h"
 #include "IntCtx.h"
-#include "words.h"
-
 #include "td/utils/PathView.h"
+#include "words.h"
 
 namespace fift {
 

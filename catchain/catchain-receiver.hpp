@@ -19,14 +19,13 @@
 #pragma once
 
 #include <list>
-#include <queue>
 #include <map>
+#include <queue>
 
-#include "catchain-types.h"
-#include "catchain-receiver.h"
-#include "catchain-receiver-source.h"
 #include "catchain-received-block.h"
-
+#include "catchain-receiver-source.h"
+#include "catchain-receiver.h"
+#include "catchain-types.h"
 #include "td/db/KeyValueAsync.h"
 
 namespace ton {

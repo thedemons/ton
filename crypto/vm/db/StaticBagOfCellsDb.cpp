@@ -16,19 +16,16 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "vm/db/StaticBagOfCellsDb.h"
+#include <limits>
 
-#include "vm/boc.h"
-
-#include "vm/cells/ExtCell.h"
-
+#include "td/utils/ConcurrentHashTable.h"
 #include "td/utils/crypto.h"
 #include "td/utils/format.h"
 #include "td/utils/misc.h"
 #include "td/utils/port/RwMutex.h"
-#include "td/utils/ConcurrentHashTable.h"
-
-#include <limits>
+#include "vm/boc.h"
+#include "vm/cells/ExtCell.h"
+#include "vm/db/StaticBagOfCellsDb.h"
 
 namespace vm {
 //

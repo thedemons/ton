@@ -15,13 +15,13 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
-#include "vm/cells.h"
-#include "ton/ton-types.h"
 #include "auto/tl/ton_api.h"
 #include "interfaces/out-msg-queue-proof.h"
-#include "td/actor/actor.h"
 #include "interfaces/shard.h"
+#include "td/actor/actor.h"
+#include "ton/ton-types.h"
 #include "validator.h"
+#include "vm/cells.h"
 
 namespace ton {
 

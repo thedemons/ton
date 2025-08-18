@@ -16,14 +16,13 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "vm/dict.h"
-#include "vm/cells.h"
-#include "vm/cellslice.h"
-#include "vm/stack.hpp"
 #include "common/bitstring.h"
 #include "td/utils/Random.h"
-
 #include "td/utils/bits.h"
+#include "vm/cells.h"
+#include "vm/cellslice.h"
+#include "vm/dict.h"
+#include "vm/stack.hpp"
 
 namespace vm {
 

@@ -25,8 +25,9 @@
 */
 #pragma once
 
-#include "fwd-declarations.h"
 #include <string>
+
+#include "fwd-declarations.h"
 
 namespace tolk {
 

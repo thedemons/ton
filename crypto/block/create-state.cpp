@@ -25,42 +25,40 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <memory>
-#include <cstring>
-#include <cstdlib>
+
 #include <cmath>
-#include <map>
-#include <functional>
-#include <limits>
 #include <getopt.h>
 
-#include "vm/stack.hpp"
-#include "vm/boc.h"
-
-#include "fift/Fift.h"
+#include "block-auto.h"
+#include "block-parse.h"
+#include "block.h"
 #include "fift/Dictionary.h"
-#include "fift/SourceLookup.h"
+#include "fift/Fift.h"
 #include "fift/IntCtx.h"
+#include "fift/SourceLookup.h"
 #include "fift/words.h"
-
+#include "git.h"
+#include "mc-config.h"
+#include "td/utils/Parser.h"
 #include "td/utils/logging.h"
 #include "td/utils/misc.h"
-#include "td/utils/Parser.h"
 #include "td/utils/port/path.h"
 #include "td/utils/port/signals.h"
-
-#include "block.h"
-#include "block-parse.h"
-#include "block-auto.h"
-#include "mc-config.h"
-#include "git.h"
+#include "vm/boc.h"
+#include "vm/stack.hpp"
 
 #if defined(_INTERNAL_COMPILE) || defined(_TONLIB_COMPILE)
 #define WITH_TONLIB

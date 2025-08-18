@@ -17,13 +17,14 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include <functional>
+
+#include "vm/cellops.h"
+#include "vm/continuation.h"
 #include "vm/contops.h"
+#include "vm/excno.hpp"
 #include "vm/log.h"
 #include "vm/opctable.h"
 #include "vm/stack.hpp"
-#include "vm/continuation.h"
-#include "vm/cellops.h"
-#include "vm/excno.hpp"
 #include "vm/vm.h"
 
 using namespace std::literals::string_literals;

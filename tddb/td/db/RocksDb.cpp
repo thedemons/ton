@@ -16,15 +16,14 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/db/RocksDb.h"
-
 #include "rocksdb/db.h"
-#include "rocksdb/table.h"
+#include "rocksdb/filter_policy.h"
 #include "rocksdb/statistics.h"
-#include "rocksdb/write_batch.h"
+#include "rocksdb/table.h"
 #include "rocksdb/utilities/optimistic_transaction_db.h"
 #include "rocksdb/utilities/transaction.h"
-#include "rocksdb/filter_policy.h"
+#include "rocksdb/write_batch.h"
+#include "td/db/RocksDb.h"
 #include "td/utils/misc.h"
 
 namespace td {

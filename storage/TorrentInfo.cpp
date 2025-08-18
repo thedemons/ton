@@ -18,11 +18,9 @@
 */
 
 #include "TorrentInfo.h"
-
+#include "td/utils/misc.h"
 #include "vm/cells/CellString.h"
 #include "vm/cellslice.h"
-
-#include "td/utils/misc.h"
 
 namespace ton {
 bool TorrentInfo::pack(vm::CellBuilder &cb) const {

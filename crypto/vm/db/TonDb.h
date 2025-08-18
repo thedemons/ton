@@ -17,15 +17,14 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "vm/cellslice.h"
-#include "vm/cells.h"
-#include "vm/boc.h"
 #include "td/db/KeyValue.h"
-#include "vm/db/CellStorage.h"
-#include "vm/db/CellHashTable.h"
-
 #include "td/utils/Slice.h"
 #include "td/utils/Status.h"
+#include "vm/boc.h"
+#include "vm/cells.h"
+#include "vm/cellslice.h"
+#include "vm/db/CellHashTable.h"
+#include "vm/db/CellStorage.h"
 
 namespace vm {
 class SmartContractDbImpl;

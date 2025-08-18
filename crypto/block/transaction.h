@@ -17,21 +17,22 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
+#include <ostream>
+
 #include "account-storage-stat.h"
+#include "block/block-auto.h"
+#include "block/block.h"
+#include "block/mc-config.h"
 #include "common/refcnt.hpp"
 #include "common/refint.h"
+#include "precompiled-smc/PrecompiledSmartContract.h"
+#include "td/utils/bits.h"
+#include "tl/tlblib.hpp"
+#include "ton/ton-types.h"
+#include "vm/boc.h"
 #include "vm/cells.h"
 #include "vm/cellslice.h"
 #include "vm/dict.h"
-#include "vm/boc.h"
-#include <ostream>
-#include "tl/tlblib.hpp"
-#include "td/utils/bits.h"
-#include "ton/ton-types.h"
-#include "block/block.h"
-#include "block/mc-config.h"
-#include "precompiled-smc/PrecompiledSmartContract.h"
-#include "block/block-auto.h"
 
 namespace block {
 using td::Ref;

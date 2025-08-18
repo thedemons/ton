@@ -18,9 +18,7 @@
 */
 #include "adnl-network-manager.hpp"
 #include "adnl-peer-table.h"
-
 #include "auto/tl/ton_api.hpp"
-
 #include "td/utils/overloaded.h"
 
 namespace ton {

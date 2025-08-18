@@ -16,11 +16,11 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
+#include <utility>
+
+#include "catchain-receiver.h"
 #include "catchain-types.h"
 #include "catchain.hpp"
-
-#include <utility>
-#include "catchain-receiver.h"
 
 namespace ton {
 

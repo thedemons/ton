@@ -16,16 +16,16 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "block/transaction.h"
-#include "block/block.h"
-#include "block/block-parse.h"
 #include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "block/block.h"
+#include "block/transaction.h"
 #include "crypto/openssl/rand.hpp"
+#include "td/utils/Timer.h"
 #include "td/utils/bits.h"
 #include "td/utils/uint128.h"
 #include "ton/ton-shard.h"
 #include "vm/vm.h"
-#include "td/utils/Timer.h"
 
 namespace {
 /**

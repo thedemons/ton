@@ -22,19 +22,19 @@
 
 #ifdef TD_THREAD_PTHREAD
 
-#include "td/utils/common.h"
-#include "td/utils/Destructor.h"
-#include "td/utils/invoke.h"
-#include "td/utils/MovableValue.h"
-#include "td/utils/port/detail/ThreadIdGuard.h"
-#include "td/utils/port/thread_local.h"
-#include "td/utils/Slice.h"
-
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
 #include <sys/types.h>
+
+#include "td/utils/Destructor.h"
+#include "td/utils/MovableValue.h"
+#include "td/utils/Slice.h"
+#include "td/utils/common.h"
+#include "td/utils/invoke.h"
+#include "td/utils/port/detail/ThreadIdGuard.h"
+#include "td/utils/port/thread_local.h"
 
 namespace td {
 namespace detail {

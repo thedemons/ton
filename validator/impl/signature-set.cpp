@@ -16,11 +16,11 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "signature-set.hpp"
-#include "auto/tl/ton_api.hpp"
 #include "adnl/utils.hpp"
-#include "vm/dict.h"
+#include "auto/tl/ton_api.hpp"
+#include "signature-set.hpp"
 #include "vm/boc.h"
+#include "vm/dict.h"
 
 namespace ton {
 

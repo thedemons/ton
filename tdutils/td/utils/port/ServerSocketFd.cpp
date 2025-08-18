@@ -16,15 +16,13 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/port/ServerSocketFd.h"
-
-#include "td/utils/port/config.h"
-
 #include "td/utils/common.h"
 #include "td/utils/logging.h"
-#include "td/utils/port/detail/skip_eintr.h"
 #include "td/utils/port/IPAddress.h"
 #include "td/utils/port/PollFlags.h"
+#include "td/utils/port/ServerSocketFd.h"
+#include "td/utils/port/config.h"
+#include "td/utils/port/detail/skip_eintr.h"
 
 #if TD_PORT_POSIX
 #include <cerrno>
@@ -39,9 +37,9 @@
 #endif
 
 #if TD_PORT_WINDOWS
-#include "td/utils/port/detail/Iocp.h"
 #include "td/utils/SpinLock.h"
 #include "td/utils/VectorQueue.h"
+#include "td/utils/port/detail/Iocp.h"
 #endif
 
 #include <atomic>

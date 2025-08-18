@@ -18,8 +18,8 @@
 */
 #pragma once
 #include "SmartContract.h"
-#include "smc-envelope/WalletInterface.h"
 #include "block/block.h"
+#include "smc-envelope/WalletInterface.h"
 #include "vm/cells/CellString.h"
 namespace ton {
 class TestGiver : public SmartContract, public WalletInterface {

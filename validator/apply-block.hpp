@@ -18,8 +18,8 @@
 */
 #pragma once
 
-#include "td/actor/actor.h"
 #include "interfaces/validator-manager.h"
+#include "td/actor/actor.h"
 
 namespace ton {
 

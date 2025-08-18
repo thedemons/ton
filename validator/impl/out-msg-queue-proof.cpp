@@ -14,15 +14,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "out-msg-queue-proof.hpp"
+#include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "common/delay.h"
 #include "interfaces/proof.h"
+#include "interfaces/validator-manager.h"
+#include "out-msg-queue-proof.hpp"
+#include "output-queue-merger.h"
 #include "shard.hpp"
 #include "vm/cells/MerkleProof.h"
-#include "common/delay.h"
-#include "interfaces/validator-manager.h"
-#include "block/block-parse.h"
-#include "block/block-auto.h"
-#include "output-queue-merger.h"
 
 namespace ton {
 

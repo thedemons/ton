@@ -18,11 +18,11 @@
 */
 #pragma once
 
-#include "adnl.h"
-#include "adnl-peer-table.h"
-#include "keys/encryptor.h"
-
 #include <map>
+
+#include "adnl-peer-table.h"
+#include "adnl.h"
+#include "keys/encryptor.h"
 
 namespace ton {
 

@@ -17,11 +17,11 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "vm/cells/Cell.h"
-#include "td/utils/buffer.h"
-
-#include <utility>
 #include <functional>
+#include <utility>
+
+#include "td/utils/buffer.h"
+#include "vm/cells/Cell.h"
 
 namespace vm {
 

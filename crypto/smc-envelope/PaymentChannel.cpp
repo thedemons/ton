@@ -17,16 +17,15 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 
-#include "PaymentChannel.h"
-#include "GenericAccount.h"
-#include "vm/cells.h"
-#include "vm/cellslice.h"
 #include "Ed25519.h"
-#include "block/block-auto.h"
-#include "block/block-parse.h"
-
+#include "GenericAccount.h"
+#include "PaymentChannel.h"
 #include "SmartContract.h"
 #include "SmartContractCode.h"
+#include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "vm/cells.h"
+#include "vm/cellslice.h"
 
 namespace ton {
 using smc::pack_grams;

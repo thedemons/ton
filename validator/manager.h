@@ -17,10 +17,10 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "validator/validator.h"
 #include "adnl/adnl.h"
 #include "rldp/rldp.h"
 #include "rldp2/rldp.h"
+#include "validator/validator.h"
 
 namespace ton {
 

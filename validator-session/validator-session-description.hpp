@@ -18,13 +18,12 @@
 */
 #pragma once
 
-#include <set>
 #include <map>
-
-#include "validator-session.h"
-#include "validator-session-state.h"
+#include <set>
 
 #include "keys/encryptor.h"
+#include "validator-session-state.h"
+#include "validator-session.h"
 
 namespace ton {
 

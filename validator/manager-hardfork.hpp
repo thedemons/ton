@@ -18,16 +18,16 @@
 */
 #pragma once
 
-#include "interfaces/validator-manager.h"
-#include "interfaces/db.h"
-#include "ton/ton-types.h"
-#include "validator-group.hpp"
-#include "manager-init.h"
-#include "manager-hardfork.h"
-#include "queue-size-counter.hpp"
-
 #include <map>
 #include <set>
+
+#include "interfaces/db.h"
+#include "interfaces/validator-manager.h"
+#include "manager-hardfork.h"
+#include "manager-init.h"
+#include "queue-size-counter.hpp"
+#include "ton/ton-types.h"
+#include "validator-group.hpp"
 
 namespace ton {
 

@@ -16,9 +16,9 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/actor/actor.h"
-#include "td/actor/PromiseFuture.h"
 #include "td/actor/MultiPromise.h"
+#include "td/actor/PromiseFuture.h"
+#include "td/actor/actor.h"
 #include "td/utils/MovableValue.h"
 #include "td/utils/tests.h"
 

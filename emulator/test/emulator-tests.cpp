@@ -1,18 +1,13 @@
-#include "td/utils/tests.h"
-
 #include "block/block-auto.h"
-#include "block/block.h"
 #include "block/block-parse.h"
-
+#include "block/block.h"
 #include "crypto/vm/boc.h"
-
+#include "emulator/emulator-extern.h"
+#include "smc-envelope/WalletV3.h"
+#include "td/utils/JsonBuilder.h"
 #include "td/utils/base64.h"
 #include "td/utils/crypto.h"
-#include "td/utils/JsonBuilder.h"
-
-#include "smc-envelope/WalletV3.h"
-
-#include "emulator/emulator-extern.h"
+#include "td/utils/tests.h"
 
 // testnet config as of 27.06.24
 const char* config_boc =

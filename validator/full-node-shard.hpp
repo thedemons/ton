@@ -18,11 +18,12 @@
 */
 #pragma once
 
+#include <set>
+
 #include "auto/tl/ton_api.h"
 #include "full-node-shard.h"
 #include "td/actor/PromiseFuture.h"
 #include "td/utils/port/Poll.h"
-#include <set>
 
 namespace ton {
 

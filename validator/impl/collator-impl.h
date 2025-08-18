@@ -17,23 +17,24 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
+#include <map>
+#include <queue>
+
+#include "block/block-db.h"
+#include "block/block.h"
+#include "block/mc-config.h"
+#include "block/output-queue-merger.h"
+#include "block/transaction.h"
+#include "common/global-version.h"
+#include "common/refcnt.hpp"
+#include "fabric.h"
 #include "interfaces/validator-manager.h"
 #include "shard.hpp"
 #include "top-shard-descr.hpp"
-#include "common/refcnt.hpp"
 #include "vm/cells.h"
-#include "vm/dict.h"
-#include "block/mc-config.h"
-#include "block/block.h"
-#include "block/transaction.h"
-#include "block/block-db.h"
-#include "block/output-queue-merger.h"
 #include "vm/cells/MerkleProof.h"
 #include "vm/cells/MerkleUpdate.h"
-#include <map>
-#include <queue>
-#include "common/global-version.h"
-#include "fabric.h"
+#include "vm/dict.h"
 
 namespace ton {
 

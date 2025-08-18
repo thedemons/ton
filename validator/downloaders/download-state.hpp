@@ -18,8 +18,8 @@
 */
 #pragma once
 
-#include "validator/interfaces/validator-manager.h"
 #include "stats-provider.h"
+#include "validator/interfaces/validator-manager.h"
 
 namespace ton {
 

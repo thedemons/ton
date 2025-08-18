@@ -16,35 +16,31 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "auto/tl/ton_api.h"
-#include "checksum.h"
-#include "overlays.h"
-#include "td/utils/SharedSlice.h"
-#include "td/utils/overloaded.h"
-#include "full-node-shard.hpp"
-#include "full-node-shard-queries.hpp"
-#include "full-node-serializer.hpp"
-
-#include "td/utils/buffer.h"
-#include "ton/ton-shard.h"
-#include "ton/ton-tl.hpp"
-
 #include "adnl/utils.hpp"
+#include "auto/tl/ton_api.h"
+#include "auto/tl/ton_api_json.h"
+#include "checksum.h"
+#include "common/delay.h"
+#include "full-node-serializer.hpp"
+#include "full-node-shard-queries.hpp"
+#include "full-node-shard.hpp"
+#include "impl/out-msg-queue-proof.hpp"
+#include "net/download-archive-slice.hpp"
 #include "net/download-block-new.hpp"
 #include "net/download-block.hpp"
 #include "net/download-next-block.hpp"
-#include "net/download-state.hpp"
 #include "net/download-proof.hpp"
+#include "net/download-state.hpp"
 #include "net/get-next-key-blocks.hpp"
-#include "net/download-archive-slice.hpp"
-#include "impl/out-msg-queue-proof.hpp"
-
-#include "td/utils/Random.h"
-
-#include "common/delay.h"
+#include "overlays.h"
 #include "td/utils/JsonBuilder.h"
+#include "td/utils/Random.h"
+#include "td/utils/SharedSlice.h"
+#include "td/utils/buffer.h"
+#include "td/utils/overloaded.h"
 #include "tl/tl_json.h"
-#include "auto/tl/ton_api_json.h"
+#include "ton/ton-shard.h"
+#include "ton/ton-tl.hpp"
 
 namespace ton {
 

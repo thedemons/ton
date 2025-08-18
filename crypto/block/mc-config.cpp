@@ -25,20 +25,21 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "mc-config.h"
-#include "block/block.h"
-#include "block/block-parse.h"
-#include "block/block-auto.h"
-#include "common/bitstring.h"
-#include "vm/dict.h"
-#include "td/utils/bits.h"
-#include "td/utils/uint128.h"
-#include "ton/ton-types.h"
-#include "ton/ton-shard.h"
-#include "openssl/digest.hpp"
-#include <stack>
 #include <algorithm>
 #include <mutex>
+#include <stack>
+
+#include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "block/block.h"
+#include "common/bitstring.h"
+#include "mc-config.h"
+#include "openssl/digest.hpp"
+#include "td/utils/bits.h"
+#include "td/utils/uint128.h"
+#include "ton/ton-shard.h"
+#include "ton/ton-types.h"
+#include "vm/dict.h"
 
 namespace block {
 using namespace std::literals::string_literals;

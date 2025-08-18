@@ -18,13 +18,12 @@
 */
 #pragma once
 
-#include "td/utils/port/config.h"
-
-#include "td/utils/common.h"
-#include "td/utils/Destructor.h"
-
 #include <memory>
 #include <utility>
+
+#include "td/utils/Destructor.h"
+#include "td/utils/common.h"
+#include "td/utils/port/config.h"
 
 namespace td {
 

@@ -17,10 +17,10 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include "download-state.hpp"
-#include "ton/ton-tl.hpp"
-#include "ton/ton-io.hpp"
-#include "td/utils/overloaded.h"
 #include "full-node.h"
+#include "td/utils/overloaded.h"
+#include "ton/ton-io.hpp"
+#include "ton/ton-tl.hpp"
 
 namespace ton {
 

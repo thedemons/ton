@@ -1,11 +1,12 @@
+#include <iostream>
+
+#include "StringLog.h"
+#include "crypto/common/bitstring.h"
 #include "emulator-extern.h"
-#include "td/utils/logging.h"
 #include "td/utils/JsonBuilder.h"
+#include "td/utils/logging.h"
 #include "td/utils/misc.h"
 #include "td/utils/optional.h"
-#include "StringLog.h"
-#include <iostream>
-#include "crypto/common/bitstring.h"
 
 struct TransactionEmulationParams {
   uint32_t utime;

@@ -25,16 +25,15 @@
 
     Copyright 2019-2020 Telegram Systems LLP
 */
-#include "http/http-server.h"
-#include "http/http-client.h"
-
-#include "td/utils/port/signals.h"
-#include "td/utils/OptionParser.h"
-#include "td/utils/FileLog.h"
-
 #include <algorithm>
 #include <list>
+
 #include "git.h"
+#include "http/http-client.h"
+#include "http/http-server.h"
+#include "td/utils/FileLog.h"
+#include "td/utils/OptionParser.h"
+#include "td/utils/port/signals.h"
 
 #if TD_DARWIN || TD_LINUX
 #include <unistd.h>

@@ -25,41 +25,35 @@
 
     Copyright 2019-2020 Telegram Systems LLP
 */
-#include "auto/tl/tonlib_api.h"
-#include "block/block.h"
-#include "common/bigint.hpp"
-#include "common/refint.h"
-#include "td/actor/actor.h"
-
-#include "td/actor/common.h"
-#include "td/utils/Time.h"
-#include "td/utils/filesystem.h"
-#include "td/utils/OptionParser.h"
-#include "td/utils/overloaded.h"
-#include "td/utils/Parser.h"
-#include "td/utils/port/signals.h"
-#include "td/utils/port/path.h"
-#include "td/utils/Random.h"
-#include "td/utils/as.h"
-
-#include "terminal/terminal.h"
-
-#include "tonlib/TonlibClient.h"
-#include "tonlib/TonlibCallback.h"
-
-#include "smc-envelope/ManualDns.h"
-#include "smc-envelope/PaymentChannel.h"
-
-#include "auto/tl/tonlib_api.hpp"
-
-#include "vm/boc.h"
-#include "vm/cells/CellBuilder.h"
-#include "lite-client/ext-client.h"
-
 #include <cinttypes>
 #include <iostream>
 #include <map>
+
+#include "auto/tl/tonlib_api.h"
+#include "auto/tl/tonlib_api.hpp"
+#include "block/block.h"
+#include "common/bigint.hpp"
+#include "common/refint.h"
 #include "git.h"
+#include "lite-client/ext-client.h"
+#include "smc-envelope/ManualDns.h"
+#include "smc-envelope/PaymentChannel.h"
+#include "td/actor/actor.h"
+#include "td/actor/common.h"
+#include "td/utils/OptionParser.h"
+#include "td/utils/Parser.h"
+#include "td/utils/Random.h"
+#include "td/utils/Time.h"
+#include "td/utils/as.h"
+#include "td/utils/filesystem.h"
+#include "td/utils/overloaded.h"
+#include "td/utils/port/path.h"
+#include "td/utils/port/signals.h"
+#include "terminal/terminal.h"
+#include "tonlib/TonlibCallback.h"
+#include "tonlib/TonlibClient.h"
+#include "vm/boc.h"
+#include "vm/cells/CellBuilder.h"
 
 using tonlib_api::make_object;
 

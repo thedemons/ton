@@ -17,8 +17,8 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include "bigexp.h"
-#include "td/utils/bits.h"
 #include "td/utils/as.h"
+#include "td/utils/bits.h"
 #include "td/utils/misc.h"
 
 namespace td {

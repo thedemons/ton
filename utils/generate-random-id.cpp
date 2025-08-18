@@ -25,18 +25,19 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <string>
+
 #include "adnl/utils.hpp"
 #include "auto/tl/ton_api.h"
 #include "auto/tl/ton_api_json.h"
-#include "tl/tl_json.h"
+#include "dht/dht-node.hpp"
+#include "git.h"
+#include "keys/encryptor.h"
 #include "td/utils/OptionParser.h"
 #include "td/utils/filesystem.h"
-#include "keys/encryptor.h"
-#include "git.h"
-#include "dht/dht-node.hpp"
+#include "tl/tl_json.h"
 
 int main(int argc, char *argv[]) {
   ton::PrivateKey pk;

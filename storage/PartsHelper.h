@@ -17,9 +17,8 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 
-#include "PeerState.h"
 #include "Bitset.h"
-
+#include "PeerState.h"
 #include "td/utils/Random.h"
 #include "td/utils/Status.h"
 

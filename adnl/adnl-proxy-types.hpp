@@ -19,7 +19,6 @@
 #pragma once
 
 #include "adnl-proxy-types.h"
-
 #include "common/checksum.h"
 
 namespace ton {

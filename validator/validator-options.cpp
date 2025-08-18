@@ -16,11 +16,10 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "validator-options.hpp"
+#include <ton/ton-tl.hpp>
 
 #include "ton/ton-shard.h"
-
-#include <ton/ton-tl.hpp>
+#include "validator-options.hpp"
 
 namespace ton {
 

@@ -18,16 +18,16 @@
 */
 #pragma once
 
-#include <jni.h>
-
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "td/utils/Slice.h"
-#include "td/utils/SharedSlice.h"
+#include <jni.h>
+
 #include "common/bitstring.h"
+#include "td/utils/SharedSlice.h"
+#include "td/utils/Slice.h"
 
 namespace td {
 namespace jni {

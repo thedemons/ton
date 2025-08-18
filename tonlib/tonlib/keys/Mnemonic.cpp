@@ -16,23 +16,19 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "Mnemonic.h"
-
-#include "tonlib/keys/bip39.h"
-
+#include <algorithm>
 #include <vector>
 
-#include "td/utils/crypto.h"
-#include "td/utils/format.h"
+#include "Mnemonic.h"
+#include "crypto/Ed25519.h"
 #include "td/utils/Random.h"
 #include "td/utils/Span.h"
+#include "td/utils/Timer.h"
+#include "td/utils/crypto.h"
+#include "td/utils/format.h"
 #include "td/utils/misc.h"
 #include "td/utils/optional.h"
-#include "td/utils/Timer.h"
-
-#include "crypto/Ed25519.h"
-
-#include <algorithm>
+#include "tonlib/keys/bip39.h"
 
 namespace tonlib {
 td::Result<Mnemonic> Mnemonic::create(td::SecureString words, td::SecureString password) {

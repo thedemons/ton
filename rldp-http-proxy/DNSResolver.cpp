@@ -24,8 +24,8 @@
     from all source files in the program, then also delete it here.
 */
 #include "DNSResolver.h"
-#include "td/utils/overloaded.h"
 #include "common/delay.h"
+#include "td/utils/overloaded.h"
 
 static const double CACHE_TIMEOUT_HARD = 300.0;
 static const double CACHE_TIMEOUT_SOFT = 270.0;

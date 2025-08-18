@@ -20,9 +20,9 @@
 
 #include "common/refcnt.hpp"
 #include "vm/cellslice.h"
+#include "vm/log.h"
 #include "vm/stack.hpp"
 #include "vm/vmstate.h"
-#include "vm/log.h"
 
 namespace vm {
 

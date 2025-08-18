@@ -16,9 +16,10 @@
 */
 #pragma once
 
-#include "fwd-declarations.h"
-#include "crypto/common/refint.h"
 #include <variant>
+
+#include "crypto/common/refint.h"
+#include "fwd-declarations.h"
 
 namespace tolk {
 

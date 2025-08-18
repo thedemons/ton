@@ -25,14 +25,16 @@
 
     Copyright 2017-2019 Telegram Systems LLP
 */
+#include <iostream>
+
+#include <getopt.h>
+
+#include "block-auto.h"
+#include "block-db.h"
+#include "block-parse.h"
 #include "block/block.h"
 #include "vm/boc.h"
-#include <iostream>
-#include "block-db.h"
-#include "block-auto.h"
-#include "block-parse.h"
 #include "vm/cp0.h"
-#include <getopt.h>
 
 using td::Ref;
 

@@ -18,21 +18,21 @@
 */
 #pragma once
 
-#include "shard.h"
+#include <ton/ton-tl.hpp>
+
+#include "auto/tl/lite_api.h"
 #include "block.h"
-#include "proof.h"
+#include "crypto/vm/db/DynamicBagOfCellsDb.h"
 #include "external-message.h"
 #include "ihr-message.h"
-#include "shard-block.h"
-#include "message-queue.h"
-#include "validator/validator.h"
-#include "liteserver.h"
-#include "crypto/vm/db/DynamicBagOfCellsDb.h"
-#include "validator-session/validator-session-types.h"
-#include "auto/tl/lite_api.h"
 #include "impl/out-msg-queue-proof.hpp"
-
-#include <ton/ton-tl.hpp>
+#include "liteserver.h"
+#include "message-queue.h"
+#include "proof.h"
+#include "shard-block.h"
+#include "shard.h"
+#include "validator-session/validator-session-types.h"
+#include "validator/validator.h"
 
 namespace ton {
 

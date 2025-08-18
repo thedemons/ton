@@ -17,18 +17,19 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include <vector>
-#include <string>
 #include <algorithm>
-#include <cmath>
+#include <cassert>
 #include <cstring>
 #include <ostream>
 #include <sstream>
-#include <cassert>
-#include "common/bitstring.h"
+#include <string>
+#include <vector>
 
-#include "td/utils/bits.h"
+#include <cmath>
+
+#include "common/bitstring.h"
 #include "td/utils/Span.h"
+#include "td/utils/bits.h"
 #include "td/utils/uint128.h"
 
 /**************************************

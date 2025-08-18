@@ -20,14 +20,12 @@
 
 #include <map>
 
+#include "adnl-peer-table.h"
+#include "auto/tl/ton_api.h"
+#include "dht/dht.h"
+#include "keys/encryptor.h"
 #include "td/actor/actor.h"
 #include "td/utils/BufferedUdp.h"
-#include "auto/tl/ton_api.h"
-#include "keys/encryptor.h"
-#include "adnl-peer-table.h"
-#include "dht/dht.h"
-
-#include "adnl-peer-table.h"
 #include "utils.hpp"
 
 namespace ton {

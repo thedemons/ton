@@ -19,10 +19,10 @@
 
 #pragma once
 
+#include <map>
+
 #include "RldpSender.h"
 #include "fec/fec.h"
-
-#include <map>
 
 namespace ton {
 namespace rldp2 {

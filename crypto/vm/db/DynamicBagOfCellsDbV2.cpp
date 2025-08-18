@@ -1,18 +1,15 @@
-#include "vm/db/DynamicBagOfCellsDb.h"
-#include "vm/db/CellStorage.h"
-#include "vm/db/CellHashTable.h"
+#include <optional>
 
-#include "vm/cells/ExtCell.h"
-
+#include "td/utils/ThreadSafeCounter.h"
 #include "td/utils/base64.h"
 #include "td/utils/format.h"
-#include "td/utils/ThreadSafeCounter.h"
 #include "td/utils/misc.h"
 #include "validator/validator.h"
-
+#include "vm/cells/ExtCell.h"
 #include "vm/cellslice.h"
-
-#include <optional>
+#include "vm/db/CellHashTable.h"
+#include "vm/db/CellStorage.h"
+#include "vm/db/DynamicBagOfCellsDb.h"
 
 namespace vm {
 namespace {

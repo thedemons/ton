@@ -18,7 +18,6 @@
 */
 #include "BinlogReaderHelper.h"
 #include "BinlogReaderInterface.h"
-
 #include "td/utils/misc.h"
 
 namespace td {

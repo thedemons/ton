@@ -16,14 +16,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "utils.h"
-#include "words.h"
+#include <map>
+
 #include "td/utils/PathView.h"
 #include "td/utils/filesystem.h"
 #include "td/utils/misc.h"
 #include "td/utils/port/path.h"
+#include "utils.h"
 #include "vm/boc.h"
-#include <map>
+#include "words.h"
 
 namespace fift {
 namespace {

@@ -14,14 +14,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "constant-evaluator.h"
 #include "ast.h"
-#include "tolk.h"
-#include "type-system.h"
-#include "openssl/digest.hpp"
+#include "constant-evaluator.h"
 #include "crypto/common/util.h"
+#include "openssl/digest.hpp"
 #include "td/utils/crypto.h"
+#include "tolk.h"
 #include "ton/ton-types.h"
+#include "type-system.h"
 
 namespace tolk {
 

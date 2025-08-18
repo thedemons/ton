@@ -18,9 +18,9 @@
 */
 #pragma once
 
+#include "adnl/adnl-ext-client.h"
 #include "full-node.h"
 #include "validator/interfaces/block-handle.h"
-#include "adnl/adnl-ext-client.h"
 
 namespace ton {
 

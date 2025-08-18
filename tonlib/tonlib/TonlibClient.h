@@ -18,24 +18,20 @@
 */
 #pragma once
 
-#include "TonlibCallback.h"
+#include <map>
 
+#include "TonlibCallback.h"
+#include "lite-client/ext-client.h"
+#include "smc-envelope/ManualDns.h"
+#include "td/actor/actor.h"
+#include "td/utils/CancellationToken.h"
+#include "td/utils/optional.h"
 #include "tonlib/Config.h"
 #include "tonlib/ExtClient.h"
 #include "tonlib/ExtClientOutbound.h"
 #include "tonlib/KeyStorage.h"
 #include "tonlib/KeyValue.h"
 #include "tonlib/LastBlockStorage.h"
-
-#include "td/actor/actor.h"
-
-#include "td/utils/CancellationToken.h"
-#include "td/utils/optional.h"
-
-#include "smc-envelope/ManualDns.h"
-#include "lite-client/ext-client.h"
-
-#include <map>
 
 namespace tonlib {
 namespace int_api {

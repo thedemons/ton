@@ -14,9 +14,9 @@
     You should have received a copy of the GNU General Public License
     along with TON Blockchain.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "ast.h"
 #include "ast-visitor.h"
+#include "ast.h"
+#include "tolk.h"
 
 /*
  *   This pipe refines rvalue/lvalue and checks `mutate` arguments validity.

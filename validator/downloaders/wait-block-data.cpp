@@ -16,15 +16,14 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "wait-block-data.hpp"
-
-#include "block-parse.h"
-#include "block-auto.h"
-#include "fabric.h"
 #include "adnl/utils.hpp"
-#include "ton/ton-io.hpp"
+#include "block-auto.h"
+#include "block-parse.h"
 #include "common/delay.h"
+#include "fabric.h"
+#include "ton/ton-io.hpp"
 #include "vm/cells/MerkleProof.h"
+#include "wait-block-data.hpp"
 
 namespace ton {
 

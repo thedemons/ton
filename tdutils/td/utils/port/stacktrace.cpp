@@ -16,9 +16,8 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/port/stacktrace.h"
-
 #include "td/utils/port/signals.h"
+#include "td/utils/port/stacktrace.h"
 
 #if TD_WINDOWS
 #include <DbgHelp.h>

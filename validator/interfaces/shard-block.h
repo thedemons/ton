@@ -18,9 +18,9 @@
 */
 #pragma once
 
-#include "ton/ton-types.h"
-#include "shard.h"
 #include "interfaces/block-handle.h"
+#include "shard.h"
+#include "ton/ton-types.h"
 
 namespace ton {
 

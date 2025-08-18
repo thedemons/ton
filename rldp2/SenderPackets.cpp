@@ -18,7 +18,6 @@
 */
 
 #include "SenderPackets.h"
-
 #include "td/utils/bits.h"
 
 namespace ton {

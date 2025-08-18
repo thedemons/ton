@@ -15,10 +15,10 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "smc-util.h"
-#include "td/utils/filesystem.h"
 #include "keys/encryptor.h"
 #include "smartcont/provider-code.h"
+#include "smc-util.h"
+#include "td/utils/filesystem.h"
 
 namespace ton {
 

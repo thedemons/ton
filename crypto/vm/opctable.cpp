@@ -17,17 +17,17 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include <cassert>
-#include <iterator>
-#include "vm/opctable.h"
-#include "vm/cellslice.h"
-#include "vm/excno.hpp"
-#include "vm/vm.h"
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <functional>
+#include <iomanip>
+#include <iostream>
+#include <iterator>
+#include <sstream>
 
 #include "td/utils/format.h"
+#include "vm/cellslice.h"
+#include "vm/excno.hpp"
+#include "vm/opctable.h"
+#include "vm/vm.h"
 
 namespace vm {
 

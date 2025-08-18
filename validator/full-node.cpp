@@ -16,13 +16,13 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "full-node.hpp"
-#include "ton/ton-io.hpp"
-#include "td/actor/MultiPromise.h"
-#include "full-node.h"
 #include "common/delay.h"
+#include "full-node.h"
+#include "full-node.hpp"
 #include "impl/out-msg-queue-proof.hpp"
+#include "td/actor/MultiPromise.h"
 #include "td/utils/Random.h"
+#include "ton/ton-io.hpp"
 #include "ton/ton-tl.hpp"
 
 namespace ton {

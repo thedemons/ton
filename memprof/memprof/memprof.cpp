@@ -18,7 +18,6 @@
 */
 #undef NDEBUG
 #include "memprof/memprof.h"
-
 #include "td/utils/port/platform.h"
 
 #if (TD_DARWIN || TD_LINUX) && defined(USE_MEMPROF)

@@ -17,9 +17,9 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "td/db/KeyValue.h"
-
 #include <map>
+
+#include "td/db/KeyValue.h"
 
 namespace td {
 

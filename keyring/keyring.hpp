@@ -18,10 +18,10 @@
 */
 #pragma once
 
+#include <map>
+
 #include "keyring.h"
 #include "keys/encryptor.h"
-
-#include <map>
 
 namespace ton {
 

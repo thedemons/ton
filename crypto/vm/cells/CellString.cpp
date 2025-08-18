@@ -18,7 +18,6 @@
 */
 #include "CellString.h"
 #include "td/utils/misc.h"
-
 #include "vm/cells/CellSlice.h"
 
 namespace vm {

@@ -18,19 +18,17 @@
 */
 #pragma once
 
-#include "crypto/vm/stack.hpp"
-#include "crypto/vm/box.hpp"
-#include "crypto/common/bitstring.h"
-
-#include "td/utils/Status.h"
-
-#include "Dictionary.h"
-#include "Continuation.h"
-
 #include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <string>
+
+#include "Continuation.h"
+#include "Dictionary.h"
+#include "crypto/common/bitstring.h"
+#include "crypto/vm/box.hpp"
+#include "crypto/vm/stack.hpp"
+#include "td/utils/Status.h"
 
 namespace vm {
 class TonDbImpl;  // from crypto/vm/db/TonDb.h

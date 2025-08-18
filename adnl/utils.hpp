@@ -18,19 +18,18 @@
 */
 #pragma once
 
+#include "adnl-address-list.hpp"
+#include "adnl-node-id.hpp"
+#include "adnl-node.h"
+#include "common/checksum.h"
+#include "common/errorcode.h"
+#include "common/status.h"
+#include "td/utils/base64.h"
 #include "td/utils/buffer.h"
-#include "td/utils/misc.h"
 #include "td/utils/crypto.h"
 #include "td/utils/format.h"
-#include "td/utils/base64.h"
+#include "td/utils/misc.h"
 #include "tl-utils/tl-utils.hpp"
-
-#include "common/errorcode.h"
-#include "common/checksum.h"
-#include "adnl-node-id.hpp"
-#include "common/status.h"
-#include "adnl-node.h"
-#include "adnl-address-list.hpp"
 
 namespace ton {
 

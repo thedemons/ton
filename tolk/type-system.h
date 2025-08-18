@@ -16,10 +16,11 @@
 */
 #pragma once
 
-#include "fwd-declarations.h"
 #include <functional>
 #include <string>
 #include <vector>
+
+#include "fwd-declarations.h"
 
 namespace tolk {
 

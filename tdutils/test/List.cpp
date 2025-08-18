@@ -17,18 +17,18 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 
-#include "td/utils/common.h"
-#include "td/utils/List.h"
-#include "td/utils/MovableValue.h"
-#include "td/utils/port/thread.h"
-#include "td/utils/Random.h"
-#include "td/utils/tests.h"
-#include "td/utils/TsList.h"
-
 #include <atomic>
 #include <mutex>
 #include <set>
 #include <utility>
+
+#include "td/utils/List.h"
+#include "td/utils/MovableValue.h"
+#include "td/utils/Random.h"
+#include "td/utils/TsList.h"
+#include "td/utils/common.h"
+#include "td/utils/port/thread.h"
+#include "td/utils/tests.h"
 
 struct ListData {
   td::MovableValue<td::uint64> value;

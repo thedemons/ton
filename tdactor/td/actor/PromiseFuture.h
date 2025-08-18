@@ -17,16 +17,16 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "td/utils/Closure.h"
-#include "td/utils/common.h"
-#include "td/utils/invoke.h"  // for tuple_for_each
-#include "td/utils/logging.h"
-#include "td/utils/ScopeGuard.h"
-#include "td/utils/Status.h"
-
 #include <tuple>
 #include <type_traits>
 #include <utility>
+
+#include "td/utils/Closure.h"
+#include "td/utils/ScopeGuard.h"
+#include "td/utils/Status.h"
+#include "td/utils/common.h"
+#include "td/utils/invoke.h"  // for tuple_for_each
+#include "td/utils/logging.h"
 
 namespace td {
 namespace detail {

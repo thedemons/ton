@@ -16,18 +16,14 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "dht.hpp"
-
-#include "td/utils/tl_storers.h"
-#include "td/utils/crypto.h"
-#include "td/utils/Random.h"
-#include "td/utils/overloaded.h"
-
-#include "td/utils/format.h"
-
 #include "auto/tl/ton_api.hpp"
-
 #include "dht-query.hpp"
+#include "dht.hpp"
+#include "td/utils/Random.h"
+#include "td/utils/crypto.h"
+#include "td/utils/format.h"
+#include "td/utils/overloaded.h"
+#include "td/utils/tl_storers.h"
 
 namespace ton {
 

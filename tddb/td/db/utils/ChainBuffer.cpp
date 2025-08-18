@@ -17,9 +17,8 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include "ChainBuffer.h"
-
-#include "td/utils/buffer.h"
 #include "td/db/utils/StreamInterface.h"
+#include "td/utils/buffer.h"
 
 namespace td {
 namespace detail {

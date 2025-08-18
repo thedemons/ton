@@ -18,11 +18,10 @@
 */
 #pragma once
 
-#include "td/utils/buffer.h"
-#include "td/utils/SharedSlice.h"
 #include "auto/tl/ton_api.h"
-
 #include "catchain/catchain-receiver.h"
+#include "td/utils/SharedSlice.h"
+#include "td/utils/buffer.h"
 
 namespace ton {
 

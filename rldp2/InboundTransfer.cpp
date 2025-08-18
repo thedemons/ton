@@ -18,7 +18,6 @@
 */
 
 #include "InboundTransfer.h"
-
 #include "common/errorcode.h"
 
 namespace ton {

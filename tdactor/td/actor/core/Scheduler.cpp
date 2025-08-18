@@ -16,10 +16,9 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/actor/core/Scheduler.h"
-
 #include "td/actor/core/CpuWorker.h"
 #include "td/actor/core/IoWorker.h"
+#include "td/actor/core/Scheduler.h"
 
 namespace td {
 namespace actor {

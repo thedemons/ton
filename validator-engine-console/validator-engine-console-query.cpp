@@ -25,22 +25,22 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "validator-engine-console-query.h"
-#include "auto/tl/ton_api.h"
-#include "td/utils/StringBuilder.h"
-#include "validator-engine-console.h"
-#include "terminal/terminal.h"
-#include "td/utils/filesystem.h"
-#include "overlay/overlays.h"
-#include "ton/ton-tl.hpp"
-#include "td/utils/JsonBuilder.h"
-#include "auto/tl/ton_api_json.h"
-#include "keys/encryptor.h"
-#include "td/utils/port/path.h"
-#include "tl/tl_json.h"
-
 #include <cctype>
 #include <fstream>
+
+#include "auto/tl/ton_api.h"
+#include "auto/tl/ton_api_json.h"
+#include "keys/encryptor.h"
+#include "overlay/overlays.h"
+#include "td/utils/JsonBuilder.h"
+#include "td/utils/StringBuilder.h"
+#include "td/utils/filesystem.h"
+#include "td/utils/port/path.h"
+#include "terminal/terminal.h"
+#include "tl/tl_json.h"
+#include "ton/ton-tl.hpp"
+#include "validator-engine-console-query.h"
+#include "validator-engine-console.h"
 
 Tokenizer::Tokenizer(td::BufferSlice data) : data_(std::move(data)) {
   remaining_ = data_.as_slice();

@@ -16,19 +16,16 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "Logging.h"
-#include "utils.h"
-
-#include "auto/tl/tonlib_api.h"
-
-#include "td/utils/FileLog.h"
-#include "td/utils/logging.h"
-#include "td/utils/misc.h"
-#include "td/utils/misc.h"
-
 #include <atomic>
 #include <map>
 #include <mutex>
+
+#include "Logging.h"
+#include "auto/tl/tonlib_api.h"
+#include "td/utils/FileLog.h"
+#include "td/utils/logging.h"
+#include "td/utils/misc.h"
+#include "utils.h"
 
 namespace tonlib {
 

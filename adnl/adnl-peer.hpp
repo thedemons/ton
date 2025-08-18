@@ -18,20 +18,18 @@
 */
 #pragma once
 
-#include <vector>
 #include <map>
 #include <queue>
+#include <vector>
 
-#include "adnl-peer.h"
-#include "adnl-peer-table.h"
-#include "adnl-network-manager.h"
-#include "keys/encryptor.h"
 #include "adnl-channel.h"
+#include "adnl-network-manager.h"
+#include "adnl-peer-table.h"
+#include "adnl-peer.h"
 #include "adnl-query.h"
-
 #include "crypto/Ed25519.h"
+#include "keys/encryptor.h"
 #include "td/utils/DecTree.h"
-
 #include "utils.hpp"
 
 namespace ton {

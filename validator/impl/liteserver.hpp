@@ -17,17 +17,17 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "ton/ton-types.h"
+#include "auto/tl/lite_api.h"
+#include "block.hpp"
+#include "block/block-auto.h"
+#include "interfaces/block-handle.h"
+#include "interfaces/shard.h"
+#include "interfaces/validator-manager.h"
+#include "proof.hpp"
+#include "shard.hpp"
 #include "td/actor/actor.h"
 #include "td/utils/Time.h"
-#include "interfaces/block-handle.h"
-#include "interfaces/validator-manager.h"
-#include "interfaces/shard.h"
-#include "block.hpp"
-#include "shard.hpp"
-#include "proof.hpp"
-#include "block/block-auto.h"
-#include "auto/tl/lite_api.h"
+#include "ton/ton-types.h"
 
 namespace ton {
 

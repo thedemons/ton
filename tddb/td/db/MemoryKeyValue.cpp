@@ -17,9 +17,8 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include "td/db/MemoryKeyValue.h"
-
-#include "td/utils/format.h"
 #include "td/utils/Span.h"
+#include "td/utils/format.h"
 
 namespace td {
 Result<MemoryKeyValue::GetStatus> MemoryKeyValue::get(Slice key, std::string &value) {

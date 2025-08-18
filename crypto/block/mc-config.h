@@ -17,19 +17,19 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "common/refcnt.hpp"
-#include "vm/db/StaticBagOfCellsDb.h"
-#include "vm/dict.h"
-#include "ton/ton-types.h"
-#include "ton/ton-shard.h"
-#include "common/bitstring.h"
-#include "block.h"
-
-#include <vector>
+#include <cstring>
 #include <limits>
 #include <map>
 #include <set>
-#include <cstring>
+#include <vector>
+
+#include "block.h"
+#include "common/bitstring.h"
+#include "common/refcnt.hpp"
+#include "ton/ton-shard.h"
+#include "ton/ton-types.h"
+#include "vm/db/StaticBagOfCellsDb.h"
+#include "vm/dict.h"
 
 namespace block {
 using td::Ref;

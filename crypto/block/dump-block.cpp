@@ -25,16 +25,18 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "block/block.h"
-#include "vm/boc.h"
 #include <iostream>
-#include "block-db.h"
-#include "block-auto.h"
-#include "block-parse.h"
-#include "mc-config.h"
-#include "vm/cp0.h"
+
 #include <getopt.h>
+
+#include "block-auto.h"
+#include "block-db.h"
+#include "block-parse.h"
+#include "block/block.h"
 #include "git.h"
+#include "mc-config.h"
+#include "vm/boc.h"
+#include "vm/cp0.h"
 
 using td::Ref;
 using namespace std::literals::string_literals;

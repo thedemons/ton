@@ -18,14 +18,14 @@
 */
 #pragma once
 
-#include "td/utils/common.h"
-#include "td/utils/invoke.h"  // for tuple_for_each
-#include "td/utils/Slice.h"
-#include "td/utils/StringBuilder.h"
-
+#include <set>
 #include <tuple>
 #include <utility>
-#include <set>
+
+#include "td/utils/Slice.h"
+#include "td/utils/StringBuilder.h"
+#include "td/utils/common.h"
+#include "td/utils/invoke.h"  // for tuple_for_each
 
 namespace td {
 namespace format {

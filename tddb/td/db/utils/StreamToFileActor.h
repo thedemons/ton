@@ -17,13 +17,11 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "StreamInterface.h"
 #include "FileSyncState.h"
-
+#include "StreamInterface.h"
+#include "td/actor/actor.h"
 #include "td/utils/Time.h"
 #include "td/utils/port/FileFd.h"
-
-#include "td/actor/actor.h"
 
 namespace td {
 class StreamToFileActor : public actor::Actor {

@@ -20,13 +20,13 @@
 
 #include "common/refcnt.hpp"
 #include "td/utils/HashMap.h"
-#include "vm/cellslice.h"
-#include "vm/stack.hpp"
-#include "vm/vmstate.h"
-#include "vm/log.h"
-#include "vm/continuation.h"
 #include "td/utils/HashSet.h"
 #include "td/utils/optional.h"
+#include "vm/cellslice.h"
+#include "vm/continuation.h"
+#include "vm/log.h"
+#include "vm/stack.hpp"
+#include "vm/vmstate.h"
 
 namespace vm {
 

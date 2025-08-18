@@ -18,9 +18,8 @@
 */
 #pragma once
 
-#include "td/actor/actor.h"
-
 #include "adnl.h"
+#include "td/actor/actor.h"
 
 namespace ton {
 

@@ -16,10 +16,11 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
+#include <cassert>
+#include <sstream>
+
 #include "lexer.h"
 #include "symtable.h"
-#include <sstream>
-#include <cassert>
 
 namespace src {
 

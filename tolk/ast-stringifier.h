@@ -18,10 +18,11 @@
 
 #ifdef TOLK_DEBUG
 
-#include "ast.h"
-#include "ast-visitor.h"
-#include "type-system.h"
 #include <sstream>
+
+#include "ast-visitor.h"
+#include "ast.h"
+#include "type-system.h"
 
 /*
  *   ASTStringifier is used to print out the whole vertex tree in a human-readable format.

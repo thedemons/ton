@@ -16,9 +16,8 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "TestGiver.h"
 #include "GenericAccount.h"
-
+#include "TestGiver.h"
 #include "td/utils/base64.h"
 
 namespace ton {

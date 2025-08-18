@@ -17,9 +17,8 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "td/utils/common.h"
-
 #include "StreamInterface.h"
+#include "td/utils/common.h"
 
 namespace td {
 class ChainBuffer {

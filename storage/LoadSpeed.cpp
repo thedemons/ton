@@ -18,7 +18,6 @@
 */
 
 #include "LoadSpeed.h"
-
 #include "td/utils/format.h"
 
 namespace ton {

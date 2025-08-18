@@ -18,17 +18,18 @@
 */
 #pragma once
 
-#include "interfaces/validator-manager.h"
-#include "vm/cells.h"
-#include "vm/dict.h"
+#include <map>
+#include <string>
+#include <vector>
+
 #include "block/mc-config.h"
 #include "block/transaction.h"
+#include "common/global-version.h"
+#include "interfaces/validator-manager.h"
 #include "shard.hpp"
 #include "signature-set.hpp"
-#include <vector>
-#include <string>
-#include <map>
-#include "common/global-version.h"
+#include "vm/cells.h"
+#include "vm/dict.h"
 
 namespace ton {
 

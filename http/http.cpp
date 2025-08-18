@@ -16,11 +16,10 @@
 
     Copyright 2019-2020 Telegram Systems LLP
 */
-#include "http.h"
-
-#include "td/utils/misc.h"
-
 #include <algorithm>
+
+#include "http.h"
+#include "td/utils/misc.h"
 
 namespace ton {
 

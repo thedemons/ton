@@ -16,12 +16,13 @@
 */
 #pragma once
 
-#include "src-file.h"
-#include "fwd-declarations.h"
-#include "crypto/common/refint.h"
 #include <unordered_map>
 #include <variant>
 #include <vector>
+
+#include "crypto/common/refint.h"
+#include "fwd-declarations.h"
+#include "src-file.h"
 
 namespace tolk {
 

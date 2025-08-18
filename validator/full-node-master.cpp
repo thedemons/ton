@@ -16,19 +16,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/SharedSlice.h"
+#include "adnl/utils.hpp"
+#include "auto/tl/lite_api.h"
+#include "common/delay.h"
 #include "full-node-master.hpp"
 #include "full-node-shard-queries.hpp"
-
+#include "td/utils/SharedSlice.h"
+#include "tl-utils/lite-utils.hpp"
 #include "ton/ton-shard.h"
 #include "ton/ton-tl.hpp"
-
-#include "adnl/utils.hpp"
-
-#include "common/delay.h"
-
-#include "auto/tl/lite_api.h"
-#include "tl-utils/lite-utils.hpp"
 
 namespace ton {
 

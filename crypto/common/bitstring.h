@@ -17,12 +17,13 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "common/refcnt.hpp"
-#include <utility>
 #include <array>
-#include <string>
-#include <ostream>
 #include <cstdlib>
+#include <ostream>
+#include <string>
+#include <utility>
+
+#include "common/refcnt.hpp"
 #include "td/utils/bits.h"
 
 namespace td {

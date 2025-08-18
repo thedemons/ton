@@ -18,12 +18,11 @@
 */
 #pragma once
 
-#include "td/utils/Status.h"
-#include "td/utils/SharedSlice.h"
+#include <string>
 
 #include "KeyValue.h"
-
-#include <string>
+#include "td/utils/SharedSlice.h"
+#include "td/utils/Status.h"
 
 namespace tonlib {
 struct DecryptedKey;

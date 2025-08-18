@@ -16,11 +16,11 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "validator-session.hpp"
-#include "td/utils/Random.h"
 #include "candidate-serializer.h"
+#include "td/utils/Random.h"
 #include "td/utils/overloaded.h"
 #include "ton/ton-tl.hpp"
+#include "validator-session.hpp"
 
 namespace ton {
 

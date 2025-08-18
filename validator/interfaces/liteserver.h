@@ -18,9 +18,9 @@
 */
 #pragma once
 
+#include "common/bitstring.h"
 #include "td/actor/actor.h"
 #include "td/utils/buffer.h"
-#include "common/bitstring.h"
 
 namespace ton::validator {
 

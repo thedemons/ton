@@ -17,25 +17,26 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include <functional>
-#include "vm/tonops.h"
+
+#include <sodium.h>
+
+#include "Ed25519.h"
+#include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "bls.h"
+#include "crypto/ellcurve/p256.h"
+#include "crypto/ellcurve/secp256k1.h"
+#include "mc-config.h"
+#include "openssl/digest.hpp"
+#include "vm/Hasher.h"
+#include "vm/boc.h"
+#include "vm/dict.h"
+#include "vm/excno.hpp"
 #include "vm/log.h"
 #include "vm/opctable.h"
 #include "vm/stack.hpp"
-#include "vm/excno.hpp"
+#include "vm/tonops.h"
 #include "vm/vm.h"
-#include "vm/dict.h"
-#include "vm/boc.h"
-#include "Ed25519.h"
-#include "vm/Hasher.h"
-#include "block/block-auto.h"
-#include "block/block-parse.h"
-#include "crypto/ellcurve/secp256k1.h"
-#include "crypto/ellcurve/p256.h"
-
-#include "openssl/digest.hpp"
-#include <sodium.h>
-#include "bls.h"
-#include "mc-config.h"
 
 namespace vm {
 

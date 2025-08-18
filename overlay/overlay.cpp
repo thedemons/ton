@@ -16,21 +16,19 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "auto/tl/ton_api.h"
-#include "td/utils/Random.h"
-#include "common/delay.h"
+#include <limits>
 
 #include "adnl/utils.hpp"
-#include "dht/dht.h"
-
-#include "overlay.hpp"
+#include "auto/tl/ton_api.h"
 #include "auto/tl/ton_api.hpp"
-
+#include "common/delay.h"
+#include "dht/dht.h"
 #include "keys/encryptor.h"
+#include "overlay.hpp"
+#include "td/utils/Random.h"
 #include "td/utils/Status.h"
 #include "td/utils/StringBuilder.h"
 #include "td/utils/port/signals.h"
-#include <limits>
 
 namespace ton {
 

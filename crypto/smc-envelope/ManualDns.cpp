@@ -17,20 +17,15 @@
     Copyright 2019-2020 Telegram Systems LLP
 */
 #include "ManualDns.h"
-
-#include "smc-envelope/SmartContractCode.h"
-
-#include "vm/dict.h"
-
-#include "td/utils/format.h"
-#include "td/utils/overloaded.h"
-#include "td/utils/Parser.h"
-#include "td/utils/Random.h"
-
 #include "block/block-auto.h"
 #include "block/block-parse.h"
-
 #include "common/util.h"
+#include "smc-envelope/SmartContractCode.h"
+#include "td/utils/Parser.h"
+#include "td/utils/Random.h"
+#include "td/utils/format.h"
+#include "td/utils/overloaded.h"
+#include "vm/dict.h"
 
 namespace ton {
 td::StringBuilder& operator<<(td::StringBuilder& sb, const ManualDns::EntryData& data) {

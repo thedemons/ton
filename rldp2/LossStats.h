@@ -20,7 +20,6 @@
 #pragma once
 
 #include "LossSender.h"
-
 #include "td/utils/int_types.h"
 
 namespace ton {

@@ -23,13 +23,15 @@
     exception statement from your version. If you delete this exception statement
     from all source files in the program, then also delete it here.
 */
-#include "tolk.h"
-#include "tolk-version.h"
+#include <fstream>
+
+#include <getopt.h>
+#include <sys/stat.h>
+
 #include "compiler-state.h"
 #include "td/utils/port/path.h"
-#include <getopt.h>
-#include <fstream>
-#include <sys/stat.h>
+#include "tolk-version.h"
+#include "tolk.h"
 #ifdef TD_DARWIN
 #include <mach-o/dyld.h>
 #elif TD_WINDOWS

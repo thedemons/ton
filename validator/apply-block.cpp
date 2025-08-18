@@ -16,12 +16,12 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "apply-block.hpp"
 #include "adnl/utils.hpp"
-#include "ton/ton-io.hpp"
-#include "validator/invariants.hpp"
+#include "apply-block.hpp"
 #include "td/actor/MultiPromise.h"
+#include "ton/ton-io.hpp"
 #include "validator/fabric.h"
+#include "validator/invariants.hpp"
 
 namespace ton {
 

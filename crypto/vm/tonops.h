@@ -17,9 +17,9 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "vm/vm.h"
-#include "ton/ton-types.h"
 #include "mc-config.h"
+#include "ton/ton-types.h"
+#include "vm/vm.h"
 
 namespace vm {
 

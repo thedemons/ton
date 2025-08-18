@@ -17,19 +17,17 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "common/refcnt.hpp"
-#include "common/bitstring.h"
-#include "td/utils/HashSet.h"
+#include <iostream>
 
+#include "common/bitstring.h"
+#include "common/refcnt.hpp"
+#include "td/utils/HashSet.h"
+#include "td/utils/Status.h"
 #include "vm/cells/CellHash.h"
 #include "vm/cells/CellTraits.h"
 #include "vm/cells/CellUsageTree.h"
 #include "vm/cells/LevelMask.h"
 #include "vm/cells/VirtualizationParameters.h"
-
-#include "td/utils/Status.h"
-
-#include <iostream>
 
 namespace vm {
 using td::Ref;

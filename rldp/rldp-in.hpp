@@ -18,17 +18,15 @@
 */
 #pragma once
 
-#include "rldp.hpp"
-#include "rldp-peer.h"
-
-#include "tl-utils/tl-utils.hpp"
-#include "adnl/adnl-query.h"
-#include "adnl/adnl-peer-table.h"
-
-#include "td/utils/List.h"
-
 #include <map>
 #include <set>
+
+#include "adnl/adnl-peer-table.h"
+#include "adnl/adnl-query.h"
+#include "rldp-peer.h"
+#include "rldp.hpp"
+#include "td/utils/List.h"
+#include "tl-utils/tl-utils.hpp"
 
 namespace ton {
 

@@ -16,17 +16,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
+#include "adnl-local-id.h"
 #include "adnl-peer.h"
 #include "adnl-peer.hpp"
-#include "adnl-local-id.h"
-
-#include "utils.hpp"
-
-#include "td/actor/PromiseFuture.h"
-#include "td/utils/base64.h"
-#include "td/utils/Random.h"
 #include "auto/tl/ton_api.h"
+#include "td/actor/PromiseFuture.h"
+#include "td/utils/Random.h"
+#include "td/utils/base64.h"
 #include "td/utils/overloaded.h"
+#include "utils.hpp"
 
 namespace ton {
 

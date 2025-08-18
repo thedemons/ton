@@ -18,14 +18,15 @@
 */
 #pragma once
 
+#include <tuple>
+#include <utility>
+
+#include <cmath>
+
+#include "td/utils/StringBuilder.h"
 #include "td/utils/format.h"
 #include "td/utils/logging.h"
 #include "td/utils/port/Clocks.h"
-#include "td/utils/StringBuilder.h"
-
-#include <cmath>
-#include <tuple>
-#include <utility>
 
 #define BENCH(name, desc)                          \
   class name##Bench : public ::td::Benchmark {     \

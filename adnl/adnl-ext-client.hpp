@@ -18,13 +18,13 @@
 */
 #pragma once
 
-#include "auto/tl/lite_api.h"
-#include "adnl-ext-connection.hpp"
-#include "tl-utils/lite-utils.hpp"
-#include "td/utils/Random.h"
-#include "adnl-query.h"
-#include "keys/encryptor.h"
 #include "adnl-ext-client.h"
+#include "adnl-ext-connection.hpp"
+#include "adnl-query.h"
+#include "auto/tl/lite_api.h"
+#include "keys/encryptor.h"
+#include "td/utils/Random.h"
+#include "tl-utils/lite-utils.hpp"
 
 namespace ton {
 

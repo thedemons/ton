@@ -16,15 +16,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "vm/dispatch.h"
-#include "vm/continuation.h"
-#include "vm/dict.h"
-#include "vm/log.h"
-#include "vm/vm.h"
+#include <sodium.h>
+
 #include "cp0.h"
 #include "memo.h"
-
-#include <sodium.h>
+#include "vm/continuation.h"
+#include "vm/dict.h"
+#include "vm/dispatch.h"
+#include "vm/log.h"
+#include "vm/vm.h"
 
 namespace vm {
 

@@ -1,11 +1,11 @@
 #pragma once
-#include "crypto/common/refcnt.hpp"
-#include "ton/ton-types.h"
-#include "crypto/vm/cells.h"
-#include "block/transaction.h"
 #include "block/block-auto.h"
 #include "block/block-parse.h"
 #include "block/mc-config.h"
+#include "block/transaction.h"
+#include "crypto/common/refcnt.hpp"
+#include "crypto/vm/cells.h"
+#include "ton/ton-types.h"
 
 namespace emulator {
 class TransactionEmulator {

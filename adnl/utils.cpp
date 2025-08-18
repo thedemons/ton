@@ -16,12 +16,12 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "utils.hpp"
-#include "tl/tl_object_store.h"
-#include "td/utils/format.h"
-#include "td/utils/Random.h"
-#include "keys/encryptor.h"
-#include "auto/tl/ton_api.hpp"
 #include "adnl-node-id.hpp"
+#include "auto/tl/ton_api.hpp"
+#include "keys/encryptor.h"
+#include "td/utils/Random.h"
+#include "td/utils/format.h"
+#include "tl/tl_object_store.h"
+#include "utils.hpp"
 
 namespace ton {}  // namespace ton

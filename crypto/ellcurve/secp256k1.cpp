@@ -15,13 +15,14 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <cstring>
+
+#include <secp256k1_extrakeys.h>
+#include <secp256k1_recovery.h>
+
 #include "secp256k1.h"
 #include "td/utils/check.h"
 #include "td/utils/logging.h"
-
-#include <secp256k1_recovery.h>
-#include <secp256k1_extrakeys.h>
-#include <cstring>
 
 namespace td::secp256k1 {
 

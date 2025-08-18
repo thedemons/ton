@@ -16,11 +16,11 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/common.h"
-#include "td/utils/SharedObjectPool.h"
-#include "td/utils/tests.h"
-
 #include <memory>
+
+#include "td/utils/SharedObjectPool.h"
+#include "td/utils/common.h"
+#include "td/utils/tests.h"
 
 TEST(AtomicRefCnt, simple) {
   td::detail::AtomicRefCnt cnt{0};

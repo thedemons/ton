@@ -18,14 +18,13 @@
 */
 
 #pragma once
-#include "MerkleTree.h"
-#include "TorrentMeta.h"
-
-#include "td/utils/buffer.h"
-#include "td/db/utils/BlobView.h"
-
 #include <map>
 #include <set>
+
+#include "MerkleTree.h"
+#include "TorrentMeta.h"
+#include "td/db/utils/BlobView.h"
+#include "td/utils/buffer.h"
 
 namespace ton {
 class Torrent {

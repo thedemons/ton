@@ -19,13 +19,10 @@
 #pragma once
 
 #include "auto/tl/ton_api.h"
-
-#include "tl/tl_object_parse.h"
-#include "td/utils/tl_parsers.h"
-
-#include "crypto/common/bitstring.h"
-
 #include "common-utils.hpp"
+#include "crypto/common/bitstring.h"
+#include "td/utils/tl_parsers.h"
+#include "tl/tl_object_parse.h"
 
 namespace ton {
 td::BufferSlice serialize_tl_object(const ton_api::Object *T, bool boxed);

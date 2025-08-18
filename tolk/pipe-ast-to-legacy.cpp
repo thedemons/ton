@@ -14,19 +14,18 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "src-file.h"
-#include "ast.h"
 #include "ast-aux-data.h"
 #include "ast-visitor.h"
-#include "type-system.h"
+#include "ast.h"
 #include "common/refint.h"
-#include "smart-casts-cfg.h"
-#include "pack-unpack-api.h"
 #include "gen-entrypoints.h"
 #include "generics-helpers.h"
+#include "pack-unpack-api.h"
 #include "send-message-api.h"
-#include "gen-entrypoints.h"
+#include "smart-casts-cfg.h"
+#include "src-file.h"
+#include "tolk.h"
+#include "type-system.h"
 
 /*
  *   This pipe is the last one operating AST: it transforms AST to IR.

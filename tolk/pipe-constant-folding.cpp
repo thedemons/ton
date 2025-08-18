@@ -14,11 +14,11 @@
     You should have received a copy of the GNU General Public License
     along with TON Blockchain.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "ast.h"
 #include "ast-replacer.h"
-#include "type-system.h"
+#include "ast.h"
 #include "constant-evaluator.h"
+#include "tolk.h"
+#include "type-system.h"
 
 /*
  *   This pipe is supposed to do constant folding, like replacing `2 + 3` with `5`.

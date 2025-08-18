@@ -25,11 +25,11 @@
 #include "adnl-peer.h"
 #include "keys/encryptor.h"
 //#include "adnl-decryptor.h"
+#include "adnl-address-list.h"
+#include "adnl-ext-server.h"
 #include "adnl-local-id.h"
 #include "adnl-query.h"
 #include "utils.hpp"
-#include "adnl-ext-server.h"
-#include "adnl-address-list.h"
 
 namespace ton {
 

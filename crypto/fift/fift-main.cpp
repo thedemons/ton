@@ -25,33 +25,32 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "vm/stack.hpp"
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <memory>
-#include <cstring>
-#include <cstdlib>
+
 #include <cmath>
-#include <map>
-#include <functional>
 #include <getopt.h>
 
-#include "Fift.h"
 #include "Dictionary.h"
+#include "Fift.h"
 #include "SourceLookup.h"
-#include "words.h"
-
+#include "git.h"
+#include "td/utils/Parser.h"
 #include "td/utils/logging.h"
 #include "td/utils/misc.h"
-#include "td/utils/Parser.h"
 #include "td/utils/port/path.h"
-
-#include "git.h"
+#include "vm/stack.hpp"
+#include "words.h"
 
 void usage(const char* progname) {
   std::cerr << "A simple Fift interpreter. Type `bye` to quit, or `words` to get a list of all commands\n";

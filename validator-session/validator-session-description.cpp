@@ -16,10 +16,10 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "validator-session.hpp"
 #include "td/utils/Random.h"
 #include "td/utils/crypto.h"
 #include "validator-session-description.hpp"
+#include "validator-session.hpp"
 
 namespace ton {
 

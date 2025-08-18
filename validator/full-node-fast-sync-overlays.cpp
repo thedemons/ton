@@ -15,15 +15,14 @@
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "full-node-fast-sync-overlays.hpp"
-
+#include "auto/tl/ton_api_json.h"
 #include "checksum.h"
-#include "ton/ton-tl.hpp"
 #include "common/delay.h"
+#include "full-node-fast-sync-overlays.hpp"
+#include "full-node-serializer.hpp"
 #include "td/utils/JsonBuilder.h"
 #include "tl/tl_json.h"
-#include "auto/tl/ton_api_json.h"
-#include "full-node-serializer.hpp"
+#include "ton/ton-tl.hpp"
 
 namespace ton::validator::fullnode {
 

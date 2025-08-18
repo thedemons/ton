@@ -16,9 +16,10 @@
 */
 #pragma once
 
+#include <string>
+
 #include "platform-utils.h"
 #include "src-file.h"
-#include <string>
 
 namespace tolk {
 

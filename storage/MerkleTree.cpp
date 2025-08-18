@@ -18,10 +18,8 @@
 */
 
 #include "MerkleTree.h"
-
 #include "common/bitstring.h"
 #include "td/utils/UInt.h"
-
 #include "vm/cells/CellSlice.h"
 #include "vm/cells/MerkleProof.h"
 #include "vm/cellslice.h"

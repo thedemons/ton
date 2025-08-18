@@ -17,12 +17,12 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
-#include "interfaces/proof.h"
-#include "interfaces/config.h"
 #include "block/block-db.h"
 #include "block/mc-config.h"
-#include "vm/db/StaticBagOfCellsDb.h"
 #include "config.hpp"
+#include "interfaces/config.h"
+#include "interfaces/proof.h"
+#include "vm/db/StaticBagOfCellsDb.h"
 
 namespace ton {
 namespace validator {

@@ -16,11 +16,11 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "ihr-message.hpp"
-#include "vm/boc.h"
-#include "block/block-parse.h"
 #include "block/block-auto.h"
 #include "block/block-db.h"
+#include "block/block-parse.h"
+#include "ihr-message.hpp"
+#include "vm/boc.h"
 #include "vm/cells/MerkleProof.h"
 
 namespace ton {

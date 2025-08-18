@@ -27,11 +27,11 @@
 */
 #pragma once
 
+#include "block/block.h"
+#include "td/utils/Random.h"
 #include "ton/ton-types.h"
 #include "vm/boc.h"
 #include "vm/cellops.h"
-#include "td/utils/Random.h"
-#include "block/block.h"
 
 extern bool local_scripts;
 

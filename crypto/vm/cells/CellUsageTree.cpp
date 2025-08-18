@@ -16,8 +16,8 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "vm/cells/CellUsageTree.h"
 #include "DataCell.h"
+#include "vm/cells/CellUsageTree.h"
 
 namespace vm {
 //

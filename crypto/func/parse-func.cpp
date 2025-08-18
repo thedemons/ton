@@ -16,12 +16,12 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "func.h"
-#include "td/utils/crypto.h"
-#include "common/refint.h"
-#include "openssl/digest.hpp"
-#include "block/block.h"
 #include "block-parse.h"
+#include "block/block.h"
+#include "common/refint.h"
+#include "func.h"
+#include "openssl/digest.hpp"
+#include "td/utils/crypto.h"
 
 namespace sym {
 

@@ -19,12 +19,9 @@
 #pragma once
 
 #include "BinlogReaderInterface.h"
-
+#include "td/actor/actor.h"
 #include "td/db/utils/FileSyncState.h"
 #include "td/db/utils/StreamInterface.h"
-
-#include "td/actor/actor.h"
-
 #include "td/utils/misc.h"
 #include "td/utils/port/FileFd.h"
 

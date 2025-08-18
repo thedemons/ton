@@ -20,19 +20,15 @@
 
 #include <set>
 
-#include "td/utils/int_types.h"
+#include "adnl/adnl.h"
+#include "adnl/utils.hpp"
+#include "auto/tl/ton_api.hpp"
+#include "dht-node.hpp"
+#include "dht.h"
+#include "keys/encryptor.h"
 #include "td/actor/actor.h"
 #include "td/utils/List.h"
-
-#include "adnl/adnl.h"
-
-#include "adnl/utils.hpp"
-#include "keys/encryptor.h"
-
-#include "dht.h"
-#include "dht-node.hpp"
-
-#include "auto/tl/ton_api.hpp"
+#include "td/utils/int_types.h"
 
 namespace ton {
 

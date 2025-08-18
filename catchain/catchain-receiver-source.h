@@ -19,7 +19,6 @@
 #pragma once
 
 #include "catchain-receiver.h"
-
 #include "keys/encryptor.h"
 
 namespace ton {

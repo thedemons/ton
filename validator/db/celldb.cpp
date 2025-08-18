@@ -16,26 +16,20 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "celldb.hpp"
+#include <block-auto.h>
+#include <rocksdb/merge_operator.h>
 
-#include "files-async.hpp"
-#include "rootdb.hpp"
-
-#include "td/db/RocksDb.h"
-#include "rocksdb/utilities/optimistic_transaction_db.h"
-
-#include "ton/ton-tl.hpp"
-#include "ton/ton-io.hpp"
-#include "common/delay.h"
 #include "block/block-auto.h"
+#include "celldb.hpp"
+#include "common/delay.h"
+#include "files-async.hpp"
 #include "permanent-celldb/permanent-celldb-utils.h"
+#include "rocksdb/utilities/optimistic_transaction_db.h"
+#include "rootdb.hpp"
 #include "td/actor/MultiPromise.h"
-
-#include <block-auto.h>
-#include <rocksdb/merge_operator.h>
-
-#include <block-auto.h>
-#include <rocksdb/merge_operator.h>
+#include "td/db/RocksDb.h"
+#include "ton/ton-io.hpp"
+#include "ton/ton-tl.hpp"
 
 namespace ton {
 

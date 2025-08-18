@@ -25,14 +25,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
+#include <iomanip>
+#include <sstream>
+
+#include "fift/utils.h"
 #include "func/func.h"
 #include "git.h"
 #include "td/utils/JsonBuilder.h"
-#include "fift/utils.h"
-#include "td/utils/base64.h"
 #include "td/utils/Status.h"
-#include <sstream>
-#include <iomanip>
+#include "td/utils/base64.h"
 #include "vm/boc.h"
 
 td::Result<std::string> compile_internal(char* config_json) {

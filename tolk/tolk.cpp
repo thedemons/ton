@@ -23,11 +23,11 @@
     exception statement from your version. If you delete this exception statement
     from all source files in the program, then also delete it here.
 */
-#include "tolk.h"
-#include "pipeline.h"
+#include "ast.h"
 #include "compiler-state.h"
 #include "lexer.h"
-#include "ast.h"
+#include "pipeline.h"
+#include "tolk.h"
 #include "type-system.h"
 
 namespace tolk {

@@ -21,9 +21,8 @@
 #include "adnl/adnl.h"
 #include "adnl/utils.hpp"
 #include "auto/tl/ton_api.h"
-
-#include "catchain-types.h"
 #include "catchain-receiver-interface.h"
+#include "catchain-types.h"
 
 namespace ton {
 

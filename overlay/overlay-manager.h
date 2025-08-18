@@ -20,14 +20,12 @@
 
 #include <map>
 
-#include "td/actor/actor.h"
-#include "td/db/KeyValueAsync.h"
-
 #include "adnl/adnl.h"
 #include "dht/dht.h"
-
-#include "overlays.h"
 #include "overlay-id.hpp"
+#include "overlays.h"
+#include "td/actor/actor.h"
+#include "td/db/KeyValueAsync.h"
 
 namespace ton {
 

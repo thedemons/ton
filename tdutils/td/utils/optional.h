@@ -18,11 +18,11 @@
 */
 #pragma once
 
-#include "td/utils/common.h"
-#include "td/utils/Status.h"
-
 #include <type_traits>
 #include <utility>
+
+#include "td/utils/Status.h"
+#include "td/utils/common.h"
 
 namespace td {
 

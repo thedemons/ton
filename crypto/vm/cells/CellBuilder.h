@@ -17,12 +17,11 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #pragma once
+#include "common/refint.h"
+#include "td/utils/ThreadSafeCounter.h"
 #include "vm/cells/DataCell.h"
 #include "vm/cells/VirtualCell.h"
 #include "vm/vmstate.h"
-#include "common/refint.h"
-
-#include "td/utils/ThreadSafeCounter.h"
 
 namespace vm {
 

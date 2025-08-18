@@ -19,7 +19,6 @@
 #pragma once
 
 #include "StreamInterface.h"
-
 #include "td/actor/actor.h"
 #include "td/utils/port/FileFd.h"
 

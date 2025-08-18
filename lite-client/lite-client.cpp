@@ -25,41 +25,40 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "lite-client.h"
-
-#include "lite-client-common.h"
-
-#include "tl-utils/lite-utils.hpp"
-#include "auto/tl/ton_api_json.h"
 #include "auto/tl/lite_api.hpp"
-#include "td/utils/OptionParser.h"
-#include "td/utils/Time.h"
-#include "td/utils/filesystem.h"
-#include "td/utils/Random.h"
-#include "td/utils/crypto.h"
-#include "td/utils/port/signals.h"
-#include "td/utils/port/FileFd.h"
-#include "ton/lite-tl.hpp"
-#include "block/block-db.h"
-#include "block/block.h"
-#include "block/block-parse.h"
+#include "auto/tl/ton_api_json.h"
 #include "block/block-auto.h"
-#include "block/mc-config.h"
+#include "block/block-db.h"
+#include "block/block-parse.h"
+#include "block/block.h"
 #include "block/check-proof.h"
+#include "block/mc-config.h"
+#include "common/checksum.h"
+#include "crypto/common/util.h"
+#include "crypto/vm/utils.h"
+#include "lite-client-common.h"
+#include "lite-client.h"
+#include "td/utils/OptionParser.h"
+#include "td/utils/Random.h"
+#include "td/utils/Time.h"
+#include "td/utils/crypto.h"
+#include "td/utils/filesystem.h"
+#include "td/utils/port/FileFd.h"
+#include "td/utils/port/signals.h"
+#include "tl-utils/lite-utils.hpp"
+#include "ton/lite-tl.hpp"
 #include "vm/boc.h"
 #include "vm/cellops.h"
 #include "vm/cells/MerkleProof.h"
-#include "vm/vm.h"
 #include "vm/cp0.h"
 #include "vm/memo.h"
-#include "crypto/vm/utils.h"
-#include "crypto/common/util.h"
-#include "common/checksum.h"
+#include "vm/vm.h"
 
 #if TD_DARWIN || TD_LINUX
 #include <unistd.h>
 #endif
 #include <iostream>
+
 #include "git.h"
 
 using namespace std::literals::string_literals;

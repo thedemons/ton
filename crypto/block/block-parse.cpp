@@ -16,12 +16,12 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "td/utils/bits.h"
-#include "block/block-parse.h"
 #include "block/block-auto.h"
-#include "ton/ton-shard.h"
+#include "block/block-parse.h"
 #include "common/util.h"
+#include "td/utils/bits.h"
 #include "td/utils/crypto.h"
+#include "ton/ton-shard.h"
 
 namespace block {
 using namespace std::literals::string_literals;

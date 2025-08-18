@@ -18,27 +18,24 @@
 */
 #pragma once
 
-#include <vector>
 #include <deque>
 #include <functional>
-
-#include "interfaces/persistent-state.h"
-#include "td/actor/actor.h"
-
-#include "ton/ton-types.h"
+#include <vector>
 
 #include "adnl/adnl.h"
+#include "catchain/catchain-types.h"
 #include "dht/dht.h"
-#include "overlay/overlays.h"
-
 #include "interfaces/block-handle.h"
-#include "interfaces/validator-set.h"
 #include "interfaces/block.h"
+#include "interfaces/external-message.h"
+#include "interfaces/out-msg-queue-proof.h"
+#include "interfaces/persistent-state.h"
 #include "interfaces/proof.h"
 #include "interfaces/shard.h"
-#include "catchain/catchain-types.h"
-#include "interfaces/out-msg-queue-proof.h"
-#include "interfaces/external-message.h"
+#include "interfaces/validator-set.h"
+#include "overlay/overlays.h"
+#include "td/actor/actor.h"
+#include "ton/ton-types.h"
 
 namespace ton {
 

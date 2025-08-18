@@ -17,12 +17,9 @@
     Copyright 2019-2020 Telegram Systems LLP
 */
 #include "MultisigWallet.h"
-
 #include "SmartContractCode.h"
-
-#include "vm/dict.h"
-
 #include "td/utils/misc.h"
+#include "vm/dict.h"
 
 namespace ton {
 

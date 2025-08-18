@@ -14,10 +14,10 @@
     You should have received a copy of the GNU General Public License
     along with TON Blockchain.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "ast.h"
 #include "ast-visitor.h"
+#include "ast.h"
 #include "platform-utils.h"
+#include "tolk.h"
 
 /*
  *   This pipe checks for impure operations inside pure functions.

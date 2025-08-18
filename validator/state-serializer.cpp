@@ -16,15 +16,15 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "state-serializer.hpp"
+#include "common/delay.h"
 #include "crypto/block/block-auto.h"
 #include "crypto/block/block-parse.h"
+#include "state-serializer.hpp"
+#include "td/utils/HashSet.h"
 #include "td/utils/Random.h"
+#include "td/utils/filesystem.h"
 #include "td/utils/overloaded.h"
 #include "ton/ton-io.hpp"
-#include "common/delay.h"
-#include "td/utils/filesystem.h"
-#include "td/utils/HashSet.h"
 #include "vm/cells/MerkleProof.h"
 
 namespace ton {

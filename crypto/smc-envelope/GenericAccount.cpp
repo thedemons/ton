@@ -17,7 +17,6 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include "GenericAccount.h"
-
 #include "block/block-auto.h"
 #include "block/block-parse.h"
 namespace ton {

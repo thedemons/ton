@@ -16,13 +16,13 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include "vm/stack.hpp"
-#include "vm/continuation.h"
-#include "vm/box.hpp"
-#include "vm/atom.h"
-#include "vm/vmstate.h"
-#include "vm/boc.h"
 #include "td/utils/misc.h"
+#include "vm/atom.h"
+#include "vm/boc.h"
+#include "vm/box.hpp"
+#include "vm/continuation.h"
+#include "vm/stack.hpp"
+#include "vm/vmstate.h"
 
 namespace td {
 template class td::Cnt<std::string>;

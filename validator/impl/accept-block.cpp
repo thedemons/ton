@@ -18,21 +18,18 @@
 */
 #include "accept-block.hpp"
 #include "adnl/utils.hpp"
-#include "interfaces/validator-manager.h"
-#include "ton/ton-tl.hpp"
-#include "ton/ton-io.hpp"
-
+#include "block/block-auto.h"
+#include "block/block-parse.h"
+#include "block/block.h"
 #include "fabric.h"
+#include "interfaces/validator-manager.h"
+#include "ton/ton-io.hpp"
+#include "ton/ton-tl.hpp"
 #include "top-shard-descr.hpp"
-
+#include "validator/invariants.hpp"
+#include "vm/boc.h"
 #include "vm/cells.h"
 #include "vm/cells/MerkleProof.h"
-#include "vm/boc.h"
-#include "block/block.h"
-#include "block/block-parse.h"
-#include "block/block-auto.h"
-
-#include "validator/invariants.hpp"
 
 namespace ton {
 

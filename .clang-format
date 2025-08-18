@@ -49,6 +49,14 @@ DisableFormat:   false
 ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
 # ForEachMacros: [ foreach, Q_FOREACH, BOOST_FOREACH ]
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:           '.h>$'
+    Priority:        -1
+  - Regex:           '>$'
+    Priority:        -2
+  - Regex:           '^\".*\"$'
+    Priority:        0
 IndentCaseLabels: true
 IndentWidth:     2
 IndentWrappedFunctionNames: false
@@ -70,7 +78,6 @@ PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 200
 PointerAlignment: Left
 ReflowComments:  false # true
-SortIncludes: false # disabled, because we need case insensitive sort
 SpaceAfterCStyleCast: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true

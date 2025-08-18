@@ -16,12 +16,13 @@
 */
 #pragma once
 
-#include "src-file.h"
-#include "symtable.h"
-#include "td/utils/Status.h"
 #include <functional>
 #include <set>
 #include <string>
+
+#include "src-file.h"
+#include "symtable.h"
+#include "td/utils/Status.h"
 
 namespace tolk {
 

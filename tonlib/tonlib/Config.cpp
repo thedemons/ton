@@ -18,8 +18,8 @@
 */
 #include "Config.h"
 #include "adnl/adnl-node-id.hpp"
-#include "td/utils/JsonBuilder.h"
 #include "auto/tl/ton_api_json.h"
+#include "td/utils/JsonBuilder.h"
 #include "ton/ton-tl.hpp"
 
 namespace tonlib {

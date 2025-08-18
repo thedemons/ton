@@ -18,10 +18,10 @@
 */
 #pragma once
 
-#include "td/actor/actor.h"
 #include "adnl/adnl.h"
-#include "overlay/overlays.h"
 #include "catchain-types.h"
+#include "overlay/overlays.h"
+#include "td/actor/actor.h"
 
 namespace ton {
 

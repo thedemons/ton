@@ -18,20 +18,18 @@
 */
 #pragma once
 
-#include <vector>
 #include <utility>
+#include <vector>
 
-#include "ton/ton-types.h"
-
-#include "td/actor/actor.h"
-
+#include "adnl/adnl-ext-client.h"
 #include "adnl/adnl.h"
-#include "rldp/rldp.h"
-#include "rldp2/rldp.h"
 #include "dht/dht.h"
 #include "overlay/overlays.h"
+#include "rldp/rldp.h"
+#include "rldp2/rldp.h"
+#include "td/actor/actor.h"
+#include "ton/ton-types.h"
 #include "validator/validator.h"
-#include "adnl/adnl-ext-client.h"
 
 namespace ton {
 

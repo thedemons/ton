@@ -14,13 +14,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "tolk.h"
-#include "platform-utils.h"
-#include "compiler-state.h"
-#include "src-file.h"
-#include "ast.h"
-#include "ast-visitor.h"
 #include <unordered_map>
+
+#include "ast-visitor.h"
+#include "ast.h"
+#include "compiler-state.h"
+#include "platform-utils.h"
+#include "src-file.h"
+#include "tolk.h"
 
 /*
  *   This pipe resolves identifiers (local variables, globals, constants, etc.) in all functions bodies.

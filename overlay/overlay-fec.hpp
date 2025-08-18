@@ -18,8 +18,8 @@
 */
 #pragma once
 
-#include "overlay-manager.h"
 #include "fec/fec.h"
+#include "overlay-manager.h"
 #include "overlay.h"
 
 namespace ton {

@@ -18,9 +18,9 @@
 */
 #pragma once
 
-#include "encryptor.h"
-#include "crypto/Ed25519.h"
 #include "auto/tl/ton_api.h"
+#include "crypto/Ed25519.h"
+#include "encryptor.h"
 #include "tl-utils/tl-utils.hpp"
 
 namespace ton {

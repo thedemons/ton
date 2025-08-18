@@ -26,10 +26,10 @@
  * ===================================================================
 */
 
-#include <string.h>
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define KECCAK_F1600_STATE 200
 #define MIN(x, y) ((x) < (y) ? (x) : (y))

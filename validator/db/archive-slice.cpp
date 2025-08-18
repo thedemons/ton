@@ -17,14 +17,13 @@
     Copyright 2019-2020 Telegram Systems LLP
 */
 #include "archive-slice.hpp"
-
+#include "common/delay.h"
+#include "db-utils.h"
+#include "files-async.hpp"
 #include "td/actor/MultiPromise.h"
-#include "validator/fabric.h"
 #include "td/db/RocksDb.h"
 #include "td/utils/port/path.h"
-#include "common/delay.h"
-#include "files-async.hpp"
-#include "db-utils.h"
+#include "validator/fabric.h"
 
 namespace ton {
 

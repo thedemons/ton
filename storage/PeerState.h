@@ -18,16 +18,15 @@
 */
 
 #pragma once
+#include <atomic>
+#include <map>
+
+#include "SpeedLimiter.h"
+#include "TorrentInfo.h"
+#include "td/actor/actor.h"
 #include "td/utils/buffer.h"
 #include "td/utils/common.h"
 #include "td/utils/optional.h"
-
-#include "td/actor/actor.h"
-#include "TorrentInfo.h"
-#include "SpeedLimiter.h"
-
-#include <map>
-#include <atomic>
 
 namespace ton {
 using PeerId = td::uint64;

@@ -23,8 +23,8 @@
     exception statement from your version. If you delete this exception statement
     from all source files in the program, then also delete it here.
 */
-#include "tolk.h"
 #include "compiler-state.h"
+#include "tolk.h"
 
 /*
  *   This pipe finds unused symbols (global functions and variables) to strip them off codegen.

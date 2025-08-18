@@ -25,21 +25,21 @@
 
     Copyright 2017-2020 Telegram Systems LLP
 */
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <cstring>
 #include <cassert>
-#include "td/utils/OptionParser.h"
-#include "keys/encryptor.h"
-#include "auto/tl/ton_api_json.h"
-#include "td/utils/filesystem.h"
-#include "common/io.hpp"
-#include "common/checksum.h"
-#include "tl/tl_json.h"
+#include <cstring>
+#include <iomanip>
+#include <iostream>
+#include <string>
+
 #include "auto/tl/ton_api.h"
 #include "auto/tl/ton_api_json.h"
+#include "common/checksum.h"
+#include "common/io.hpp"
 #include "git.h"
+#include "keys/encryptor.h"
+#include "td/utils/OptionParser.h"
+#include "td/utils/filesystem.h"
+#include "tl/tl_json.h"
 
 int main(int argc, char *argv[]) {
   std::string in_f;

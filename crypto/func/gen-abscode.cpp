@@ -17,6 +17,7 @@
     Copyright 2017-2020 Telegram Systems LLP
 */
 #include <numeric>
+
 #include "func.h"
 
 using namespace std::literals::string_literals;

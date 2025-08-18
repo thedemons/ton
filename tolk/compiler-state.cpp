@@ -14,9 +14,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TON Blockchain Library.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "compiler-state.h"
 #include <iostream>
 #include <sstream>
+
+#include "compiler-state.h"
 
 namespace tolk {
 

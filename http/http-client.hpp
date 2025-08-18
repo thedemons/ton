@@ -18,7 +18,6 @@
 */
 #include "http-client.h"
 #include "http-outbound-connection.h"
-
 #include "td/utils/Random.h"
 
 namespace ton {

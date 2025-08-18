@@ -16,8 +16,9 @@
 */
 #pragma once
 
-#include "full-node.h"
 #include <fstream>
+
+#include "full-node.h"
 
 namespace ton::validator::fullnode {
 

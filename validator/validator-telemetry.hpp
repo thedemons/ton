@@ -24,10 +24,10 @@
     from all source files in the program, then also delete it here.
 */
 #pragma once
-#include "overlay.h"
-#include "td/actor/actor.h"
 #include "adnl/adnl.h"
 #include "interfaces/shard.h"
+#include "overlay.h"
+#include "td/actor/actor.h"
 
 namespace ton::validator {
 class ValidatorManager;
