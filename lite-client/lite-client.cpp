@@ -34,7 +34,6 @@
 #include "block/check-proof.h"
 #include "block/mc-config.h"
 #include "common/checksum.h"
-#include "crypto/common/util.h"
 #include "crypto/vm/utils.h"
 #include "lite-client-common.h"
 #include "lite-client.h"
@@ -60,6 +59,9 @@
 #include <iostream>
 
 #include "git.h"
+
+// FIXME: base64_decode here clashes with one from td
+#include "crypto/common/util.h"
 
 using namespace std::literals::string_literals;
 using td::Ref;

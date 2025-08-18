@@ -19,10 +19,14 @@
 #pragma once
 #include <ctime>
 
+#include "td/utils/as.h"
 #include "td/utils/int_types.h"
 #include "ton/ton-types.h"
 
 namespace block {
+
+using FileHash = ton::Bits256;
+using RootHash = ton::Bits256;
 
 namespace log {
 
