@@ -90,6 +90,24 @@ class PackageWriter : public td::actor::Actor {
   std::weak_ptr<Package> package_;
   bool async_mode_ = false;
   std::shared_ptr<PackageStatistics> statistics_;
+
+  bool wait_for_sync_ = false;
+  std::vector<td::Promise<td::Unit>> sync_waiters_;
+
+  void postponed_sync() {
+    if (wait_for_sync_) {
+      wait_for_sync_ = false;
+      auto p = package_.lock();
+      if (p) {
+        p->sync();
+      }
+      auto waiters = std::move(sync_waiters_);
+      sync_waiters_.clear();
+      for (auto &promise : waiters) {
+        promise.set_result(td::Unit{});
+      }
+    }
+  }
 };
 
 class ArchiveLru;

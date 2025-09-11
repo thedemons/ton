@@ -118,14 +118,23 @@ void PackageWriter::append(std::string filename, td::BufferSlice data,
       return;
     }
     start = td::Timestamp::now();
-    offset = p->append(std::move(filename), std::move(data), !async_mode_);
+    offset = p->append(std::move(filename), std::move(data), false);
     end = td::Timestamp::now();
     size = p->size();
   }
   if (statistics_) {
     statistics_->record_write((end.at() - start.at()) * 1e6, data_size);
   }
-  promise.set_value(std::pair<td::uint64, td::uint64>{offset, size});
+  sync_waiters_.push_back([promise = std::move(promise), offset, size](td::Result<td::Unit> R) mutable {
+    if (R.is_error()) {
+      return;
+    }
+    promise.set_value(std::pair<td::uint64, td::uint64>{offset, size});
+  });
+  if (!wait_for_sync_) {
+    wait_for_sync_ = true;
+    td::actor::send_closure_later(actor_id(this), &PackageWriter::postponed_sync);
+  }
 }
 
 class PackageReader : public td::actor::Actor {
@@ -849,7 +858,7 @@ void ArchiveSlice::add_package(td::uint32 seqno, ShardIdFull shard_prefix, td::u
   if (version >= 1) {
     pack->truncate(size).ensure();
   }
-  auto writer = td::actor::create_actor<PackageWriter>("writer", pack, async_mode_, statistics_.pack_statistics);
+  auto writer = td::actor::create_actor<PackageWriter>("writer", pack, false, statistics_.pack_statistics);
   packages_.emplace_back(std::move(pack), std::move(writer), seqno, shard_prefix, path, idx, version);
 }
 
@@ -1080,7 +1089,7 @@ void ArchiveSlice::truncate(BlockSeqno masterchain_seqno, ConstBlockHandle, td::
     package->writer.reset();
     td::unlink(package->path).ensure();
     td::rename(package->path + ".new", package->path).ensure();
-    package->writer = td::actor::create_actor<PackageWriter>("writer", new_package, async_mode_);
+    package->writer = td::actor::create_actor<PackageWriter>("writer", new_package, false);
   }
 
   std::vector<PackageInfo> new_packages_info;
