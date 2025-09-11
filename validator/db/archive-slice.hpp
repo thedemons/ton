@@ -137,7 +137,8 @@ class ArchiveSlice : public td::actor::Actor {
   void end_async_query();
 
   void begin_transaction();
-  void commit_transaction();
+  void commit_transaction(td::Promise<td::Unit> promise);
+  void commit_transaction_now();
 
   void add_file_cont(size_t idx, FileReference ref_id, td::uint64 offset, td::uint64 size,
                      td::Promise<td::Unit> promise);
@@ -158,8 +159,9 @@ class ArchiveSlice : public td::actor::Actor {
   bool destroyed_ = false;
   bool async_mode_ = false;
   bool huge_transaction_started_ = false;
+  std::vector<td::Promise<td::Unit>> commit_waiters_;
+  bool waiting_for_commit_ = false;
   bool sliced_mode_{false};
-  td::uint32 huge_transaction_size_ = 0;
   td::uint32 slice_size_{100};
   bool shard_separated_{false};
   td::uint32 shard_split_depth_ = 0;

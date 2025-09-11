@@ -238,16 +238,18 @@ void ArchiveSlice::add_handle(BlockHandle handle, td::Promise<td::Unit> promise)
     kv_->set(shard_key.as_slice(), shard_value.as_slice()).ensure();
   }
   kv_->set(get_db_key_block_info(handle->id()), handle->serialize().as_slice()).ensure();
-  commit_transaction();
-
-  handle->flushed_upto(version);
-  handle->set_handle_moved_to_archive();
-
-  if (handle->need_flush()) {
-    update_handle(std::move(handle), std::move(promise));
-  } else {
-    promise.set_value(td::Unit());
-  }
+  commit_transaction([this, version, handle, promise = std::move(promise)](td::Result<td::Unit> R) mutable {
+    if (R.is_error()) {
+      return;
+    }
+    handle->flushed_upto(version);
+    handle->set_handle_moved_to_archive();
+    if (handle->need_flush()) {
+      update_handle(std::move(handle), std::move(promise));
+    } else {
+      promise.set_value(td::Unit());
+    }
+  });
 }
 
 void ArchiveSlice::update_handle(BlockHandle handle, td::Promise<td::Unit> promise) {
@@ -268,12 +270,15 @@ void ArchiveSlice::update_handle(BlockHandle handle, td::Promise<td::Unit> promi
     kv_->set(get_db_key_block_info(handle->id()), handle->serialize().as_slice()).ensure();
     handle->flushed_upto(version);
   } while (handle->need_flush());
-  commit_transaction();
-  if (!temp_) {
-    handle->set_handle_moved_to_archive();
-  }
-
-  promise.set_value(td::Unit());
+  commit_transaction([temp = temp_, handle, promise = std::move(promise)](td::Result<td::Unit> R) mutable {
+    if (R.is_error()) {
+      return;
+    }
+    if (!temp) {
+      handle->set_handle_moved_to_archive();
+    }
+    promise.set_value(td::Unit());
+  });
 }
 
 void ArchiveSlice::add_file(BlockHandle handle, FileReference ref_id, td::BufferSlice data,
@@ -325,8 +330,7 @@ void ArchiveSlice::add_file_cont(size_t idx, FileReference ref_id, td::uint64 of
     kv_->set("status", td::to_string(size)).ensure();
     kv_->set(ref_id.hash().to_hex(), td::to_string(offset)).ensure();
   }
-  commit_transaction();
-  promise.set_value(td::Unit());
+  commit_transaction(std::move(promise));
 }
 
 void ArchiveSlice::get_handle(BlockIdExt block_id, td::Promise<BlockHandle> promise) {
@@ -711,6 +715,7 @@ void ArchiveSlice::do_close() {
   }
   CHECK(status_ != st_closed && active_queries_ == 0);
   LOG(DEBUG) << "Closing archive slice " << db_path_;
+  commit_transaction_now();
   status_ = st_closed;
   kv_ = {};
   if (statistics_.pack_statistics) {
@@ -738,39 +743,37 @@ void ArchiveSlice::end_async_query() {
 }
 
 void ArchiveSlice::begin_transaction() {
-  if (!async_mode_ || !huge_transaction_started_) {
+  if (!huge_transaction_started_) {
     kv_->begin_transaction().ensure();
-    if (async_mode_) {
-      huge_transaction_started_ = true;
-    }
+    huge_transaction_started_ = true;
   }
 }
 
-void ArchiveSlice::commit_transaction() {
-  if (!async_mode_ || huge_transaction_size_++ >= 100) {
-    kv_->commit_transaction().ensure();
-    if (async_mode_) {
-      huge_transaction_size_ = 0;
-      huge_transaction_started_ = false;
-    }
+void ArchiveSlice::commit_transaction(td::Promise<td::Unit> promise) {
+  commit_waiters_.push_back(std::move(promise));
+  if (!waiting_for_commit_) {
+    waiting_for_commit_ = true;
+    td::actor::send_closure_later(actor_id(this), &ArchiveSlice::commit_transaction_now);
+  }
+}
+
+void ArchiveSlice::commit_transaction_now() {
+  waiting_for_commit_ = false;
+  if (!huge_transaction_started_) {
+    return;
+  }
+  kv_->commit_transaction().ensure();
+  huge_transaction_started_ = false;
+
+  auto waiters = std::move(commit_waiters_);
+  commit_waiters_.clear();
+  for (auto &p : waiters) {
+    p.set_value(td::Unit{});
   }
 }
 
 void ArchiveSlice::set_async_mode(bool mode, td::Promise<td::Unit> promise) {
-  async_mode_ = mode;
-  if (!async_mode_ && huge_transaction_started_ && kv_) {
-    kv_->commit_transaction().ensure();
-    huge_transaction_size_ = 0;
-    huge_transaction_started_ = false;
-  }
-
-  td::MultiPromise mp;
-  auto ig = mp.init_guard();
-  ig.add_promise(std::move(promise));
-
-  for (auto &p : packages_) {
-    td::actor::send_closure(p.writer, &PackageWriter::set_async_mode, mode, ig.get_promise());
-  }
+  promise.set_value(td::Unit{});
 }
 
 ArchiveSlice::ArchiveSlice(td::uint32 archive_id, bool key_blocks_only, bool temp, bool finalized,
@@ -817,7 +820,7 @@ td::Result<ArchiveSlice::PackageInfo *> ArchiveSlice::choose_package(BlockSeqno 
     if (shard_separated_) {
       kv_->set(PSTRING() << "info." << v, package_info_to_str(masterchain_seqno, shard_prefix)).ensure();
     }
-    commit_transaction();
+    commit_transaction_now();
     add_package(masterchain_seqno, shard_prefix, 0, default_package_version());
     return &packages_[v];
   } else {
