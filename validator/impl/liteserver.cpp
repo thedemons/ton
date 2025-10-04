@@ -495,7 +495,7 @@ void LiteQuery::perform_getState(BlockIdExt blkid) {
     fatal_error("invalid BlockIdExt");
     return;
   }
-  if (blkid.id.seqno > 1000) {
+  if (blkid.is_masterchain() && blkid.id.seqno > 1000) {
     fatal_error("cannot request total state: possibly too large");
     return;
   }
