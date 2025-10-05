@@ -294,7 +294,8 @@ td::Result<td::BufferSlice> ShardStateQ::serialize() const {
   TD_PERF_COUNTER(serialize_state);
   LOG(INFO) << "step2 getShardState.serialize()";
   td::PerfWarningTimer perf_timer_{"serializestate", 0.1};
-  LOG(INFO) << "step2 getShardState.serialize()";
+  LOG(INFO) << "step2.1 getShardState.serialize() data len " << data.length();
+  LOG(INFO) << "step2.2 getShardState.serialize() lt " << lt ;
   if (!data.is_null()) {
     LOG(INFO) << "step3 getShardState.serialize()";
     return data.clone();
@@ -304,6 +305,7 @@ td::Result<td::BufferSlice> ShardStateQ::serialize() const {
     LOG(INFO) << "step5 getShardState.serialize()";
     return td::Status::Error(-666, "cannot serialize an uninitialized state");
   }
+  init()
   LOG(INFO) << "step6 getShardState.serialize()";
   vm::BagOfCells new_boc;
   new_boc.set_root(root);
