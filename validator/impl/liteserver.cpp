@@ -526,7 +526,7 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   LOG(INFO) << "obtained data for getShardState(" << blkid.to_str() << ")";
   CHECK(state.not_null());
   LOG(INFO) << "step1 getShardState(" << blkid.to_str() << ")";
-  auto res = state->serialize();
+  auto res = vm::std_boc_serialize(std::move(state->root_cell()));
   LOG(INFO) << "step2 getShardState(" << blkid.to_str() << ")";
   if (res.is_error()) {
     LOG(INFO) << "cannot serialize data from getShardState(" << blkid.to_str() << ")";
