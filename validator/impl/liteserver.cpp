@@ -490,7 +490,7 @@ void LiteQuery::continue_getBlockHeader(BlockIdExt blkid, int mode, Ref<ton::val
 }
 
 void LiteQuery::perform_getState(BlockIdExt blkid) {
-  LOG(INFO) << "started a getState(" << blkid.to_str() << ") liteserver query";
+  LOG(INFO) << "started a getShardState(" << blkid.to_str() << ") liteserver query";
   if (!blkid.is_valid_full()) {
     fatal_error("invalid BlockIdExt");
     return;
@@ -523,19 +523,28 @@ void LiteQuery::perform_getState(BlockIdExt blkid) {
 }
 
 void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardState> state) {
-  LOG(INFO) << "obtained data for getState(" << blkid.to_str() << ")";
+  LOG(INFO) << "obtained data for getShardState(" << blkid.to_str() << ")";
   CHECK(state.not_null());
+  LOG(INFO) << "step1 getShardState(" << blkid.to_str() << ")";
   auto res = state->serialize();
+  LOG(INFO) << "step2 getShardState(" << blkid.to_str() << ")";
   if (res.is_error()) {
+    LOG(INFO) << "cannot serialize data from getShardState(" << blkid.to_str() << ")";
     abort_query(res.move_as_error());
     return;
   }
+  LOG(INFO) << "step3 getShardState(" << blkid.to_str() << ")";
   auto data = res.move_as_ok();
+  LOG(INFO) << "step4 getShardState(" << blkid.to_str() << ")";
   FileHash file_hash;
+  LOG(INFO) << "step5 getShardState(" << blkid.to_str() << ")";
   td::sha256(data, file_hash.as_slice());
+  LOG(INFO) << "step6 getShardState(" << blkid.to_str() << ")";
   auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockState>(
       ton::create_tl_lite_block_id(blkid), state->root_hash(), file_hash, std::move(data));
-  finish_query(std::move(b));
+  LOG(INFO) << "step7 getShardState(" << blkid.to_str() << ")";
+  auto result = finish_query(std::move(b));
+  LOG(INFO) << "step8 getShardState(" << blkid.to_str() << ") " << result;
 }
 
 void LiteQuery::continue_getZeroState(BlockIdExt blkid, td::BufferSlice state) {
