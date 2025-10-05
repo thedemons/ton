@@ -290,25 +290,39 @@ td::Result<std::pair<td::Ref<ShardState>, td::Ref<ShardState>>> ShardStateQ::spl
 }
 
 td::Result<td::BufferSlice> ShardStateQ::serialize() const {
+  LOG(INFO) << "step1 getShardState.serialize()";
   TD_PERF_COUNTER(serialize_state);
+  LOG(INFO) << "step2 getShardState.serialize()";
   td::PerfWarningTimer perf_timer_{"serializestate", 0.1};
+  LOG(INFO) << "step2 getShardState.serialize()";
   if (!data.is_null()) {
+    LOG(INFO) << "step3 getShardState.serialize()";
     return data.clone();
   }
+  LOG(INFO) << "step4 getShardState.serialize()";
   if (root.is_null()) {
+    LOG(INFO) << "step5 getShardState.serialize()";
     return td::Status::Error(-666, "cannot serialize an uninitialized state");
   }
+  LOG(INFO) << "step6 getShardState.serialize()";
   vm::BagOfCells new_boc;
   new_boc.set_root(root);
+  LOG(INFO) << "step7 getShardState.serialize()";
   auto res = new_boc.import_cells();
+  LOG(INFO) << "step8 getShardState.serialize()";
   if (res.is_error()) {
+    LOG(INFO) << "step9 getShardState.serialize()";
     return res.move_as_error();
   }
+  LOG(INFO) << "step10 getShardState.serialize()";
   auto st_res = new_boc.serialize_to_slice(31);
+  LOG(INFO) << "step11 getShardState.serialize()";
   if (st_res.is_error()) {
+    LOG(INFO) << "step12 getShardState.serialize()";
     LOG(ERROR) << "cannot serialize a shardchain state";
     return st_res.move_as_error();
   }
+  LOG(INFO) << "step13 getShardState.serialize()";
   // data = st_res.move_as_ok();
   // return data.clone();
   return st_res.move_as_ok();
