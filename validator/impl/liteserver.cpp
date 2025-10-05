@@ -522,6 +522,42 @@ void LiteQuery::perform_getState(BlockIdExt blkid) {
   }
 }
 
+class BagOfCellsLogger : public vm::BagOfCellsLogger {
+ public:
+  BagOfCellsLogger() = default;
+  explicit BagOfCellsLogger() {
+  }
+
+  void start_stage(std::string stage) {
+    LOG(INFO) << "stepboc getShardState start_stage " << stage;
+    stage_ = std::move(stage);
+  }
+  void finish_stage(td::Slice desc) {
+    LOG(INFO) << "stepboc getShardState finish_stage " << desc;
+  }
+  td::Status on_cells_processed(size_t count) {
+    processed_cells_ += count;
+    LOG(INFO) << "stepboc getShardState on_cells_processed " << count << "/" << processed_cells_;
+
+    if (log_speed_at_.is_in_past()) {
+      double period = td::Timestamp::now().at() - last_speed_log_.at();
+
+      LOG(INFO) << "stepboc getShardState serializer: " << stage_ << " " << (double)processed_cells_ / period
+                << " cells/s";
+      processed_cells_ = 0;
+      last_speed_log_ = td::Timestamp::now();
+      log_speed_at_ = td::Timestamp::in(LOG_SPEED_PERIOD);
+    }
+    return td::Status::OK();
+  }
+
+ private:
+  std::string stage_;
+  td::Timestamp log_speed_at_;
+  size_t processed_cells_ = 0;
+  td::Timestamp last_speed_log_;
+  static constexpr double LOG_SPEED_PERIOD = 120.0;
+};
 void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardState> state) {
   LOG(INFO) << "obtained data for getShardState(" << blkid.to_str() << ")";
   CHECK(state.not_null());
@@ -541,7 +577,9 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
 
   // auto res = vm::std_boc_serialize(std::move(accounts_dict.get_root_cell()), 31);
 
+  BagOfCellsLogger logger{}; 
   vm::BagOfCells boc;
+  boc.set_logger(&logger);
   boc.add_root(std::move(accounts_dict.get_root_cell()));
   LOG(INFO) << "step1.8 getShardState(" << blkid.to_str() << ")";
   auto res1 = boc.import_cells();
