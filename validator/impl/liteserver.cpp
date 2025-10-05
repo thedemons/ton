@@ -526,7 +526,7 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   LOG(INFO) << "obtained data for getShardState(" << blkid.to_str() << ")";
   CHECK(state.not_null());
   LOG(INFO) << "step1 getShardState(" << blkid.to_str() << ")";
-  state->init();
+  // ((ShardStateQ*)state.get())->init();
   LOG(INFO) << "step1.5 getShardState(" << blkid.to_str() << ")";
   auto res = state->serialize();
   LOG(INFO) << "step2 getShardState(" << blkid.to_str() << ")";
