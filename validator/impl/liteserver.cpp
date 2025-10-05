@@ -527,7 +527,7 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   CHECK(state.not_null());
   LOG(INFO) << "step1 getShardState(" << blkid.to_str() << ")";
 
-  vm::MerkleProofBuilder pb{state_->root_cell()};
+  vm::MerkleProofBuilder pb{state->root_cell()};
   LOG(INFO) << "step1.1 getShardState(" << blkid.to_str() << ")";
   block::gen::ShardStateUnsplit::Record sstate;
   if (!tlb::unpack_cell(pb.root(), sstate)) {
