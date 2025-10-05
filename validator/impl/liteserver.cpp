@@ -526,7 +526,18 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   LOG(INFO) << "obtained data for getShardState(" << blkid.to_str() << ")";
   CHECK(state.not_null());
   LOG(INFO) << "step1 getShardState(" << blkid.to_str() << ")";
-  auto res = vm::std_boc_serialize(std::move(state->root_cell()));
+
+  vm::MerkleProofBuilder pb{state_->root_cell()};
+  LOG(INFO) << "step1.1 getShardState(" << blkid.to_str() << ")";
+  block::gen::ShardStateUnsplit::Record sstate;
+  if (!tlb::unpack_cell(pb.root(), sstate)) {
+    LOG(INFO) << "step1.2 getShardState(" << blkid.to_str() << ")";
+    fatal_error("cannot unpack state header");
+    return;
+  }
+  LOG(INFO) << "step1.3 getShardState(" << blkid.to_str() << ")";
+
+  auto res = vm::std_boc_serialize(std::move(sstate.accounts));
   LOG(INFO) << "step2 getShardState(" << blkid.to_str() << ")";
   if (res.is_error()) {
     LOG(INFO) << "cannot serialize data from getShardState(" << blkid.to_str() << ")";
