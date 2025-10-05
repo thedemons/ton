@@ -526,9 +526,33 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   LOG(INFO) << "obtained data for getShardState(" << blkid.to_str() << ")";
   CHECK(state.not_null());
   LOG(INFO) << "step1 getShardState(" << blkid.to_str() << ")";
-  // ((ShardStateQ*)state.get())->init();
+  // auto res = state->serialize();
+
+  block::gen::ShardStateUnsplit::Record sstate;
   LOG(INFO) << "step1.5 getShardState(" << blkid.to_str() << ")";
-  auto res = state->serialize();
+  if (!tlb::unpack_cell(std::move(state->root_cell()), sstate)) {
+    LOG(INFO) << "step1.6555555 getShardState(" << blkid.to_str() << ")";
+    fatal_error("cannot unpack state header");
+    return;
+  }
+  LOG(INFO) << "step1.6 getShardState(" << blkid.to_str() << ")";
+  vm::AugmentedDictionary accounts_dict{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
+  LOG(INFO) << "step1.7 getShardState(" << blkid.to_str() << ")";
+
+  // auto res = vm::std_boc_serialize(std::move(accounts_dict.get_root_cell()), 31);
+
+  vm::BagOfCells boc;
+  boc.add_root(std::move(accounts_dict.get_root_cell()));
+  LOG(INFO) << "step1.8 getShardState(" << blkid.to_str() << ")";
+  auto res1 = boc.import_cells();
+  LOG(INFO) << "step1.81 getShardState(" << blkid.to_str() << ")";
+  if (res1.is_error()) {
+    LOG(INFO) << "step1.82 getShardState(" << blkid.to_str() << ")";
+    return;
+  }
+  LOG(INFO) << "step1.9 getShardState(" << blkid.to_str() << ")";
+  auto res= boc.serialize_to_slice(31);
+
   LOG(INFO) << "step2 getShardState(" << blkid.to_str() << ")";
   if (res.is_error()) {
     LOG(INFO) << "cannot serialize data from getShardState(" << blkid.to_str() << ")";
