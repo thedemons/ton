@@ -525,8 +525,6 @@ void LiteQuery::perform_getState(BlockIdExt blkid) {
 class BagOfCellsLogger : public vm::BagOfCellsLogger {
  public:
   BagOfCellsLogger() = default;
-  explicit BagOfCellsLogger() {
-  }
 
   void start_stage(std::string stage) {
     LOG(INFO) << "stepboc getShardState start_stage " << stage;
