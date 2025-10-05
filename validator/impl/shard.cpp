@@ -305,7 +305,6 @@ td::Result<td::BufferSlice> ShardStateQ::serialize() const {
     LOG(INFO) << "step5 getShardState.serialize()";
     return td::Status::Error(-666, "cannot serialize an uninitialized state");
   }
-  init();
   LOG(INFO) << "step6 getShardState.serialize()";
   vm::BagOfCells new_boc;
   new_boc.set_root(root);
