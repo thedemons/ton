@@ -557,7 +557,7 @@ class BagOfCellsLogger : public vm::BagOfCellsLogger {
   static constexpr double LOG_SPEED_PERIOD = 120.0;
 };
 void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardState> state) {
-  LOG(INFO) << "obtained data for getShardState(" << blkid.to_str() << ")";
+  LOG(INFO) << "continue_getState obtained data for getShardState(" << blkid.to_str() << ")";
   CHECK(state.not_null());
   LOG(INFO) << "step1 getShardState(" << blkid.to_str() << ")";
   // auto res = state->serialize();
@@ -574,10 +574,10 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   LOG(INFO) << "step1.7 getShardState(" << blkid.to_str() << ")";
 
   // auto res = vm::std_boc_serialize(std::move(accounts_dict.get_root_cell()), 31);
-
   BagOfCellsLogger logger{}; 
   vm::BagOfCells boc;
   boc.set_logger(&logger);
+  logger.start_stage("add_root");
   boc.add_root(std::move(accounts_dict.get_root_cell()));
   LOG(INFO) << "step1.8 getShardState(" << blkid.to_str() << ")";
   auto res1 = boc.import_cells();
