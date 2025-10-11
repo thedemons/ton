@@ -554,42 +554,62 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
 }
 
 void LiteQuery::finish_getState() {
-  LOG(INFO) << "getShardState finished get state and block " << blk_id_.to_str() << "";
+  LOG(INFO) << "getShardState finished get state and block " << blk_id_.to_str();
 
   block::gen::Block::Record blk;
   block::gen::ShardStateUnsplit::Record sstate;
   if (!tlb::unpack_cell(state_->root_cell(), sstate)) {
-    fatal_error("cannot unpack state header");
     LOG(INFO) << "getShardState cannot unpack state header";
+    fatal_error("cannot unpack state header");
     return;
   }
+
+  LOG(INFO) << "getShardState unpacked sstate";
+
   if (!tlb::unpack_cell(block_->root_cell(), blk)) {
-    fatal_error("cannot unpack block data");
     LOG(INFO) << "getShardState cannot unpack block data";
+    fatal_error("cannot unpack block data");
     return;
   }
+
+  LOG(INFO) << "getShardState unpacked blk";
+
   vm::CellSlice upd_cs{vm::NoVmSpec(), blk.state_update};
   if (!(upd_cs.is_special() && upd_cs.prefetch_long(8) == 4  // merkle update
         && upd_cs.size_ext() == 0x20228)) {
-    fatal_error("invalid Merkle update in block");
     LOG(INFO) << "getShardState invalid Merkle update in block";
+    fatal_error("invalid Merkle update in block");
     return;
   }
+
+  LOG(INFO) << "getShardState unpacked upd_cs";
+
   auto update_from = upd_cs.fetch_ref();
+  LOG(INFO) << "getShardState unpacked upd_cs ref 1";
+
   auto update_to = upd_cs.fetch_ref();
+  LOG(INFO) << "getShardState unpacked upd_cs ref 2";
 
   block::gen::ShardState::Record_cons1 sstate_pruned;
   if (!tlb::unpack_cell(update_to, sstate_pruned)) {
-    fatal_error("cannot unpack state pruned header");
     LOG(INFO) << "getShardState cannot unpack state pruned header";
+    fatal_error("cannot unpack state pruned header");
     return;
   }
 
+  LOG(INFO) << "getShardState unpacked sstate_pruned";
+
   vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
+  LOG(INFO) << "getShardState unpacked full_accounts";
+
   vm::AugmentedDictionary updated_accounts{sstate_pruned.x, 256, block::tlb::aug_ShardAccounts};
+  LOG(INFO) << "getShardState unpacked updated_accounts";
+
   for (auto it = updated_accounts.begin(); it != updated_accounts.end(); ++it) {
     LOG(INFO) << "getShardState updated_accounts " << td::Bits256(it.cur_pos()).to_hex();
   }
+
+  LOG(INFO) << "getShardState done";
   fatal_error("unimplemented");
 }
 
