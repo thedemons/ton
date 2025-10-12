@@ -647,7 +647,7 @@ void LiteQuery::finish_getState() {
 
   for (auto& key : keys) {
     auto acc_csr = full_accounts.lookup(key);
-    if (!new_accounts.set_ref(key, acc_csr->get_base_cell())) {
+    if (!new_accounts.set(key, acc_csr)) {
       fatal_error("unable to write new_accounts");
       return;
     }
@@ -657,6 +657,7 @@ void LiteQuery::finish_getState() {
     block_->root_cell(),
     updated_accounts.get_root_cell(),
     full_accounts.lookup(keys[0])->get_base_cell(),
+    new_accounts.lookup(keys[0])->get_base_cell(),
   });
 
   if (res.is_error()) {
