@@ -615,10 +615,12 @@ void LiteQuery::finish_getState() {
   LOG(INFO) << "getShardState unpacked updated_accounts";
 
   for (auto it = updated_accounts.begin(); it != updated_accounts.end(); ++it) {
-    LOG(INFO) << "getShardState updated_accounts " << td::Bits256(it.cur_pos()).to_hex();
+    auto key = td::Bits256(it.cur_pos());
+    LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
 
     auto acc_csr = full_accounts.lookup(acc_addr_);
-    LOG(INFO) << "getShardState setting updated_account " << updated_accounts.set(it.cur_pos(), acc_csr, vm::DictionaryBase::SetMode::Replace);
+    LOG(INFO) << "getShardState setting updated_account "
+              << updated_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Replace);
   }
 
   LOG(INFO) << "getShardState start serialization";
