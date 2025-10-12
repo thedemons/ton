@@ -544,8 +544,10 @@ void collect_keys(const Ref<vm::Cell>& cell, int key_bits, td::BitPtr key_buffer
   if (cell.is_null())
     return;
 
+  bool special;
+  Ref<vm::CellSlice> cs = vm::load_cell_slice_ref_special(std::move(cell), special);
   // Use LabelParser, but do NOT parse the value at leaves!
-  vm::dict::LabelParser label(cell, key_bits - depth, vm::dict::LabelParser::chk_none);
+  vm::dict::LabelParser label(cs, key_bits - depth, vm::dict::LabelParser::chk_none);
 
   // Copy label bits to key_buffer
   int label_len = label.l_bits;
