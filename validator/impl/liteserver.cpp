@@ -673,6 +673,7 @@ void LiteQuery::finish_getState() {
 
   std::vector<td::Bits256> keys = extract_all_keys(updated_accounts);
 
+  vm::AugmentedDictionary new_accounts{256, block::tlb::aug_ShardAccounts};
   // try {
   //   auto it = updated_accounts.begin();
 
@@ -700,10 +701,15 @@ void LiteQuery::finish_getState() {
   // }
 
   LOG(INFO) << "getShardState finished updated_accounts iterator";
+  
+  for (auto key : keys) {
+    LOG(INFO) << "getShardState account " << key.to_hex();
+  }
+
   for (auto key : keys) {
     auto acc_csr = full_accounts.lookup(key);
-    LOG(INFO) << "getShardState setting updated_account " << key.to_hex() << " result: "
-              << updated_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Replace);
+    LOG(INFO) << "getShardState setting updated_account " << key.to_hex()
+              << " result: " << new_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Set);
   }
 
   LOG(INFO) << "getShardState start serialization";
