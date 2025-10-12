@@ -634,13 +634,13 @@ void LiteQuery::finish_getState() {
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
 
   std::vector<td::Bits256> keys = extract_all_keys(updated_accounts);
-  vm::AugmentedDictionary new_accounts{256, block::tlb::aug_ShardAccounts}; 
+  vm::Dictionary new_accounts{256};
 
   // LOG(INFO) << "getShardState shard accounts length " << keys.size();
 
   for (auto& key : keys) {
     auto acc_csr = full_accounts.lookup(key);
-    if (!new_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Set)) {
+    if (!new_accounts.set(key, acc_csr)) {
       fatal_error("unable to write new_accounts");
       return;
     }
@@ -648,8 +648,7 @@ void LiteQuery::finish_getState() {
 
   auto res = vm::std_boc_serialize_multi({
     block_->root_cell(),
-    updated_accounts.get_root_cell(),
-    full_accounts.lookup(keys[0])->get_base_cell(),
+    updated_accounts.get_root_cell()
   });
 
   if (res.is_error()) {
