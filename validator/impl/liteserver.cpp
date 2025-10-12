@@ -609,12 +609,13 @@ void LiteQuery::finish_getState() {
   LOG(INFO) << "getShardState unpacked state_pruned " << sstate_pruned.seq_no << " " << sstate_pruned.gen_lt;
 
   vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
-  LOG(INFO) << "getShardState unpacked full_accounts";
+  LOG(INFO) << "getShardState unpacked full_accounts " << full_accounts.is_valid() << " " << full_accounts.validate();
 
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
   LOG(INFO) << "getShardState unpacked updated_accounts " << updated_accounts.is_valid() << " " << updated_accounts.validate();
 
-  auto it = updated_accounts.begin();
+  auto it = full_accounts.begin();
+  // updated_accounts.pos
 
   LOG(INFO) << "getShardState got updated_accounts iterator";
   std::vector<td::Bits256> keys;
