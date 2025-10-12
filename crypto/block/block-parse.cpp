@@ -1247,7 +1247,8 @@ const DepthBalanceInfo t_DepthBalanceInfo;
 
 bool Aug_ShardAccounts::eval_leaf(vm::CellBuilder& cb, vm::CellSlice& cs) const {
   if (cs.have_refs()) {
-    auto cs2 = load_cell_slice(cs.prefetch_ref());
+    bool can_be_special = true;
+    auto cs2 = vm::load_cell_slice_special(cs.prefetch_ref(), can_be_special);
     return t_Account.skip_copy_depth_balance(cb, cs2);
   } else {
     return false;
