@@ -631,17 +631,32 @@ void LiteQuery::finish_getState() {
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, aug_ShardAccounts_special};
   LOG(INFO) << "getShardState unpacked updated_accounts " << updated_accounts.is_valid() << " " << updated_accounts.validate();
 
-  auto it = updated_accounts.begin();
-
-  LOG(INFO) << "getShardState got updated_accounts iterator";
   std::vector<td::Bits256> keys;
-  while (!it.eof()) {
+  
+  try {
+    auto it = updated_accounts.begin();
 
-    auto key = td::Bits256(it.cur_pos());
-    keys.push_back(key);
-    LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
+    LOG(INFO) << "getShardState got updated_accounts iterator";
+    while (!it.eof()) {
 
-    ++it;
+      auto key = td::Bits256(it.cur_pos());
+      keys.push_back(key);
+      LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
+
+      ++it;
+    }
+  } catch (const std::exception& e) {
+    LOG(INFO) << "getShardState exception " << e.what();
+  } catch (const vm::VmError& e) {
+    LOG(INFO) << "getShardState exception vm " << e.get_msg();
+  } catch (const vm::VmVirtError& e) {
+    LOG(INFO) << "getShardState exception vm virt " << e.get_msg();
+  } catch (const vm::CombineError& e) {
+    LOG(INFO) << "getShardState exception combine";
+  } catch (const vm::CombineErrorValue& e) {
+    LOG(INFO) << "getShardState exception combine " << e.arg_;
+  } catch (...) {
+    LOG(INFO) << "getShardState exception unknown";
   }
 
   LOG(INFO) << "getShardState finished updated_accounts iterator";
