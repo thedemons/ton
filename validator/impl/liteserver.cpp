@@ -634,9 +634,9 @@ void LiteQuery::finish_getState() {
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
 
   std::vector<td::Bits256> keys = extract_all_keys(updated_accounts);
-  vm::AugmentedDictionary new_accounts{256, block::tlb::aug_ShardAccounts};
+  vm::AugmentedDictionary new_accounts{256, block::tlb::aug_ShardAccounts}; 
 
-  LOG(INFO) << "getShardState shard accounts length " << keys.size();
+  // LOG(INFO) << "getShardState shard accounts length " << keys.size();
 
   for (auto& key : keys) {
     auto acc_csr = full_accounts.lookup(key);
@@ -646,14 +646,19 @@ void LiteQuery::finish_getState() {
     }
   }
 
-  auto res = vm::std_boc_serialize_multi({block_->root_cell(), updated_accounts.get_root_cell()});
+  auto res = vm::std_boc_serialize_multi({
+    block_->root_cell(),
+    updated_accounts.get_root_cell(),
+    full_accounts.lookup(keys[0])->prefetch_ref(),
+  });
+
   if (res.is_error()) {
     fatal_error("cannot serialize account states");
     return;
   }
 
-  LOG(INFO) << "getShardState serialized result";
-  
+  // LOG(INFO) << "getShardState serialized result";
+
   auto data = res.move_as_ok();
   auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockState>(
       ton::create_tl_lite_block_id(blk_id_), blk_id_.root_hash, blk_id_.file_hash, std::move(data));
