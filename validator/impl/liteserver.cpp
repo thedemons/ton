@@ -558,6 +558,7 @@ struct Aug_ShardAccounts_Special final : block::tlb::AugmentationCheckData {
       : block::tlb::AugmentationCheckData(block::tlb::t_ShardAccount, block::tlb::t_DepthBalanceInfo) {
   }
   bool eval_leaf(vm::CellBuilder& cb, vm::CellSlice& cs) const override {
+    LOG(INFO) << "getShardState eval_leaf called " << cs.have_refs();
     if (cs.have_refs()) {
       bool can_be_special = true;
       auto cs2 = vm::load_cell_slice_special(cs.prefetch_ref(), can_be_special);
