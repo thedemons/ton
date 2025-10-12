@@ -201,6 +201,7 @@ void LiteQuery::perform() {
             this->perform_getBlockHeader(ton::create_block_id(q.id_), q.mode_);
           },
           [&](lite_api::liteServer_getState& q) { this->perform_getState(ton::create_block_id(q.id_)); },
+          [&](lite_api::liteServer_getBlockAndState& q) { this->perform_getBlockAndState(ton::create_block_id(q.id_)); },
           [&](lite_api::liteServer_getAccountState& q) {
             this->perform_getAccountState(ton::create_block_id(q.id_), static_cast<WorkchainId>(q.account_->workchain_),
                                           q.account_->id_, 0);
@@ -262,15 +263,11 @@ void LiteQuery::perform() {
             this->perform_runSmcMethod(ton::create_block_id(q.id_), static_cast<WorkchainId>(q.account_->workchain_),
                                        q.account_->id_, q.mode_, q.method_id_, std::move(q.params_));
           },
-          [&](lite_api::liteServer_getLibraries& q) {
-            this->perform_getLibraries(q.library_list_);
-          },
+          [&](lite_api::liteServer_getLibraries& q) { this->perform_getLibraries(q.library_list_); },
           [&](lite_api::liteServer_getLibrariesWithProof& q) {
             this->perform_getLibrariesWithProof(ton::create_block_id(q.id_), q.mode_, q.library_list_);
           },
-          [&](lite_api::liteServer_getShardBlockProof& q) {
-            this->perform_getShardBlockProof(create_block_id(q.id_));
-          },
+          [&](lite_api::liteServer_getShardBlockProof& q) { this->perform_getShardBlockProof(create_block_id(q.id_)); },
           [&](lite_api::liteServer_nonfinal_getCandidate& q) {
             this->perform_nonfinal_getCandidate(q.id_->creator_, create_block_id(q.id_->block_id_),
                                                 q.id_->collated_data_hash_);
@@ -490,40 +487,25 @@ void LiteQuery::continue_getBlockHeader(BlockIdExt blkid, int mode, Ref<ton::val
 }
 
 void LiteQuery::perform_getState(BlockIdExt blkid) {
-  LOG(INFO) << "getShardState started a getState(" << blkid.to_str() << ") liteserver query";
+  LOG(INFO) << "started a getState(" << blkid.to_str() << ") liteserver query";
   if (!blkid.is_valid_full()) {
     fatal_error("invalid BlockIdExt");
     return;
   }
-  // if (blkid.id.seqno > 1000) {
-  //   fatal_error("cannot request total state: possibly too large");
-  //   return;
-  // }
+  if (blkid.id.seqno > 1000) {
+    fatal_error("cannot request total state: possibly too large");
+    return;
+  }
   if (blkid.id.seqno) {
-    set_continuation([&]() -> void { finish_getState(); });
-    blk_id_ = blkid;
-    pending_ += 2;
-    td::actor::send_closure(
-        manager_, &ValidatorManager::get_block_state_for_litequery, blkid,
-        [Self = actor_id(this), blkid](td::Result<Ref<ShardState>> res) {
-          if (res.is_error()) {
-            td::actor::send_closure(Self, &LiteQuery::abort_query,
-                                    res.move_as_error_prefix("cannot load state for "s + blkid.to_str() + " : "));
-          } else {
-            td::actor::send_closure_later(Self, &LiteQuery::got_block_state, blkid, res.move_as_ok());
-          }
-        });
-
-    td::actor::send_closure(
-        manager_, &ValidatorManager::get_block_data_for_litequery, blkid,
-        [Self = actor_id(this), blkid](td::Result<Ref<BlockData>> res) {
-          if (res.is_error()) {
-            td::actor::send_closure(Self, &LiteQuery::abort_query,
-                                    res.move_as_error_prefix("cannot load block "s + blkid.to_str() + " : "));
-          } else {
-            td::actor::send_closure_later(Self, &LiteQuery::got_block_data, blkid, res.move_as_ok());
-          }
-        });
+    td::actor::send_closure(manager_, &ValidatorManager::get_block_state_for_litequery, blkid,
+                            [Self = actor_id(this), blkid](td::Result<Ref<ShardState>> res) {
+                              if (res.is_error()) {
+                                td::actor::send_closure(Self, &LiteQuery::abort_query, res.move_as_error());
+                              } else {
+                                td::actor::send_closure_later(Self, &LiteQuery::continue_getState, blkid,
+                                                              res.move_as_ok());
+                              }
+                            });
   } else {
     td::actor::send_closure_later(manager_, &ValidatorManager::get_zero_state, blkid,
                                   [Self = actor_id(this), blkid](td::Result<td::BufferSlice> res) {
@@ -592,8 +574,41 @@ std::vector<ton::Bits256> extract_all_keys(const vm::AugmentedDictionary& dict) 
   return keys;
 }
 
-void LiteQuery::finish_getState() {
-  LOG(INFO) << "getShardState finished get state and block " << blk_id_.to_str();
+void LiteQuery::perform_getBlockAndState(BlockIdExt blkid) {
+  LOG(INFO) << "getBlockAndState started a getState and getBlock (" << blkid.to_str() << ") liteserver query";
+  if (!blkid.is_valid_full()) {
+    fatal_error("invalid BlockIdExt");
+    return;
+  }
+
+  set_continuation([&]() -> void { finish_getBlockAndState(); });
+  blk_id_ = blkid;
+  pending_ += 2;
+  td::actor::send_closure(manager_, &ValidatorManager::get_block_state_for_litequery, blkid,
+                          [Self = actor_id(this), blkid](td::Result<Ref<ShardState>> res) {
+                            if (res.is_error()) {
+                              td::actor::send_closure(
+                                  Self, &LiteQuery::abort_query,
+                                  res.move_as_error_prefix("cannot load state for "s + blkid.to_str() + " : "));
+                            } else {
+                              td::actor::send_closure_later(Self, &LiteQuery::got_block_state, blkid, res.move_as_ok());
+                            }
+                          });
+
+  td::actor::send_closure(manager_, &ValidatorManager::get_block_data_for_litequery, blkid,
+                          [Self = actor_id(this), blkid](td::Result<Ref<BlockData>> res) {
+                            if (res.is_error()) {
+                              td::actor::send_closure(
+                                  Self, &LiteQuery::abort_query,
+                                  res.move_as_error_prefix("cannot load block "s + blkid.to_str() + " : "));
+                            } else {
+                              td::actor::send_closure_later(Self, &LiteQuery::got_block_data, blkid, res.move_as_ok());
+                            }
+                          });
+}
+
+void LiteQuery::finish_getBlockAndState() {
+  LOG(INFO) << "getBlockAndState finished get state and block " << blk_id_.to_str();
 
   block::gen::Block::Record blk;
   block::gen::ShardStateUnsplit::Record sstate;
@@ -624,7 +639,7 @@ void LiteQuery::finish_getState() {
   if (tlb::unpack_cell(update_to, shard_state_pruned)) {
     
     if (!tlb::unpack_cell(shard_state_pruned.x->get_base_cell(), sstate_pruned)) {
-      LOG(INFO) << "getShardState cannot unpack state_pruned header";
+      LOG(INFO) << "getBlockAndState cannot unpack state_pruned header";
       fatal_error("cannot unpack state header");
       return;
     }
@@ -636,7 +651,7 @@ void LiteQuery::finish_getState() {
   } else {
     block::gen::ShardState::Record_split_state shard_state_split_pruned;
     if (!tlb::unpack_cell(update_to, shard_state_split_pruned)) {
-      LOG(INFO) << "getShardState cannot unpack shard_state_split_pruned";
+      LOG(INFO) << "getBlockAndState cannot unpack shard_state_split_pruned";
       fatal_error("cannot unpack shard_state_split_pruned");
       return;
     }
@@ -645,7 +660,7 @@ void LiteQuery::finish_getState() {
     block::gen::ShardStateUnsplit::Record sstate_pruned_right;
     if (!tlb::unpack_cell(shard_state_split_pruned.left, sstate_pruned_left) ||
         !tlb::unpack_cell(shard_state_split_pruned.right, sstate_pruned_right)) {
-      LOG(INFO) << "getShardState cannot unpack shard_state_split_pruned left and right";
+      LOG(INFO) << "getBlockAndState cannot unpack shard_state_split_pruned left and right";
       fatal_error("cannot unpack shard_state_split_pruned left and right");
       return;
     }
@@ -658,8 +673,6 @@ void LiteQuery::finish_getState() {
     keys = extract_all_keys(left_accounts);
     auto keys_right = extract_all_keys(left_accounts);
     keys.insert(keys.end(), keys_right.begin(), keys_right.end());
-
-
   }
   
 
@@ -689,8 +702,8 @@ void LiteQuery::finish_getState() {
   // LOG(INFO) << "getShardState serialized result";
 
   auto data = res.move_as_ok();
-  auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockState>(
-      ton::create_tl_lite_block_id(blk_id_), blk_id_.root_hash, blk_id_.file_hash, std::move(data));
+  auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockDataAndState>(
+      ton::create_tl_lite_block_id(blk_id_), std::move(data));
   finish_query(std::move(b));
 }
 
