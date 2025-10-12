@@ -614,8 +614,7 @@ void LiteQuery::finish_getState() {
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
   LOG(INFO) << "getShardState unpacked updated_accounts " << updated_accounts.is_valid() << " " << updated_accounts.validate();
 
-  auto it = full_accounts.begin();
-  // updated_accounts.pos
+  auto it = updated_accounts.rbegin();
 
   LOG(INFO) << "getShardState got updated_accounts iterator";
   std::vector<td::Bits256> keys;
@@ -625,7 +624,7 @@ void LiteQuery::finish_getState() {
     keys.push_back(key);
     LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
 
-    ++it;
+    --it;
   }
 
   LOG(INFO) << "getShardState finished updated_accounts iterator";
