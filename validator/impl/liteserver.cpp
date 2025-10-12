@@ -623,6 +623,13 @@ void LiteQuery::finish_getState() {
     fatal_error("cannot unpack state pruned header");
     return;
   }
+  
+  // block::gen::ShardState::Record_split_state shard_state_split_pruned;
+  // if (!tlb::unpack_cell(update_to, shard_state_split_pruned)) {
+  //   fatal_error("cannot unpack state pruned header");
+  //   return;
+  // }
+  // merge = shard_state_split_pruned.left + shard_state_split_pruned.right;
 
   if (!tlb::unpack_cell(shard_state_pruned.x->get_base_cell(), sstate_pruned)) {
     LOG(INFO) << "getShardState cannot unpack state_pruned header";
@@ -640,7 +647,7 @@ void LiteQuery::finish_getState() {
 
   for (auto& key : keys) {
     auto acc_csr = full_accounts.lookup(key);
-    if (!new_accounts.set(key, acc_csr)) {
+    if (!new_accounts.set_ref(key, acc_csr->get_base_cell())) {
       fatal_error("unable to write new_accounts");
       return;
     }
@@ -648,7 +655,8 @@ void LiteQuery::finish_getState() {
 
   auto res = vm::std_boc_serialize_multi({
     block_->root_cell(),
-    updated_accounts.get_root_cell()
+    updated_accounts.get_root_cell(),
+    full_accounts.lookup(keys[0])->get_base_cell(),
   });
 
   if (res.is_error()) {
