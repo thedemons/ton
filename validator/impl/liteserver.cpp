@@ -686,8 +686,6 @@ void LiteQuery::finish_getState() {
   LOG(INFO) << "getShardState done 3";
   finish_query(std::move(b));
   LOG(INFO) << "getShardState done 4";
-
-  fatal_error("unimplemented");
 }
 
 void LiteQuery::continue_getZeroState(BlockIdExt blkid, td::BufferSlice state) {
