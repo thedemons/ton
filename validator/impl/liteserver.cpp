@@ -614,14 +614,20 @@ void LiteQuery::finish_getState() {
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
   LOG(INFO) << "getShardState unpacked updated_accounts";
 
-  for (auto it = updated_accounts.begin(); it != updated_accounts.end(); ++it) {
+  auto it = updated_accounts.begin();
+
+  LOG(INFO) << "getShardState got updated_accounts iterator";
+  while (!it.eof()) {
+
     auto key = td::Bits256(it.cur_pos());
     LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
 
-    auto acc_csr = full_accounts.lookup(acc_addr_);
-    LOG(INFO) << "getShardState setting updated_account "
-              << updated_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Replace);
+    // auto acc_csr = full_accounts.lookup(acc_addr_);
+    // LOG(INFO) << "getShardState setting updated_account "
+    //           << updated_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Replace);
+    ++it;
   }
+  
 
   LOG(INFO) << "getShardState start serialization";
   auto res = vm::std_boc_serialize(updated_accounts.get_root_cell());
