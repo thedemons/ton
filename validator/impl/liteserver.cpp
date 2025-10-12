@@ -571,6 +571,45 @@ struct Aug_ShardAccounts_Special final : block::tlb::AugmentationCheckData {
 
 const Aug_ShardAccounts_Special aug_ShardAccounts_special;
 
+// Recursive traversal
+void collect_keys(const Ref<vm::Cell>& cell, int key_bits, td::BitPtr key_buffer, int depth, std::vector<ton::Bits256>& keys) {
+  if (cell.is_null())
+    return;
+
+  // Use LabelParser, but do NOT parse the value at leaves!
+  vm::dict::LabelParser label(cell, key_bits - depth, vm::dict::LabelParser::chk_none);
+
+  // Copy label bits to key_buffer
+  int label_len = label.l_bits;
+  label.copy_label_prefix_to(key_buffer + depth, label_len);
+  int new_depth = depth + label_len;
+
+  if (label_len == key_bits - depth) {
+    // Leaf node: reconstruct key
+    keys.push_back(ton::Bits256(key_buffer));
+    // SKIP parsing value at leaf!
+    return;
+  }
+
+  // Fork node: recurse on children
+  // Try both branches (0 and 1)
+  for (int sw = 0; sw < 2; ++sw) {
+    key_buffer[new_depth] = sw;
+    Ref<vm::Cell> child = label.remainder->prefetch_ref(sw);
+    collect_keys(child, key_bits, key_buffer, new_depth + 1, keys);
+  }
+}
+
+// Main function to call
+std::vector<ton::Bits256> extract_all_keys(const vm::AugmentedDictionary& dict) {
+  std::vector<ton::Bits256> keys;
+  int key_bits = dict.get_key_bits();
+  unsigned char key_buffer[vm::DictionaryBase::max_key_bytes] = {0};
+  Ref<vm::Cell> root_cell = dict.get_root_cell();
+  collect_keys(root_cell, key_bits, td::BitPtr{key_buffer}, 0, keys);
+  return keys;
+}
+
 void LiteQuery::finish_getState() {
   LOG(INFO) << "getShardState finished get state and block " << blk_id_.to_str();
 
@@ -632,33 +671,33 @@ void LiteQuery::finish_getState() {
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, aug_ShardAccounts_special};
   LOG(INFO) << "getShardState unpacked updated_accounts " << updated_accounts.is_valid() << " " << updated_accounts.validate();
 
-  std::vector<td::Bits256> keys;
-  
-  try {
-    auto it = updated_accounts.begin();
+  std::vector<td::Bits256> keys = extract_all_keys(updated_accounts);
 
-    LOG(INFO) << "getShardState got updated_accounts iterator";
-    while (!it.eof()) {
+  // try {
+  //   auto it = updated_accounts.begin();
 
-      auto key = td::Bits256(it.cur_pos());
-      keys.push_back(key);
-      LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
+  //   LOG(INFO) << "getShardState got updated_accounts iterator";
+  //   while (!it.eof()) {
 
-      ++it;
-    }
-  } catch (const std::exception& e) {
-    LOG(INFO) << "getShardState exception " << e.what();
-  } catch (const vm::VmError& e) {
-    LOG(INFO) << "getShardState exception vm " << e.get_msg();
-  } catch (const vm::VmVirtError& e) {
-    LOG(INFO) << "getShardState exception vm virt " << e.get_msg();
-  } catch (const vm::CombineError& e) {
-    LOG(INFO) << "getShardState exception combine";
-  } catch (const vm::CombineErrorValue& e) {
-    LOG(INFO) << "getShardState exception combine " << e.arg_;
-  } catch (...) {
-    LOG(INFO) << "getShardState exception unknown";
-  }
+  //     auto key = td::Bits256(it.cur_pos());
+  //     keys.push_back(key);
+  //     LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
+
+  //     ++it;
+  //   }
+  // } catch (const std::exception& e) {
+  //   LOG(INFO) << "getShardState exception " << e.what();
+  // } catch (const vm::VmError& e) {
+  //   LOG(INFO) << "getShardState exception vm " << e.get_msg();
+  // } catch (const vm::VmVirtError& e) {
+  //   LOG(INFO) << "getShardState exception vm virt " << e.get_msg();
+  // } catch (const vm::CombineError& e) {
+  //   LOG(INFO) << "getShardState exception combine";
+  // } catch (const vm::CombineErrorValue& e) {
+  //   LOG(INFO) << "getShardState exception combine " << e.arg_;
+  // } catch (...) {
+  //   LOG(INFO) << "getShardState exception unknown";
+  // }
 
   LOG(INFO) << "getShardState finished updated_accounts iterator";
   for (auto key : keys) {

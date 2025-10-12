@@ -1372,7 +1372,7 @@ bool DictIterator::dive(int mode) {
   }
   // similar to dict_lookup_minmax: create new path down until the leaf
   while (1) {
-    LabelParser label{std::move(node), n, 0};
+    LabelParser label{std::move(node), n, label_mode_};
     int l = label.extract_label_to(key(m));
     assert(l >= 0 && l <= n);
     m += l;
