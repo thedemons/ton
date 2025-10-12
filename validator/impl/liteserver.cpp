@@ -649,7 +649,7 @@ void LiteQuery::finish_getState() {
   auto res = vm::std_boc_serialize_multi({
     block_->root_cell(),
     updated_accounts.get_root_cell(),
-    full_accounts.lookup(keys[0])->prefetch_ref(),
+    full_accounts.lookup(keys[0])->get_base_cell(),
   });
 
   if (res.is_error()) {
