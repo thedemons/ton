@@ -558,6 +558,7 @@ void LiteQuery::finish_getState() {
 
   block::gen::Block::Record blk;
   block::gen::ShardStateUnsplit::Record sstate;
+  block::gen::ShardStateUnsplit::Record sstate_pruned;
   if (!tlb::unpack_cell(state_->root_cell(), sstate)) {
     LOG(INFO) << "getShardState cannot unpack state header";
     fatal_error("cannot unpack state header");
@@ -590,26 +591,56 @@ void LiteQuery::finish_getState() {
   auto update_to = upd_cs.fetch_ref();
   LOG(INFO) << "getShardState unpacked upd_cs ref 2";
 
-  block::gen::ShardState::Record_cons1 sstate_pruned;
-  if (!tlb::unpack_cell(update_to, sstate_pruned)) {
+  block::gen::ShardState::Record_cons1 shard_state_pruned;
+  if (!tlb::unpack_cell(update_to, shard_state_pruned)) {
     LOG(INFO) << "getShardState cannot unpack state pruned header";
     fatal_error("cannot unpack state pruned header");
     return;
   }
 
-  LOG(INFO) << "getShardState unpacked sstate_pruned";
+  LOG(INFO) << "getShardState unpacked shard_state_pruned";
+
+  if (!tlb::unpack_cell(shard_state_pruned.x->get_base_cell(), sstate_pruned)) {
+    LOG(INFO) << "getShardState cannot unpack state_pruned header";
+    fatal_error("cannot unpack state header");
+    return;
+  }
+
+  LOG(INFO) << "getShardState unpacked state_pruned";
 
   vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
   LOG(INFO) << "getShardState unpacked full_accounts";
 
-  vm::AugmentedDictionary updated_accounts{sstate_pruned.x, 256, block::tlb::aug_ShardAccounts};
+  vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
   LOG(INFO) << "getShardState unpacked updated_accounts";
 
   for (auto it = updated_accounts.begin(); it != updated_accounts.end(); ++it) {
     LOG(INFO) << "getShardState updated_accounts " << td::Bits256(it.cur_pos()).to_hex();
+
+    auto acc_csr = full_accounts.lookup(acc_addr_);
+    LOG(INFO) << "getShardState setting updated_account " << updated_accounts.set(it.cur_pos(), acc_csr, vm::DictionaryBase::SetMode::Replace);
+  }
+
+  LOG(INFO) << "getShardState start serialization";
+  auto res = vm::std_boc_serialize(updated_accounts.get_root_cell());
+  LOG(INFO) << "getShardState done serialization";
+  if (res.is_error()) {
+    LOG(INFO) << "getShardState serialization failed: " << res.move_as_error().to_string();
+    fatal_error("cannot serialize account states");
+    return;
   }
 
   LOG(INFO) << "getShardState done";
+
+  auto data = res.move_as_ok();
+
+  LOG(INFO) << "getShardState done 2";
+  auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockState>(
+      ton::create_tl_lite_block_id(blk_id_), blk_id_.root_hash, blk_id_.file_hash, std::move(data));
+  LOG(INFO) << "getShardState done 3";
+  finish_query(std::move(b));
+  LOG(INFO) << "getShardState done 4";
+
   fatal_error("unimplemented");
 }
 
