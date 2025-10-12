@@ -553,24 +553,6 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   finish_query(std::move(b));
 }
 
-struct Aug_ShardAccounts_Special final : block::tlb::AugmentationCheckData {
-  Aug_ShardAccounts_Special()
-      : block::tlb::AugmentationCheckData(block::tlb::t_ShardAccount, block::tlb::t_DepthBalanceInfo) {
-  }
-  bool eval_leaf(vm::CellBuilder& cb, vm::CellSlice& cs) const override {
-    LOG(INFO) << "getShardState eval_leaf called " << cs.have_refs();
-    if (cs.have_refs()) {
-      bool can_be_special = true;
-      auto cs2 = vm::load_cell_slice_special(cs.prefetch_ref(), can_be_special);
-      return block::tlb::t_Account.skip_copy_depth_balance(cb, cs2);
-    } else {
-      return false;
-    }
-  }
-};
-
-const Aug_ShardAccounts_Special aug_ShardAccounts_special;
-
 // Recursive traversal
 void collect_keys(const Ref<vm::Cell>& cell, int key_bits, td::BitPtr key_buffer, int depth, std::vector<ton::Bits256>& keys) {
   if (cell.is_null())
@@ -617,45 +599,30 @@ void LiteQuery::finish_getState() {
   block::gen::ShardStateUnsplit::Record sstate;
   block::gen::ShardStateUnsplit::Record sstate_pruned;
   if (!tlb::unpack_cell(state_->root_cell(), sstate)) {
-    LOG(INFO) << "getShardState cannot unpack state header";
     fatal_error("cannot unpack state header");
     return;
   }
 
-  LOG(INFO) << "getShardState unpacked sstate";
-
   if (!tlb::unpack_cell(block_->root_cell(), blk)) {
-    LOG(INFO) << "getShardState cannot unpack block data";
     fatal_error("cannot unpack block data");
     return;
   }
 
-  LOG(INFO) << "getShardState unpacked blk";
-
   vm::CellSlice upd_cs{vm::NoVmSpec(), blk.state_update};
   if (!(upd_cs.is_special() && upd_cs.prefetch_long(8) == 4  // merkle update
         && upd_cs.size_ext() == 0x20228)) {
-    LOG(INFO) << "getShardState invalid Merkle update in block";
     fatal_error("invalid Merkle update in block");
     return;
   }
 
-  LOG(INFO) << "getShardState unpacked upd_cs";
-
   auto update_from = upd_cs.fetch_ref();
-  LOG(INFO) << "getShardState unpacked upd_cs ref 1";
-
   auto update_to = upd_cs.fetch_ref();
-  LOG(INFO) << "getShardState unpacked upd_cs ref 2";
 
   block::gen::ShardState::Record_cons1 shard_state_pruned;
   if (!tlb::unpack_cell(update_to, shard_state_pruned)) {
-    LOG(INFO) << "getShardState cannot unpack state pruned header";
     fatal_error("cannot unpack state pruned header");
     return;
   }
-
-  LOG(INFO) << "getShardState unpacked shard_state_pruned";
 
   if (!tlb::unpack_cell(shard_state_pruned.x->get_base_cell(), sstate_pruned)) {
     LOG(INFO) << "getShardState cannot unpack state_pruned header";
@@ -663,74 +630,34 @@ void LiteQuery::finish_getState() {
     return;
   }
 
-  LOG(INFO) << "getShardState unpacked state_pruned " << sstate_pruned.seq_no << " " << sstate_pruned.gen_lt;
-
   vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
-  LOG(INFO) << "getShardState unpacked full_accounts " << full_accounts.is_valid() << " " << full_accounts.validate();
-
-  vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, aug_ShardAccounts_special};
-  LOG(INFO) << "getShardState unpacked updated_accounts " << updated_accounts.is_valid() << " " << updated_accounts.validate();
+  vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
 
   std::vector<td::Bits256> keys = extract_all_keys(updated_accounts);
-
   vm::AugmentedDictionary new_accounts{256, block::tlb::aug_ShardAccounts};
-  // try {
-  //   auto it = updated_accounts.begin();
 
-  //   LOG(INFO) << "getShardState got updated_accounts iterator";
-  //   while (!it.eof()) {
+  LOG(INFO) << "getShardState shard accounts length " << keys.size();
 
-  //     auto key = td::Bits256(it.cur_pos());
-  //     keys.push_back(key);
-  //     LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
-
-  //     ++it;
-  //   }
-  // } catch (const std::exception& e) {
-  //   LOG(INFO) << "getShardState exception " << e.what();
-  // } catch (const vm::VmError& e) {
-  //   LOG(INFO) << "getShardState exception vm " << e.get_msg();
-  // } catch (const vm::VmVirtError& e) {
-  //   LOG(INFO) << "getShardState exception vm virt " << e.get_msg();
-  // } catch (const vm::CombineError& e) {
-  //   LOG(INFO) << "getShardState exception combine";
-  // } catch (const vm::CombineErrorValue& e) {
-  //   LOG(INFO) << "getShardState exception combine " << e.arg_;
-  // } catch (...) {
-  //   LOG(INFO) << "getShardState exception unknown";
-  // }
-
-  LOG(INFO) << "getShardState finished updated_accounts iterator";
-  
-  for (auto key : keys) {
-    LOG(INFO) << "getShardState account " << key.to_hex();
-  }
-
-  for (auto key : keys) {
+  for (auto& key : keys) {
     auto acc_csr = full_accounts.lookup(key);
-    LOG(INFO) << "getShardState setting updated_account " << key.to_hex()
-              << " result: " << new_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Set);
+    if (!new_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Set)) {
+      fatal_error("unable to write new_accounts");
+      return;
+    }
   }
 
-  LOG(INFO) << "getShardState start serialization";
-  auto res = vm::std_boc_serialize(updated_accounts.get_root_cell());
-  LOG(INFO) << "getShardState done serialization";
+  auto res = vm::std_boc_serialize_multi({block_->root_cell(), updated_accounts.get_root_cell()});
   if (res.is_error()) {
-    LOG(INFO) << "getShardState serialization failed: " << res.move_as_error().to_string();
     fatal_error("cannot serialize account states");
     return;
   }
 
-  LOG(INFO) << "getShardState done";
-
+  LOG(INFO) << "getShardState serialized result";
+  
   auto data = res.move_as_ok();
-
-  LOG(INFO) << "getShardState done 2";
   auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockState>(
       ton::create_tl_lite_block_id(blk_id_), blk_id_.root_hash, blk_id_.file_hash, std::move(data));
-  LOG(INFO) << "getShardState done 3";
   finish_query(std::move(b));
-  LOG(INFO) << "getShardState done 4";
 }
 
 void LiteQuery::continue_getZeroState(BlockIdExt blkid, td::BufferSlice state) {
