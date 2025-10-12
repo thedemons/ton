@@ -553,6 +553,23 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   finish_query(std::move(b));
 }
 
+struct Aug_ShardAccounts_Special final : block::tlb::AugmentationCheckData {
+  Aug_ShardAccounts_Special()
+      : block::tlb::AugmentationCheckData(block::tlb::t_ShardAccount, block::tlb::t_DepthBalanceInfo) {
+  }
+  bool eval_leaf(vm::CellBuilder& cb, vm::CellSlice& cs) const override {
+    if (cs.have_refs()) {
+      bool can_be_special = true;
+      auto cs2 = vm::load_cell_slice_special(cs.prefetch_ref(), can_be_special);
+      return block::tlb::t_Account.skip_copy_depth_balance(cb, cs2);
+    } else {
+      return false;
+    }
+  }
+};
+
+const Aug_ShardAccounts_Special aug_ShardAccounts_special;
+
 void LiteQuery::finish_getState() {
   LOG(INFO) << "getShardState finished get state and block " << blk_id_.to_str();
 
@@ -611,10 +628,10 @@ void LiteQuery::finish_getState() {
   vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
   LOG(INFO) << "getShardState unpacked full_accounts " << full_accounts.is_valid() << " " << full_accounts.validate();
 
-  vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
+  vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, aug_ShardAccounts_special};
   LOG(INFO) << "getShardState unpacked updated_accounts " << updated_accounts.is_valid() << " " << updated_accounts.validate();
 
-  auto it = updated_accounts.rbegin();
+  auto it = updated_accounts.begin();
 
   LOG(INFO) << "getShardState got updated_accounts iterator";
   std::vector<td::Bits256> keys;
@@ -624,12 +641,12 @@ void LiteQuery::finish_getState() {
     keys.push_back(key);
     LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
 
-    --it;
+    ++it;
   }
 
   LOG(INFO) << "getShardState finished updated_accounts iterator";
   for (auto key : keys) {
-    auto acc_csr = full_accounts.lookup(acc_addr_);
+    auto acc_csr = full_accounts.lookup(key);
     LOG(INFO) << "getShardState setting updated_account " << key.to_hex() << " result: "
               << updated_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Replace);
   }
