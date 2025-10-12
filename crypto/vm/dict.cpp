@@ -263,7 +263,8 @@ LabelParser::LabelParser(Ref<CellSlice> cs, int max_label_len, int auto_validate
 }
 
 LabelParser::LabelParser(Ref<Cell> cell, int max_label_len, int auto_validate) : remainder(), l_offs(0), l_same(0) {
-  Ref<CellSlice> cs = load_cell_slice_ref(std::move(cell));
+  bool special;
+  Ref<CellSlice> cs = load_cell_slice_ref_special(std::move(cell), special);
   if (!parse_label(cs.unique_write(), max_label_len)) {
     l_offs = 0;
   } else {
