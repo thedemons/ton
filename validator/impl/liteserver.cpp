@@ -617,31 +617,54 @@ void LiteQuery::finish_getState() {
 
   auto update_from = upd_cs.fetch_ref();
   auto update_to = upd_cs.fetch_ref();
-
+  
+  std::vector<td::Bits256> keys;
+  
   block::gen::ShardState::Record_cons1 shard_state_pruned;
-  if (!tlb::unpack_cell(update_to, shard_state_pruned)) {
-    fatal_error("cannot unpack state pruned header");
-    return;
+  if (tlb::unpack_cell(update_to, shard_state_pruned)) {
+    
+    if (!tlb::unpack_cell(shard_state_pruned.x->get_base_cell(), sstate_pruned)) {
+      LOG(INFO) << "getShardState cannot unpack state_pruned header";
+      fatal_error("cannot unpack state header");
+      return;
+    }
+
+    vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256,
+                                             block::tlb::aug_ShardAccounts};
+    keys = extract_all_keys(updated_accounts);
+    
+  } else {
+    block::gen::ShardState::Record_split_state shard_state_split_pruned;
+    if (!tlb::unpack_cell(update_to, shard_state_split_pruned)) {
+      LOG(INFO) << "getShardState cannot unpack shard_state_split_pruned";
+      fatal_error("cannot unpack shard_state_split_pruned");
+      return;
+    }
+
+    block::gen::ShardStateUnsplit::Record sstate_pruned_left;
+    block::gen::ShardStateUnsplit::Record sstate_pruned_right;
+    if (!tlb::unpack_cell(shard_state_split_pruned.left, sstate_pruned_left) ||
+        !tlb::unpack_cell(shard_state_split_pruned.right, sstate_pruned_right)) {
+      LOG(INFO) << "getShardState cannot unpack shard_state_split_pruned left and right";
+      fatal_error("cannot unpack shard_state_split_pruned left and right");
+      return;
+    }
+
+    vm::AugmentedDictionary left_accounts{vm::load_cell_slice_ref(sstate_pruned_left.accounts), 256,
+                                          block::tlb::aug_ShardAccounts};
+    vm::AugmentedDictionary right_accounts{vm::load_cell_slice_ref(sstate_pruned_right.accounts), 256,
+                                           block::tlb::aug_ShardAccounts};
+
+    keys = extract_all_keys(left_accounts);
+    auto keys_right = extract_all_keys(left_accounts);
+    keys.insert(keys.end(), keys_right.begin(), keys_right.end());
+
+
   }
   
-  // block::gen::ShardState::Record_split_state shard_state_split_pruned;
-  // if (!tlb::unpack_cell(update_to, shard_state_split_pruned)) {
-  //   fatal_error("cannot unpack state pruned header");
-  //   return;
-  // }
-  // merge = shard_state_split_pruned.left + shard_state_split_pruned.right;
 
-  if (!tlb::unpack_cell(shard_state_pruned.x->get_base_cell(), sstate_pruned)) {
-    LOG(INFO) << "getShardState cannot unpack state_pruned header";
-    fatal_error("cannot unpack state header");
-    return;
-  }
-
-  vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
-  vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
-
-  std::vector<td::Bits256> keys = extract_all_keys(updated_accounts);
   vm::Dictionary new_accounts{256};
+  vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
 
   // LOG(INFO) << "getShardState shard accounts length " << keys.size();
 
@@ -655,9 +678,7 @@ void LiteQuery::finish_getState() {
 
   auto res = vm::std_boc_serialize_multi({
     block_->root_cell(),
-    updated_accounts.get_root_cell(),
-    full_accounts.lookup(keys[0])->get_base_cell(),
-    new_accounts.lookup(keys[0])->get_base_cell(),
+    new_accounts.get_root_cell(),
   });
 
   if (res.is_error()) {
