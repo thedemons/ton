@@ -201,6 +201,7 @@ void LiteQuery::perform() {
             this->perform_getBlockHeader(ton::create_block_id(q.id_), q.mode_);
           },
           [&](lite_api::liteServer_getState& q) { this->perform_getState(ton::create_block_id(q.id_)); },
+          [&](lite_api::liteServer_getBlockAndState& q) { this->perform_getBlockAndState(ton::create_block_id(q.id_)); },
           [&](lite_api::liteServer_getAccountState& q) {
             this->perform_getAccountState(ton::create_block_id(q.id_), static_cast<WorkchainId>(q.account_->workchain_),
                                           q.account_->id_, 0);
@@ -535,6 +536,178 @@ void LiteQuery::continue_getState(BlockIdExt blkid, Ref<ton::validator::ShardSta
   td::sha256(data, file_hash.as_slice());
   auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockState>(
       ton::create_tl_lite_block_id(blkid), state->root_hash(), file_hash, std::move(data));
+  finish_query(std::move(b));
+}
+
+// Recursive traversal
+void collect_keys(const Ref<vm::Cell>& cell, int key_bits, td::BitPtr key_buffer, int depth, std::vector<ton::Bits256>& keys) {
+  if (cell.is_null())
+    return;
+
+  // Use LabelParser, but do NOT parse the value at leaves!
+  vm::dict::LabelParser label(cell, key_bits - depth, vm::dict::LabelParser::chk_none);
+
+  // Copy label bits to key_buffer
+  int label_len = label.l_bits;
+  label.copy_label_prefix_to(key_buffer + depth, label_len);
+  int new_depth = depth + label_len;
+
+  if (label_len == key_bits - depth) {
+    // Leaf node: reconstruct key
+    keys.push_back(ton::Bits256(key_buffer));
+    // SKIP parsing value at leaf!
+    return;
+  }
+
+  // Fork node: recurse on children
+  // Try both branches (0 and 1)
+  for (int sw = 0; sw < 2; ++sw) {
+    key_buffer[new_depth] = sw;
+    Ref<vm::Cell> child = label.remainder->prefetch_ref(sw);
+    collect_keys(child, key_bits, key_buffer, new_depth + 1, keys);
+  }
+}
+
+// Main function to call
+std::vector<ton::Bits256> extract_all_keys(const vm::AugmentedDictionary& dict) {
+  std::vector<ton::Bits256> keys;
+  int key_bits = dict.get_key_bits();
+  unsigned char key_buffer[vm::DictionaryBase::max_key_bytes] = {0};
+  Ref<vm::Cell> root_cell = dict.get_root_cell();
+  collect_keys(root_cell, key_bits, td::BitPtr{key_buffer}, 0, keys);
+  return keys;
+}
+
+void LiteQuery::perform_getBlockAndState(BlockIdExt blkid) {
+  LOG(INFO) << "getBlockAndState started a getState and getBlock (" << blkid.to_str() << ") liteserver query";
+  if (!blkid.is_valid_full()) {
+    fatal_error("invalid BlockIdExt");
+    return;
+  }
+
+  set_continuation([&]() -> void { finish_getBlockAndState(); });
+  blk_id_ = blkid;
+  pending_ += 2;
+  td::actor::send_closure(manager_, &ValidatorManager::get_block_state_for_litequery, blkid,
+                          [Self = actor_id(this), blkid](td::Result<Ref<ShardState>> res) {
+                            if (res.is_error()) {
+                              td::actor::send_closure(
+                                  Self, &LiteQuery::abort_query,
+                                  res.move_as_error_prefix("cannot load state for "s + blkid.to_str() + " : "));
+                            } else {
+                              td::actor::send_closure_later(Self, &LiteQuery::got_block_state, blkid, res.move_as_ok());
+                            }
+                          });
+
+  td::actor::send_closure(manager_, &ValidatorManager::get_block_data_for_litequery, blkid,
+                          [Self = actor_id(this), blkid](td::Result<Ref<BlockData>> res) {
+                            if (res.is_error()) {
+                              td::actor::send_closure(
+                                  Self, &LiteQuery::abort_query,
+                                  res.move_as_error_prefix("cannot load block "s + blkid.to_str() + " : "));
+                            } else {
+                              td::actor::send_closure_later(Self, &LiteQuery::got_block_data, blkid, res.move_as_ok());
+                            }
+                          });
+}
+
+void LiteQuery::finish_getBlockAndState() {
+  LOG(INFO) << "getBlockAndState finished get state and block " << blk_id_.to_str();
+
+  block::gen::Block::Record blk;
+  block::gen::ShardStateUnsplit::Record sstate;
+  block::gen::ShardStateUnsplit::Record sstate_pruned;
+  if (!tlb::unpack_cell(state_->root_cell(), sstate)) {
+    fatal_error("cannot unpack state header");
+    return;
+  }
+
+  if (!tlb::unpack_cell(block_->root_cell(), blk)) {
+    fatal_error("cannot unpack block data");
+    return;
+  }
+
+  vm::CellSlice upd_cs{vm::NoVmSpec(), blk.state_update};
+  if (!(upd_cs.is_special() && upd_cs.prefetch_long(8) == 4  // merkle update
+        && upd_cs.size_ext() == 0x20228)) {
+    fatal_error("invalid Merkle update in block");
+    return;
+  }
+
+  auto update_from = upd_cs.fetch_ref();
+  auto update_to = upd_cs.fetch_ref();
+  
+  std::vector<td::Bits256> keys;
+  
+  block::gen::ShardState::Record_cons1 shard_state_pruned;
+  if (tlb::unpack_cell(update_to, shard_state_pruned)) {
+    
+    if (!tlb::unpack_cell(shard_state_pruned.x->get_base_cell(), sstate_pruned)) {
+      LOG(INFO) << "getBlockAndState cannot unpack state_pruned header";
+      fatal_error("cannot unpack state header");
+      return;
+    }
+
+    vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256,
+                                             block::tlb::aug_ShardAccounts};
+    keys = extract_all_keys(updated_accounts);
+    
+  } else {
+    block::gen::ShardState::Record_split_state shard_state_split_pruned;
+    if (!tlb::unpack_cell(update_to, shard_state_split_pruned)) {
+      LOG(INFO) << "getBlockAndState cannot unpack shard_state_split_pruned";
+      fatal_error("cannot unpack shard_state_split_pruned");
+      return;
+    }
+
+    block::gen::ShardStateUnsplit::Record sstate_pruned_left;
+    block::gen::ShardStateUnsplit::Record sstate_pruned_right;
+    if (!tlb::unpack_cell(shard_state_split_pruned.left, sstate_pruned_left) ||
+        !tlb::unpack_cell(shard_state_split_pruned.right, sstate_pruned_right)) {
+      LOG(INFO) << "getBlockAndState cannot unpack shard_state_split_pruned left and right";
+      fatal_error("cannot unpack shard_state_split_pruned left and right");
+      return;
+    }
+
+    vm::AugmentedDictionary left_accounts{vm::load_cell_slice_ref(sstate_pruned_left.accounts), 256,
+                                          block::tlb::aug_ShardAccounts};
+    vm::AugmentedDictionary right_accounts{vm::load_cell_slice_ref(sstate_pruned_right.accounts), 256,
+                                           block::tlb::aug_ShardAccounts};
+
+    keys = extract_all_keys(left_accounts);
+    auto keys_right = extract_all_keys(left_accounts);
+    keys.insert(keys.end(), keys_right.begin(), keys_right.end());
+  }
+  
+
+  vm::Dictionary new_accounts{256};
+  vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
+
+  // LOG(INFO) << "getShardState shard accounts length " << keys.size();
+
+  for (auto& key : keys) {
+    auto acc_csr = full_accounts.lookup(key);
+    if (!new_accounts.set(key, acc_csr)) {
+      fatal_error("unable to write new_accounts");
+      return;
+    }
+  }
+
+  auto res = vm::std_boc_serialize_multi({
+    block_->root_cell(),
+    new_accounts.get_root_cell(),
+  });
+
+  if (res.is_error()) {
+    fatal_error("cannot serialize account states");
+    return;
+  }
+
+  // LOG(INFO) << "getShardState serialized result";
+
+  auto data = res.move_as_ok();
+  auto b = ton::create_serialize_tl_object<ton::lite_api::liteServer_blockDataAndState>(
+      ton::create_tl_lite_block_id(blk_id_), std::move(data));
   finish_query(std::move(b));
 }
 
