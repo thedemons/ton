@@ -606,28 +606,33 @@ void LiteQuery::finish_getState() {
     return;
   }
 
-  LOG(INFO) << "getShardState unpacked state_pruned";
+  LOG(INFO) << "getShardState unpacked state_pruned " << sstate_pruned.seq_no << " " << sstate_pruned.gen_lt;
 
   vm::AugmentedDictionary full_accounts{vm::load_cell_slice_ref(sstate.accounts), 256, block::tlb::aug_ShardAccounts};
   LOG(INFO) << "getShardState unpacked full_accounts";
 
   vm::AugmentedDictionary updated_accounts{vm::load_cell_slice_ref(sstate_pruned.accounts), 256, block::tlb::aug_ShardAccounts};
-  LOG(INFO) << "getShardState unpacked updated_accounts";
+  LOG(INFO) << "getShardState unpacked updated_accounts " << updated_accounts.is_valid() << " " << updated_accounts.validate();
 
   auto it = updated_accounts.begin();
 
   LOG(INFO) << "getShardState got updated_accounts iterator";
+  std::vector<td::Bits256> keys;
   while (!it.eof()) {
 
     auto key = td::Bits256(it.cur_pos());
+    keys.push_back(key);
     LOG(INFO) << "getShardState updated_accounts " << key.to_hex();
 
-    // auto acc_csr = full_accounts.lookup(acc_addr_);
-    // LOG(INFO) << "getShardState setting updated_account "
-    //           << updated_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Replace);
     ++it;
   }
-  
+
+  LOG(INFO) << "getShardState finished updated_accounts iterator";
+  for (auto key : keys) {
+    auto acc_csr = full_accounts.lookup(acc_addr_);
+    LOG(INFO) << "getShardState setting updated_account " << key.to_hex() << " result: "
+              << updated_accounts.set(key, acc_csr, vm::DictionaryBase::SetMode::Replace);
+  }
 
   LOG(INFO) << "getShardState start serialization";
   auto res = vm::std_boc_serialize(updated_accounts.get_root_cell());
