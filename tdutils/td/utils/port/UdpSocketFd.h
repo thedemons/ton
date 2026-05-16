@@ -110,7 +110,7 @@ class UdpSocketFd {
 
  private:
   static constexpr uint32 DEFAULT_UDP_MAX_SND_BUFFER_SIZE = (1 << 24);
-  // static constexpr uint32 DEFAULT_UDP_MAX_RCV_BUFFER_SIZE = (1 << 28);
+  static constexpr uint32 DEFAULT_UDP_MAX_RCV_BUFFER_SIZE = (1 << 28);
   std::unique_ptr<detail::UdpSocketFdImpl, detail::UdpSocketFdImplDeleter> impl_;
   explicit UdpSocketFd(unique_ptr<detail::UdpSocketFdImpl> impl);
 };
