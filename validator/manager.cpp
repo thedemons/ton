@@ -2109,7 +2109,7 @@ bool ValidatorManagerImpl::out_of_sync() {
   if (seqno < opts_->sync_upto()) {
     return true;
   }
-  if (shard_client_handle_->id().seqno() + 16 < last_masterchain_seqno_) {
+  if (shard_client_handle_->id().seqno() + 96 < last_masterchain_seqno_) {
     return true;
   }
   if (last_masterchain_block_handle_->unix_time() + 600 > td::Clocks::system()) {
